@@ -33,6 +33,10 @@ async def terminal(e):
             await e.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
             return
 
+        if stderr.decode():
+            await e.edit(f"{OUTPUT}`{stderr.decode()}`")
+            return
+
         await e.edit(f"{OUTPUT}`{stdout.decode()}`")
         return
 
@@ -48,7 +52,10 @@ async def terminal(e):
             _, stderr = await process.communicate()
             if stderr.decode():
                 OUTPUT += f"`{stderr.decode()}`"
-                await e.edit(OUTPUT)
+                try:
+                    await e.edit(OUTPUT)
+                except Exception:
+                    break
                 break
 
         if stdout:
@@ -89,12 +96,15 @@ async def ssh_terminal(e):
         async with conn.create_process(cmd) as process:
             if not SUBPROCESS_ANIM:
                 stdout, stderr = await process.communicate()
-                if not stdout:
+
+                if len(stdout) > 4096:
+                    await e.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
+                    return
+
+                if stderr:
                     await e.edit(f"{OUTPUT}`{stderr}`")
                     return
-                if len(stdout) > 4096:
-                    await e.reply("__Process killed:__ `Messasge too long`")
-                    return
+
                 await e.edit(f"{OUTPUT}`{stdout}`")
                 return
 
@@ -108,7 +118,10 @@ async def ssh_terminal(e):
                     _, stderr = await process.communicate()
                     if stderr:
                         OUTPUT += f"`{stderr}`"
-                        await e.edit(OUTPUT)
+                        try:
+                            await e.edit(OUTPUT)
+                        except Exception:
+                            break
                         break
 
                 if stdout:
@@ -134,7 +147,6 @@ async def upload_file(e):
 @client.log_exception
 async def ssh_upload_file(e):
     to_upload = e.pattern_match.group(1)
-    chat = await e.get_chat()
     await e.edit("`Connecting...`")
 
     async with asyncssh.connect(
