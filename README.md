@@ -1,5 +1,7 @@
 # TelegramCompanion
 
+ ![](https://img.shields.io/github/forks/nitanmarcel/TelegramCompanion.svg?style=social) ![](https://img.shields.io/github/stars/nitanmarcel/TelegramCompanion.svg?style=social) ![](https://img.shields.io/github/watchers/nitanmarcel/TelegramCompanion.svg?style=social)
+
 > TelegramCompanion is simple userbot for Telegram to make your time spent on telegram more enjoyable. It runs in the background of your PC or server and gives you some new and usefull features
 
 **Notice that this version is in BETA and some features are missing. Also there might be some small bugs there and there***
@@ -163,5 +165,6 @@ You can ask for support or report a bug in our telegram [group](https://t.me/tgc
 Thanks to everyone who helped me with ideas and with the project. Including @Yash-Garg for letting me host this project on his private repo, @baalajimaestro for the idea that gave birth to this userbot. (Alse check his [userbot](https://github.com/baalajimaestro/Telegram-UserBot)). And not last @sicrs for all the support he gave me.
 
 ## License
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 This code is licensed under [GPL v3](LICENSE).
