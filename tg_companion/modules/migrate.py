@@ -16,16 +16,16 @@ MIGRATED_CHATS_COUNT = 0
         outgoing=True,
         pattern=r"^\.migrate ((?:@)?\w*)?"))
 @client.log_exception
-async def account_migrate(e):
+async def account_migrate(event):
     global CHAT_IDS
     global FAILED_CHATS
     global FAILED_CHATS_COUNT
 
-    await e.edit(
+    await event.edit(
         "`Migrating Chats. This might take a while so relax. and check this message later`"
     )
 
-    username = e.pattern_match.group(1)[1:]
+    username = event.pattern_match.group(1)[1:]
     entity = await client.get_entity(username)
 
     if isinstance(entity, User):
@@ -68,8 +68,8 @@ async def account_migrate(e):
 
                 REPLY = f"Failed to migrate `{FAILED_CHATS_COUNT}` chat because a problem has occurred or you are already in those groups/channels\n"
 
-                await e.reply(REPLY)
+                await event.reply(REPLY)
         else:
-            await e.edit("`The specified user is not a contact.`")
+            await event.edit("`The specified user is not a contact.`")
     else:
-        await e.edit("The specified username is not a User")
+        await event.edit("The specified username is not a User")

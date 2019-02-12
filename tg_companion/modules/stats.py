@@ -272,7 +272,7 @@ async def GetStats():
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.stats"))
 @client.log_exception
-async def show_stats(e):
+async def show_stats(event):
     stats = None
 
     connection = engine.connect()
@@ -312,6 +312,6 @@ async def show_stats(e):
     Last Update Time :  `{updatetime}`
     """
 
-        await e.edit(REPLY)
+        await event.edit(REPLY)
     else:
-        await e.edit("`Stats are unavailable!! Try again later. `")
+        await event.edit("`Stats are unavailable!! Try again later. `")

@@ -13,11 +13,11 @@ from tg_companion.tgclient import client
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.term (.+)"))
 @client.log_exception
-async def terminal(e):
+async def terminal(event):
 
-    cmd = e.pattern_match.group(1)
+    cmd = event.pattern_match.group(1)
 
-    await e.edit("`Connecting..`")
+    await event.edit("`Connecting..`")
 
     start_time = time.time() + 10
     process = await asyncio.create_subprocess_shell(
@@ -30,20 +30,20 @@ async def terminal(e):
         stdout, stderr = await process.communicate()
 
         if len(stdout) > 4096:
-            await e.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
+            await event.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
             return
 
         if stderr.decode():
-            await e.edit(f"{OUTPUT}`{stderr.decode()}`")
+            await event.edit(f"{OUTPUT}`{stderr.decode()}`")
             return
 
-        await e.edit(f"{OUTPUT}`{stdout.decode()}`")
+        await event.edit(f"{OUTPUT}`{stdout.decode()}`")
         return
 
     while process:
         if time.time() > start_time:
             process.kill()
-            await e.edit(f"{OUTPUT}\n__Process killed__: `Time limit reached`")
+            await event.edit(f"{OUTPUT}\n__Process killed__: `Time limit reached`")
             break
 
         stdout = await process.stdout.readline()
@@ -53,7 +53,7 @@ async def terminal(e):
             if stderr.decode():
                 OUTPUT += f"`{stderr.decode()}`"
                 try:
-                    await e.edit(OUTPUT)
+                    await event.edit(OUTPUT)
                 except Exception:
                     break
                 break
@@ -63,10 +63,10 @@ async def terminal(e):
 
         if len(OUTPUT) > 4096:
             process.kill()
-            await e.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
+            await event.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
             break
         try:
-            await e.edit(OUTPUT)
+            await event.edit(OUTPUT)
         except Exception:
             break
 
@@ -77,10 +77,10 @@ async def terminal(e):
                       pattern="^\.rterm (.+)")
 )
 @client.log_exception
-async def ssh_terminal(e):
-    cmd = e.pattern_match.group(1)
+async def ssh_terminal(event):
+    cmd = event.pattern_match.group(1)
     OUTPUT = f"**Query:**\n`{cmd}`\n\n**Output:**\n"
-    await e.edit("`Connecting..`")
+    await event.edit("`Connecting..`")
 
     async with asyncssh.connect(
         str(SSH_HOSTNAME),
@@ -98,14 +98,14 @@ async def ssh_terminal(e):
                 stdout, stderr = await process.communicate()
 
                 if len(stdout) > 4096:
-                    await e.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
+                    await event.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
                     return
 
                 if stderr:
-                    await e.edit(f"{OUTPUT}`{stderr}`")
+                    await event.edit(f"{OUTPUT}`{stderr}`")
                     return
 
-                await e.edit(f"{OUTPUT}`{stdout}`")
+                await event.edit(f"{OUTPUT}`{stdout}`")
                 return
 
             while True:
@@ -119,7 +119,7 @@ async def ssh_terminal(e):
                     if stderr:
                         OUTPUT += f"`{stderr}`"
                         try:
-                            await e.edit(OUTPUT)
+                            await event.edit(OUTPUT)
                         except Exception:
                             break
                         break
@@ -128,26 +128,26 @@ async def ssh_terminal(e):
                     OUTPUT += f"`{stdout}`"
 
                 if len(OUTPUT) > 4096:
-                    await e.reply("__Process killed:__ `Messasge too long`")
+                    await event.reply("__Process killed:__ `Messasge too long`")
                     break
                 try:
-                    await e.edit(OUTPUT)
+                    await event.edit(OUTPUT)
                 except Exception:
                     break
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.upload (.+)"))
 @client.log_exception
-async def upload_file(e):
-    to_upload = e.pattern_match.group(1)
-    await client.send_from_disk(e, to_upload, force_document=True)
+async def upload_file(event):
+    to_upload = event.pattern_match.group(1)
+    await client.send_from_disk(event, to_upload, force_document=True)
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.rupload (.+)"))
 @client.log_exception
-async def ssh_upload_file(e):
-    to_upload = e.pattern_match.group(1)
-    await e.edit("`Connecting...`")
+async def ssh_upload_file(event):
+    to_upload = event.pattern_match.group(1)
+    await event.edit("`Connecting...`")
 
     async with asyncssh.connect(
             str(SSH_HOSTNAME),
@@ -162,10 +162,10 @@ async def ssh_upload_file(e):
             stdout, _ = await process.communicate()
             if stdout:
                 async with conn.start_sftp_client() as ftp:
-                    await e.edit("`Downloading...`")
+                    await event.edit("`Downloading...`")
                     await ftp.get(to_upload, to_upload)
-                    await client.send_from_disk(e, to_upload, force_document=True)
+                    await client.send_from_disk(event, to_upload, force_document=True)
 
                 os.remove(to_upload)
             else:
-                await e.edit(f"__File Not Found__: `{to_upload}`")
+                await event.edit(f"__File Not Found__: `{to_upload}`")

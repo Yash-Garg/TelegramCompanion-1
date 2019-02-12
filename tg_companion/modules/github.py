@@ -6,14 +6,14 @@ from tg_companion.tgclient import client
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.github (.*)"))
 @client.log_exception
-async def github(e):
+async def github(event):
 
-    URL = f"https://api.github.com/users/{e.pattern_match.group(1)}"
-    chat = await e.get_chat()
+    URL = f"https://api.github.com/users/{event.pattern_match.group(1)}"
+    chat = await event.get_chat()
     async with aiohttp.ClientSession() as session:
         async with session.get(URL) as request:
             if request.status == 404:
-                await e.reply("`" + e.pattern_match.group(1) + " not found`")
+                await event.reply("`" + event.pattern_match.group(1) + " not found`")
                 return
 
             result = await request.json()
@@ -25,7 +25,7 @@ async def github(e):
             created_at = result.get("created_at", "Not Found")
 
             REPLY = f"""
-            GitHub Info for `{e.pattern_match.group(1)}`
+            GitHub Info for `{event.pattern_match.group(1)}`
 
             Username: `{name}`
             Bio: `{bio}`
@@ -34,13 +34,13 @@ async def github(e):
             Created at: `{created_at}`
             """
             if not result.get("repos_url", None):
-                await client.send_message(chat.id, message=REPLY, reply_to=e.id, link_preview=False)
+                await client.send_message(chat.id, message=REPLY, reply_to=event.id, link_preview=False)
                 return
             async with session.get(result.get("repos_url", None)) as request:
                 result = request.json
 
                 if request.status == 404:
-                    await e.edit(REPLY)
+                    await event.edit(REPLY)
                     return
 
                 result = await request.json()
@@ -50,4 +50,4 @@ async def github(e):
                 for nr in range(len(result)):
                     REPLY += f"  [{result[nr].get('name', None)}]({result[nr].get('html_url', None)})\n"
 
-                await client.send_message(chat.id, message=REPLY, reply_to=e.id, link_preview=False)
+                await client.send_message(chat.id, message=REPLY, reply_to=event.id, link_preview=False)

@@ -20,46 +20,46 @@ from .._version import __version__
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.ping"))
 @client.log_exception
-async def ping(e):
+async def ping(event):
     start_time = time.time()
     async with aiohttp.ClientSession() as session:
-        await session.get("https://www.google.com")
+        await session.get("https://www.googlevent.com")
     end_time = time.time()
     ping_time = float(end_time - start_time) * 1000
-    await e.edit(f"Ping time was: {ping_time}ms")
+    await event.edit(f"Ping time was: {ping_time}ms")
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.version"))
 @client.log_exception
-async def version(e):
+async def version(event):
     bot_version = __version__.public()
     python_version = platform.python_version()
     telethon_version = telethon.__version__
 
-    await e.edit(f"__Bot Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = {telethon_version}")
+    await event.edit(f"__Bot Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = {telethon_version}")
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.info"))
 @client.log_exception
-async def user_info(e):
-    message = e.message
-    user = await e.get_sender()
-    chat = await e.get_chat()
+async def user_info(event):
+    message = event.message
+    user = await event.get_sender()
+    chat = await event.get_chat()
 
-    if e.reply_to_msg_id:
-        message = await e.get_reply_message()
+    if event.reply_to_msg_id:
+        message = await event.get_reply_message()
         user = await message.get_sender()
 
-    if len(e.text.split()) > 1:
-        user = e.text.split()[1]
+    if len(event.text.split()) > 1:
+        user = event.text.split()[1]
         try:
             user = await client.get_entity(user)
         except Exception as exc:
-            await e.reply(str(exc))
+            await event.reply(str(exc))
             return
 
         if not isinstance(user, User):
-            await e.reply(f"`@{user.username}` is not a User")
+            await event.reply(f"`@{user.username}` is not a User")
             return
 
     full_user = await client(GetFullUserRequest(user.id))
@@ -90,10 +90,10 @@ async def user_info(e):
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\$"))
 @client.log_exception
-async def rextestercli(e):
+async def rextestercli(event):
     stdin = ""
-    message = e.text
-    chat = await e.get_chat()
+    message = event.text
+    chat = await event.get_chat()
 
     if len(message.split()) > 1:
         regex = re.search(
@@ -109,7 +109,7 @@ async def rextestercli(e):
             rextester = Rextester(language, code, stdin)
             res = await rextester.exec()
         except UnknownLanguage as exc:
-            await e.edit(str(exc))
+            await event.edit(str(exc))
             return
 
         output = ""
@@ -129,29 +129,29 @@ async def rextestercli(e):
             with io.BytesIO(str.encode(res.result)) as out_file:
                 out_file.name = "result.txt"
                 await client.send_file(chat.id, file=out_file)
-                await e.edit(code)
+                await event.edit(code)
             return
 
-        await e.edit(output)
+        await event.edit(output)
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.sendlog"))
 @client.log_exception
-async def send_logs(e):
+async def send_logs(event):
 
-    chat = await e.get_chat()
+    chat = await event.get_chat()
 
     if os.path.isdir("logs/"):
         files_in_dir = os.listdir("logs/")
         await client.send_from_disk(e, "logs/")
     else:
-        await e.edit("`There are no logs saved!s`")
+        await event.edit("`There are no logs saved!s`")
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.exec\s+([\s\S]+)"))
-async def py_execute(e):
-    chat = await e.get_chat()
-    code = e.pattern_match.group(1)
+async def py_execute(event):
+    chat = await event.get_chat()
+    code = event.pattern_match.group(1)
 
     old_stdout = sys.stdout
     old_stderr = sys.stderr
@@ -173,11 +173,11 @@ async def py_execute(e):
     sys.stderr = old_stderr
 
     if exc:
-        await e.edit(f"**Query**:\n`{code}`\n\n **Exception:**\n`{exc}`")
+        await event.edit(f"**Query**:\n`{code}`\n\n **Exception:**\n`{exc}`")
         return
 
     if stderr:
-        await e.edit(f"**Query**:\n`{code}`\n\n **Error:**\n`{stderr}`")
+        await event.edit(f"**Query**:\n`{code}`\n\n **Error:**\n`{stderr}`")
         return
 
     if stdout:
@@ -187,6 +187,6 @@ async def py_execute(e):
                 await client.send_file(chat.id, file=out_file, caption=f"'{code}'")
                 return
 
-        await e.edit(f"**Query**:\n`{code}`\n\n **Result:**\n`{stdout}`")
+        await event.edit(f"**Query**:\n`{code}`\n\n **Result:**\n`{stdout}`")
     else:
-        await e.edit("Did you forget to output something?")
+        await event.edit("Did you forget to output something?")
