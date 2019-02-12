@@ -1,14 +1,14 @@
 from tg_companion.tgclient import client
 from telethon import events
-from tg_companion.plugins import PluginManager
-
+from tg_companion.pluginmanager import load_plugins_info
+from tg_companion.plugins import load_plugins
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"\.plugin (.+)"))
-async def testplugin(e):
+async def get_plugin_info(e):
     plugin_name = e.pattern_match.group(1)
     OUTPUT = f"Plugin Info For: {plugin_name}\n\n"
 
-    plugins = PluginManager.load_plugins_info()
+    plugins = load_plugins_info()
     if plugin_name in plugins:
 
         dct = plugins[plugin_name]
@@ -23,7 +23,7 @@ async def testplugin(e):
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"\.plugins"))
 async def get_installed_plugins(e):
-    PLUGINS = sorted(PluginManager.load_plugins())
+    PLUGINS = sorted(load_plugins())
     OUTPUT = f"Installed Plugins:\n\n"
     for plugin in PLUGINS:
         OUTPUT += f"`\n{plugin}`"

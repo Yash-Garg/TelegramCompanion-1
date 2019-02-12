@@ -2,9 +2,9 @@ import asyncio
 import importlib
 import re
 
-from tg_companion import LOGGER, TO_INSTALL, proxy
+from tg_companion import LOGGER, proxy
 from tg_companion.modules import MODULES
-from tg_companion.plugins import PLUGINS, PluginManager
+from tg_companion.plugins import PLUGINS
 from tg_companion.tgclient import client
 
 for module_name in MODULES:
@@ -27,18 +27,4 @@ loop = asyncio.get_event_loop()
 
 if __name__ == "__main__":
 
-    if TO_INSTALL:
-        to_match = re.match(
-            r"([^\/]+)\/([^\/]+)(\/([^\/]+)(\/(.*))?)?",
-            TO_INSTALL)
-        if to_match:
-            loop.run_until_complete(
-                PluginManager.download_plugins(
-                    user=to_match.group(1),
-                    repo=to_match.group(2),
-                    plugin=to_match.group(4)))
-        else:
-            loop.run_until_complete(
-                PluginManager.download_plugins(
-                    plugin=TO_INSTALL))
     client.run_until_disconnected()

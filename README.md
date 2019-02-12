@@ -45,8 +45,7 @@ pip3 install -r requirements.txt
 
 #### Before starting the bot you have to configure it as per your requirements.
 > -   Create a config.env file. Follow the example from sample.config.env.
-> -   Write the next lines in the config
-> -   You can always display the congiguration help with `python3 -m tg_companion --config`
+> -   Write the config values in the created file.
 
 #### The available config values are:
 
@@ -144,7 +143,9 @@ pip3 install -r requirements.txt
 
 ## Plugins
 
-Plugins allow users to create their own plugins in a official [repo](https://github.com/nitanmarcel/TgCompanionPlugins) or on their own repo, so the user can install them using `python3 -m tg_companion --install` `<pluginname>` or `python3 -m tg_companion` `<githubusername>` `<reponame>` `pluginname`.
+Plugins allow users to create their own plugins in a official [repo](https://github.com/nitanmarcel/TgCompanionPlugins) or on their own repo, so the user can install them using `python3 -m tg_companion.pluginmanager --install` `<pluginname>` or `python3 -m tg_companion.pluginmanager` `<githubusername>` `<reponame>` `pluginname`.
+
+To uninstall a plugin run `python3 -m tg_companion.pluginmanager --remove` `<pluginname>`
 
 Check [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) repo for more informations.
 ## Contributing

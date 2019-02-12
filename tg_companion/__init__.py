@@ -1,4 +1,3 @@
-from argparse import ArgumentParser
 from distutils.util import strtobool as sb
 import socks
 import sys
@@ -19,52 +18,6 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
         "You MUST have a python version of at least 3.6! Multiple features depend on this. Bot quitting."
     )
     quit(1)
-
-parser = ArgumentParser()
-parser.add_argument(
-    "--config", help="Display all the config variables", action="store_true"
-)
-
-parser.add_argument(
-    "--install",
-    help="Install any given plugin. Usage: --install <pluginname> or <user/repo/plugin_name>.")
-
-CONFIG_VALUES = [
-    "APP_ID            : (required) Your telegram app id from https://my.telegram.org/apps",
-    "APP_HASH          : (required) Your telegram app hash from https://my.telegram.org/apps",
-    "DB_URI            : (required) Your postgress database url. Leave empty to disable the modules that use it",
-    "DEBUG             : (optional) Set True if you want to generate log files from exceptions",
-    "STATS_TIMER       : (optional) Update stats every x seconds. Default = 3600 seconds. Set to 0 to disable"
-    "WARNING: If enabled the companion will not respond to your commands for 5 seconds when starting the bot for the first time",
-    "BLOCK_PM          : (optional) Set to True if you want to block new PMs. New PMs will be deleted and user blocked",
-    "NOPM_SPAM         : (optional) Set to True if you want to block users that are spamming your PMs.",
-    "SUBPROCESS_ANIM   : (optional) Set to True if you want to enable animations when using a terminal command."
-    "WARNING: When executing commands with long outputs it might trigger a flood wait that will restrict you from editing any send messages for a given time. Usualy just 250 seconds."
-    "PROXY_TYPE        : (optional) Your proxy type HTTP/SOCKS4/SOCKS5. Leave empty to disable proxy.",
-    "HOST              : (optional) The host of the used proxy.",
-    "PORT              : (optional) The port of the used proxy.",
-    "USERNAME          : (optional) The username of the used proxy. (If any)",
-    "PASSWORD          : (optional) The password of the used proxy. (If any)",
-    "SESSION_NAME      : (optional) Custom session name. Leave empty to use the default session name",
-    "ENABLE_SSH        : (optional) Set True if you want to execute/upload from a ssh server",
-    "SSH_HOSTNAME      : (optional) The hostname or address to connect to.",
-    "SSH_PORT          : (optional) The hostname or address to connect to.",
-    "SSH_USERNAME      : (optional) Username to authenticate as on the server.",
-    "SSH_PASSWORD      : (optional) The password to use for client password authentication",
-    "SSH_PASSPHRASE    : (optional) The passphrase for your ssh connection.",
-    "SSH_KEY           : (optional) The private key which will be used to authenticate this client",
-]
-
-args = parser.parse_args()
-
-TO_INSTALL = ""
-if args.config:
-    print("\n".join(CONFIG_VALUES))
-    quit(1)
-
-if args.install:
-    TO_INSTALL = args.install
-
 
 dotenv.load_dotenv("config.env")
 
