@@ -23,10 +23,10 @@ from .._version import __version__
 async def ping(event):
     start_time = time.time()
     async with aiohttp.ClientSession() as session:
-        await session.get("https://www.google.com")
-    end_time = time.time()
-    ping_time = float(end_time - start_time) * 1000
-    await event.edit(f"Ping time was: {ping_time}ms")
+        async with session.get("https://www.google.com"):
+            end_time = time.time()
+            ping_time = float(end_time - start_time) * 1000
+            await event.edit(f"Ping time was: {ping_time}ms")
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.version"))
