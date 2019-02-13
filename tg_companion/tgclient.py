@@ -9,11 +9,12 @@ from getpass import getpass
 
 from alchemysession import AlchemySessionContainer
 from telethon import TelegramClient
+from telethon import events
 from telethon.errors import SessionPasswordNeededError, FloodWaitError
 from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 
 from tg_companion import (APP_HASH, APP_ID, DB_URI, DEBUG, LOGGER,
-                          SESSION_NAME, proxy)
+                          SESSION_NAME, CMD_HANDLER, proxy)
 from tg_companion._version import __version__
 
 loop = asyncio.get_event_loop()
@@ -70,6 +71,27 @@ class CompanionClient(TelegramClient):
                             self.sign_in(password=password))
 
         LOGGER.info("Connected!!")
+
+    def CommandHandler(self, chats=None, blacklist_chats=False, func=None,
+                       incoming=None, outgoing=None,
+                       from_users=None, forwards=None, command=None):
+        def decorator(f):
+            pattern = None
+            if command:
+                pattern = "\\" + CMD_HANDLER + command
+
+            event = events.NewMessage(
+                chats=chats,
+                blacklist_chats=blacklist_chats,
+                func=func,
+                incoming=incoming,
+                outgoing=None,
+                from_users=from_users,
+                forwards=forwards,
+                pattern=pattern)
+            self.add_event_handler(f, event)
+            return f
+        return decorator
 
     async def send_from_disk(self, event, path, caption=None, force_document=False, use_cache=None, reply_to=None):
         if os.path.isfile(path):

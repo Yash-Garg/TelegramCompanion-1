@@ -26,6 +26,14 @@ APP_HASH = os.environ.get("APP_HASH", None)
 SESSION_NAME = os.environ.get("SESSION_NAME", "tg_companion")
 DB_URI = os.environ.get("DB_URI", None)
 DEBUG = sb(os.environ.get("DEBUG", "False"))
+CMD_HANDLER = os.environ.get("CMD_HANDLER", ".")
+
+try:
+    if CMD_HANDLER[0].isalpha():
+        LOGGER.info("Invalid command handler symbol")
+        quit(1)
+except IndexError:
+    LOGGER.info("CMD_HANDLER can't be None")
 
 PROXY_TYPE = os.environ.get("PROXY_TYPE", None)
 HOST = os.environ.get("HOST", None)

@@ -270,7 +270,7 @@ async def GetStats():
     LOGGER.info("DONE!! You can see your stats by sending .stats in any chat")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.stats"))
+@client.CommandHandler(outgoing=True, command="stats")
 @client.log_exception
 async def show_stats(event):
     stats = None

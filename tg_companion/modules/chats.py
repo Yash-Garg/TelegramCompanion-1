@@ -11,8 +11,7 @@ from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
 
 from tg_companion.tgclient import client
 
-
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.cpic"))
+@client.CommandHandler(outgoing=True, command="cpic")
 @client.log_exception
 async def update_profile_pic(event):
     if event.reply:
@@ -56,8 +55,7 @@ async def update_profile_pic(event):
                 os.remove(photo)
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.cabout (.+)"))
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="^\.cabout (.+)")
 async def update_profile_bio(event):
     about = event.pattern_match.group(1)
     chat = await event.get_chat()
@@ -80,7 +78,7 @@ async def update_profile_bio(event):
                 await event.edit("`The chat wasn't modified`")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.cuname (.+)"))
+@client.CommandHandler(outgoing=True, command="cuname (.+)")
 @client.log_exception
 async def change_profile_username(event):
     username = event.pattern_match.group(1)
@@ -121,7 +119,7 @@ async def change_profile_username(event):
                 await event.edit("`The chat or channel wasn't modified`")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.cname (.+)"))
+@client.CommandHandler(outgoing=True, command="cname (.+)")
 @client.log_exception
 async def change_profile_name(event):
     title = event.pattern_match.group(1)

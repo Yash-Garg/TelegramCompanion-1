@@ -18,7 +18,7 @@ from tg_companion.tgclient import client
 from .._version import __version__
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.ping"))
+@client.CommandHandler(outgoing=True, command="ping")
 @client.log_exception
 async def ping(event):
     start_time = time.time()
@@ -29,7 +29,7 @@ async def ping(event):
             await event.edit(f"Ping time was: {ping_time}ms")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.version"))
+@client.CommandHandler(outgoing=True, command="version")
 @client.log_exception
 async def version(event):
     bot_version = __version__.public()
@@ -39,7 +39,7 @@ async def version(event):
     await event.edit(f"__Bot Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = {telethon_version}")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.info"))
+@client.CommandHandler(outgoing=True, command="info")
 @client.log_exception
 async def user_info(event):
     message = event.message
@@ -88,7 +88,7 @@ async def user_info(event):
     )
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\$"))
+@client.CommandHandler(outgoing=True, command="$")
 @client.log_exception
 async def rextestercli(event):
     stdin = ""
@@ -135,7 +135,7 @@ async def rextestercli(event):
         await event.edit(output)
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.sendlog"))
+@client.CommandHandler(outgoing=True, command="sendlog")
 @client.log_exception
 async def send_logs(event):
 
@@ -145,7 +145,7 @@ async def send_logs(event):
         await event.edit("`There are no logs saved!`")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.exec\s+([\s\S]+)"))
+@client.CommandHandler(outgoing=True, command="exec\s+([\s\S]+)")
 async def py_execute(event):
     chat = await event.get_chat()
     code = event.pattern_match.group(1)

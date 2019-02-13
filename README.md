@@ -57,6 +57,9 @@ pip3 install -r requirements.txt
 >
 > -   `DB_URI` = (required) Your postgress database url. Leave empty to disable the modules that use it
 >
+> -   `CMD_HANDLER` = (optional) You can set it to a custom symbol that will trigger any commands. For example: if you want to use /ping instead of .ping set it to /
+>
+>
 > -   `SESSION_NAME` = (optional) Custom session name. Leave empty to use the default session name
 >
 > -   `STATS_TIMER` = (optional) Set the stats update time in seconds. Set it to 0 to completly disable stats.
@@ -155,6 +158,19 @@ Check [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) re
 Feel free to open an issue (or even better, send a **Pull Request**) for improving the bot's code. **Contributions** are very welcome !! :smiley:
 
 Note that a PR needs to reach a certain level of engagement before it gets merged. This criteria is kept to maintain the quality of the bot. Also we won't accept any PR that uses a external api key to work. PR to [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) instead
+
+When making a new pull request that brings a new feature make sure you use `@client.CommandHandler(..)` instead of the default` client.on(event)`
+
+For example:
+
+```
+@client.CommandHandler(outgoing=True, command="your_command")
+def my_function(event):
+   ...
+
+```
+
+This method takes the save arguments as the default `client.on(event)` but instead of a pattern we use use a str command. This supports regex too.
 
 ## Support
 

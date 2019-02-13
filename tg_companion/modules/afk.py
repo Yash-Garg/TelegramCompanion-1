@@ -1,13 +1,12 @@
 from telethon import events
 import datetime
-from tg_companion.tgclient import client
+from tg_companion.tgclient import client, CMD_HANDLER
 
 
 USER_AFK = {}
 afk_time = None
 
-
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.afk?(.+)"))
+@client.CommandHandler(outgoing=True, command="afk?(.+)")
 @client.log_exception
 async def afk(event):
     global afk_time
@@ -24,10 +23,9 @@ async def afk(event):
         await event.edit(f"**I will be afk for a while.**")
 
 
-@client.on(
-    events.NewMessage(
-        outgoing=True,
-        func=lambda e: True if ".afk" not in e.message.text else False))
+@client.CommandHandler(
+                outgoing=True,
+                func=lambda e: True if f"{CMD_HANDLER}afk" not in e.message.text else False)
 @client.log_exception
 async def no_afk(event):
     chat = await event.get_chat()
@@ -35,11 +33,9 @@ async def no_afk(event):
         await client.send_message(chat.id, "`I'm no longer afk`")
         del USER_AFK["yes"]
 
-
-@client.on(
-    events.NewMessage(
-        incoming=True,
-        func=lambda e: True if e.mentioned or e.is_private else False))
+@client.CommandHandler(
+                incoming=True,
+                func=lambda e: True if e.mentioned or e.is_private else False)
 @client.log_exception
 async def reply_afk(event):
     global afk_time

@@ -11,7 +11,7 @@ from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
 from tg_companion.tgclient import client
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.term (.+)"))
+@client.CommandHandler(outgoing=True, command="term (.+)")
 @client.log_exception
 async def terminal(event):
 
@@ -73,11 +73,10 @@ async def terminal(event):
             break
 
 
-@client.on(
-    events.NewMessage(outgoing=True,
+@client.CommandHandler(
+                      outgoing=True,
                       func=lambda x: ENABLE_SSH,
-                      pattern="^\.rterm (.+)")
-)
+                      command="rterm (.+)")
 @client.log_exception
 async def ssh_terminal(event):
     cmd = event.pattern_match.group(1)
@@ -138,14 +137,14 @@ async def ssh_terminal(event):
                     break
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.upload (.+)"))
+@client.CommandHandler(outgoing=True, command="upload (.+)")
 @client.log_exception
 async def upload_file(event):
     to_upload = event.pattern_match.group(1)
     await client.send_from_disk(event, to_upload, force_document=True)
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.rupload (.+)"))
+@client.CommandHandler(outgoing=True, command="rupload (.+)")
 @client.log_exception
 async def ssh_upload_file(event):
     to_upload = event.pattern_match.group(1)

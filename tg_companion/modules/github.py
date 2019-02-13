@@ -4,7 +4,7 @@ from telethon import events
 from tg_companion.tgclient import client
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"^\.github (.*)"))
+@client.CommandHandler(outgoing=True, command="github (.*)")
 @client.log_exception
 async def github(event):
 

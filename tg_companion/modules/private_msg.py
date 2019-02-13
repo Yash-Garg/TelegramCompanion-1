@@ -31,7 +31,7 @@ for row in load_privates:
         ACCEPTED_USERS.append(row[0])
 
 
-@client.on(events.NewMessage(incoming=True, func=lambda x: BLOCK_PM))
+@client.CommandHandler(incoming=True, func=lambda x: BLOCK_PM)
 async def block_pm(event):
     if BLOCK_PM:
         chat = await event.get_chat()
@@ -39,7 +39,7 @@ async def block_pm(event):
             await client(BlockRequest(chat.id))
 
 
-@client.on(events.NewMessage(incoming=True, func=lambda x: not BLOCK_PM))
+@client.CommandHandler(incoming=True, func=lambda x: not BLOCK_PM)
 @client.log_exception
 async def await_permission(event):
     global PM_WARNS
@@ -68,7 +68,7 @@ async def await_permission(event):
             PM_WARNS[chat.id] += 1
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=".approve"))
+@client.CommandHandler(outgoing=True, command="approve")
 @client.log_exception
 async def accept_permission(event):
     chat = await event.get_chat()
