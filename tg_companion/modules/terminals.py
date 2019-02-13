@@ -42,7 +42,8 @@ async def terminal(event):
 
     while process:
         if time.time() > start_time:
-            process.kill()
+            if process:
+                process.kill()
             await event.edit(f"{OUTPUT}\n__Process killed__: `Time limit reached`")
             break
 
@@ -62,7 +63,8 @@ async def terminal(event):
             OUTPUT += f"`{stdout.decode()}`"
 
         if len(OUTPUT) > 4096:
-            process.kill()
+            if process:
+                process.kill()
             await event.reply(f"{OUTPUT}\n__Process killed:__ `Messasge too long`")
             break
         try:
