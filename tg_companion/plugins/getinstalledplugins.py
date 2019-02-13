@@ -3,6 +3,7 @@ from telethon import events
 from tg_companion.pluginmanager import load_plugins_info
 from tg_companion.plugins import load_plugins
 
+
 @client.on(events.NewMessage(outgoing=True, pattern=r"\.plugin (.+)"))
 async def get_plugin_info(event):
     plugin_name = event.pattern_match.group(1)

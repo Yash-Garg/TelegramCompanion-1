@@ -170,8 +170,9 @@ class CompanionClient(TelegramClient):
                 return await func(*args, **kwds)
             except Exception as e:
                 if isinstance(e, FloodWaitError):
-                    LOGGER.info(f"We have reached a flood limitation."
-                                f" You won't be able to edit your messages for {str(datetime.timedelta(seconds=e.seconds))}.")
+                    LOGGER.info(
+                        f"We have reached a flood limitation."
+                        f" You won't be able to edit your messages for {str(datetime.timedelta(seconds=e.seconds))}.")
                     return
 
                 exc_time = datetime.datetime.now().strftime("%m_%d_%H:%M:%S")

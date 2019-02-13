@@ -3,7 +3,6 @@ from os.path import dirname, basename, isfile
 import glob
 
 
-
 def load_plugins():
 
     path = glob.glob(dirname(__file__) + "/*.py")

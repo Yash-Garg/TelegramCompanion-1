@@ -90,6 +90,7 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
             LOGGER.info(f"Installed {plugin}")
             LOGGER.info(f"Plugin {plugin} Installed")
 
+
 def remove_plugin(plugin_name):
     if os.path.isfile(f"tg_companion/plugins/{plugin_name}.plugin"):
         for plugin in os.listdir("tg_companion/plugins/"):
@@ -99,12 +100,14 @@ def remove_plugin(plugin_name):
     else:
         LOGGER.info("Can't find the specified plugin.")
 
+
 def list_plugins():
     PLUGINS = sorted(load_plugins())
     OUTPUT = f"Installed Plugins:\n"
     for plugin in PLUGINS:
         OUTPUT += f"\n{plugin}"
     print(OUTPUT)
+
 
 def load_plugins_info():
 
@@ -126,6 +129,7 @@ def load_plugins_info():
                             plugin_dct[module_name].update({item: val})
 
     return plugin_dct
+
 
 if __name__ == "__main__":
     if args.install:
