@@ -14,14 +14,16 @@ async def afk(event):
     if not USER_AFK:
         USER_AFK.update({"yes": reason})
         if reason:
-            await event.edit(f"**I will be afk for a whilevent. \n __Reason__: {reason}")
+            await event.edit(f"**I will be afk for a while.** \n __Reason__: {reason}")
             return
 
-        await event.edit(f"**I will be afk for a whilevent.")
-        raise events.StopPropagation
+        await event.edit(f"**I will be afk for a while.**")
 
 
-@client.on(events.NewMessage(outgoing=True))
+@client.on(
+    events.NewMessage(
+        outgoing=True,
+        func=lambda e: True if ".afk" not in e.message.text else False))
 @client.log_exception
 async def no_afk(event):
     chat = await event.get_chat()
@@ -30,14 +32,17 @@ async def no_afk(event):
         del USER_AFK["yes"]
 
 
+@client.on(
+    events.NewMessage(
+        incoming=True,
+        func=lambda e: True if e.mentioned or e.is_private else False))
 @client.log_exception
 async def reply_afk(event):
     chat = await event.get_chat()
-    reason = USER_AFK["yes"]
-    if event.mentioned or event.is_private:
-        if USER_AFK:
-            if not reason:
-                await client.send_message(chat.id, "**I'm afk and I will be back soon**", reply_to=event.id)
-                return
+    if USER_AFK:
+        reason = USER_AFK["yes"]
+        if not reason:
+            await client.send_message(chat.id, "**I'm afk and I will be back soon**", reply_to=event.id)
+            return
 
-            await client.send_message(chat.id, f"**I'm afk and I will be back soon**\n__Reason:__: {reason}", reply_to=event.id)
+        await client.send_message(chat.id, f"**I'm afk and I will be back soon**\n__Reason:__: {reason}", reply_to=event.id)
