@@ -4,12 +4,12 @@ import io
 import os
 import sys
 import zipfile
-from datetime import datetime
+import datetime
 from getpass import getpass
 
 from alchemysession import AlchemySessionContainer
 from telethon import TelegramClient
-from telethon.errors import SessionPasswordNeededError
+from telethon.errors import SessionPasswordNeededError, FloodWaitError
 from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 
 from tg_companion import (APP_HASH, APP_ID, DB_URI, DEBUG, LOGGER,
@@ -169,8 +169,12 @@ class CompanionClient(TelegramClient):
             try:
                 return await func(*args, **kwds)
             except Exception as e:
+                if isinstance(e, FloodWaitError):
+                    LOGGER.info(f"We have reached a flood limitation."
+                                f" You won't be able to edit your messages for {str(datetime.timedelta(seconds=e.seconds))}.")
+                    return
 
-                exc_time = datetime.now().strftime("%m_%d_%H:%M:%S")
+                exc_time = datetime.datetime.now().strftime("%m_%d_%H:%M:%S")
 
                 file_name = f"{exc_time}_{type(e).__name__}_{func.__name__}"
 
