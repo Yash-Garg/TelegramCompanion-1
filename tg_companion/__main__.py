@@ -1,6 +1,5 @@
 import asyncio
 import importlib
-import re
 
 from tg_companion import LOGGER, proxy
 from tg_companion.modules import MODULES

@@ -139,13 +139,10 @@ async def rextestercli(event):
 @client.log_exception
 async def send_logs(event):
 
-    chat = await event.get_chat()
-
     if os.path.isdir("logs/"):
-        files_in_dir = os.listdir("logs/")
         await client.send_from_disk(event, "logs/")
     else:
-        await event.edit("`There are no logs saved!s`")
+        await event.edit("`There are no logs saved!`")
 
 
 @client.on(events.NewMessage(outgoing=True, pattern=r"^\.exec\s+([\s\S]+)"))

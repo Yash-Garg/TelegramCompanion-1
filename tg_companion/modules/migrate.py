@@ -53,7 +53,7 @@ async def account_migrate(event):
                                 await client(
                                     InviteToChannelRequest(channel=id, users=[username])
                                 )
-                            except Exception as exc:
+                            except Exception:
                                 chat = await client.get_entity(id)
                                 if id not in FAILED_CHATS:
                                     FAILED_CHATS.append(chat.id)
