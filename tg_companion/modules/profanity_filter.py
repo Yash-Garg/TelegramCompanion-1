@@ -20,6 +20,15 @@ metadata.create_all(
 
 PROFANITY_CHECK_CHATS = []
 
+PROFANITY_HELP = """
+    **Toggle the profanity filter on/off.**
+        __Args:__
+            `<on/off>` - **(admin only)** **(optional)** __The state of the profanity filter.
+                            If activated will delete any messages that countains profanity
+                            from the chat where it was enabled
+                            Will display the filter status in the chat if sent without any value.__
+"""
+
 query = db.select([profanity_tbl.columns.chat_id]).where(
     profanity_tbl.columns.profanity_filter == db.true())
 load_profanity_tbl = connection.execute(query).fetchall()
@@ -32,6 +41,7 @@ connection.close()
 @client.CommandHandler(
     outgoing=True,
     command="profanity (on|off)",
+    help=PROFANITY_HELP,
     func=lambda e: not e.is_private)
 async def profanity_switch(event):
     global PROFANITY_CHECK_CHATS
@@ -121,6 +131,7 @@ async def check_profanity_filter(event):
     incoming=True,
     outgoing=True,
     command="profanity",
+    help=PROFANITY_HELP,
     func=lambda e: not e.is_private and not any(
         x in e.text for x in [
             "on",

@@ -10,6 +10,12 @@ FAILED_CHATS = []
 FAILED_CHATS_COUNT = 0
 MIGRATED_CHATS_COUNT = 0
 
+MIGRATE_HELP = """
+    **Migrate all your chats to a second account**
+        __Args:__
+            `<username` - __The username of your second account__
+"""
+
 
 @client.CommandHandler(
         outgoing=True,

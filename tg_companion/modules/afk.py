@@ -1,18 +1,26 @@
-from telethon import events
 import datetime
 from tg_companion.tgclient import client, CMD_HANDLER
 
+AFK_HELP = """
+    **Mark yourself as AFK.**
+        __Args:__
+            `<reason>` - **(optional)** __Optional afk reason__
+"""
 
 USER_AFK = {}
 afk_time = None
 
-@client.CommandHandler(outgoing=True, command="afk?(.+)")
+@client.CommandHandler(outgoing=True, command="afk", help=AFK_HELP)
 @client.log_exception
 async def afk(event):
     global afk_time
-    reason = event.pattern_match.group(1)
-    if len(reason) <= 2:
-        reason = ""
+
+    reason = None
+    text = event.text.split()
+
+    if len(event.text.split()) > 1:
+        text.pop(0)
+        reason = " ".join(text)
     if not USER_AFK:
         afk_time = datetime.datetime.now()
         USER_AFK.update({"yes": reason})

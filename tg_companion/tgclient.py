@@ -20,6 +20,7 @@ from tg_companion._version import __version__
 loop = asyncio.get_event_loop()
 
 
+CMD_HELP = {}
 
 class CompanionClient(TelegramClient):
 
@@ -73,12 +74,13 @@ class CompanionClient(TelegramClient):
 
         LOGGER.info("Connected!!")
 
-    def CommandHandler(self, func=None, command=None, allow_edited=False, **kwargs):
+
+    def CommandHandler(self, func=None, command=None, allow_edited=False, help=None, **kwargs):
         def decorator(f):
             """
             Decorator alternative for `client.on()` which uses the same arguments but with some exceptions
 
-            Args:
+            Optional Args:
                 command (str):
                     If set to any str instance the decorated function will only work if
                             the message matches the command handler symbol ( default "." ) + the word/regex in the command argument
@@ -87,11 +89,25 @@ class CompanionClient(TelegramClient):
                 allow_edited (bool):
                     If set True the command will also work when the message is edited.
 
+                help (str):
+                    The help message used for displaying the command usage
+
             """
+            global CMD_HELP
             pattern = None
             if command:
-                pattern = "\\" + CMD_HANDLER + command
+                pattern = "\\" + CMD_HANDLER + command.split()[0]
             self.add_event_handler(f, events.NewMessage(pattern=pattern, func=func, **kwargs))
+
+            if help:
+                module_name = inspect.getmodule(f).__name__
+                cmd_name = module_name.rsplit(".", 1)[-1].replace(".py", "")
+                if command:
+                    cmd_name = command.split()[0]
+
+                if cmd_name not in CMD_HELP:
+
+                    CMD_HELP.update({f"{cmd_name}": help})
 
             if allow_edited:
                 self.add_event_handler(f, events.MessageEdited(pattern=pattern, func=func, **kwargs))

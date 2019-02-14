@@ -10,6 +10,11 @@ PM_WARNS = {}
 
 ACCEPTED_USERS = []
 
+APPROVE_HELP = """
+    **Aprove a private message from a user. Works only if NOPM_SPAM is enabled in config.env or exported**
+        __Usage:__
+            __Send in in PM of any unaproved user__ **Works only in private**
+"""
 engine = db.create_engine(DB_URI)
 metadata = db.MetaData()
 
@@ -33,7 +38,8 @@ for row in load_privates:
 
 @client.CommandHandler(incoming=True, func=lambda e: BLOCK_PM and e.is_private)
 async def block_pm(event):
-    if BLOCK_PM and not event.sender.bot:
+    sender = await event.get_sender()
+    if BLOCK_PM and not sender.bot:
         chat = await event.get_chat()
         if chat.id not in ACCEPTED_USERS:
             await client(BlockRequest(chat.id))
@@ -44,8 +50,9 @@ async def block_pm(event):
 async def await_permission(event):
     global PM_WARNS
     global ACCEPTED_USERS
+    sender = await event.get_sender()
 
-    if NOPM_SPAM and not event.sender.bot:
+    if NOPM_SPAM and not sender.bot:
         me = await client.get_me()
         chat = await event.get_chat()
         if chat.id not in ACCEPTED_USERS and chat.id != me.id:
@@ -69,7 +76,7 @@ async def await_permission(event):
             PM_WARNS[chat.id] += 1
 
 
-@client.CommandHandler(outgoing=True, command="approve")
+@client.CommandHandler(outgoing=True, command="approve", help=APPROVE_HELP)
 @client.log_exception
 async def accept_permission(event):
     chat = await event.get_chat()

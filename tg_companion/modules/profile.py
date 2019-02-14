@@ -12,8 +12,31 @@ from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
 
 from tg_companion.tgclient import client
 
+PPIC_HELP = """
+    **Change your profile picture.**
+        __Usage:__
+            __Reply to any image or photo document.__
+"""
 
-@client.CommandHandler(outgoing=True, command="ppic")
+PBIO_HELP = """
+    **Change your bio.**
+        __Args:__
+            `<bio>`
+"""
+
+PUNAME_HELP = """
+    **Change your username.**
+        __Args:__
+            `<username>`
+"""
+
+PNAME_HELP = """
+    **Change your name.**
+        __Args:__
+            `<name>` - __Use \\n to separate first name from second name__
+"""
+
+@client.CommandHandler(outgoing=True, command="ppic", help=PPIC_HELP)
 @client.log_exception
 async def update_profile_pic(event):
     if event.reply_to_msg_id:
@@ -55,7 +78,7 @@ async def update_profile_pic(event):
                 os.remove(photo)
 
 
-@client.CommandHandler(outgoing=True, command="^pbio (.+)")
+@client.CommandHandler(outgoing=True, command="pbio (.+)", help=PBIO_HELP)
 @client.log_exception
 async def update_profile_bio(event):
     bio = event.pattern_match.group(1)
@@ -66,7 +89,7 @@ async def update_profile_bio(event):
         await event.edit("`Succesfully changed your bio`")
 
 
-@client.CommandHandler(outgoing=True, command="puname (.+)")
+@client.CommandHandler(outgoing=True, command="puname (.+)", help=PUNAME_HELP)
 @client.log_exception
 async def change_profile_username(event):
     username = event.pattern_match.group(1)
@@ -94,7 +117,7 @@ async def change_profile_username(event):
             await event.edit(f"`{username} is already taken`")
 
 
-@client.CommandHandler(outgoing=True, command="pname (.+)")
+@client.CommandHandler(outgoing=True, command="pname (.+)", help=PNAME_HELP)
 @client.log_exception
 async def change_profile_name(event):
     name = event.pattern_match.group(1)

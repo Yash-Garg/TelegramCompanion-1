@@ -4,6 +4,16 @@ from tg_companion.pluginmanager import load_plugins_info
 from tg_companion.plugins import load_plugins
 
 
+PLUGIN_HELP = """
+    **Get the plugin's info**
+        __Args:__
+            <pluginname> - The plugin you want to get the info
+"""
+
+PLUGINS_HELP = """
+    **Get all the installed plugins.**
+"""
+
 @client.on(events.NewMessage(outgoing=True, pattern=r"\.plugin (.+)"))
 async def get_plugin_info(event):
     plugin_name = event.pattern_match.group(1)

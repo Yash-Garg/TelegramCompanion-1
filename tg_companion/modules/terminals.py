@@ -10,8 +10,31 @@ from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
                           SUBPROCESS_ANIM)
 from tg_companion.tgclient import client
 
+TERM_HELP = """
+    **Execute a bash command on your pc/server**
+        __Args:__
+            `<command>` - Your bash command that will be executed.
+"""
 
-@client.CommandHandler(outgoing=True, command="term (.+)")
+
+SSH_TERM_HELP = """
+    **Execute a bash command on your ssh connection**
+        __Args:__
+            `<command>` - Your bash command that will be executed.
+"""
+UPLOAD_HELP = """
+    **Upload a file or folder from your pc/server**
+        __Args:__
+            `<path>` - The path to the file or folder you want to upload
+"""
+
+SSH_UPLOAD_HELP = """
+    **Upload a file or folder from your ssh connection**
+        __Args:__
+            `<path>` - The path to the file or folder you want to upload
+"""
+
+@client.CommandHandler(outgoing=True, command="term (.+)", help=TERM_HELP)
 @client.log_exception
 async def terminal(event):
 
@@ -76,7 +99,8 @@ async def terminal(event):
 @client.CommandHandler(
                       outgoing=True,
                       func=lambda x: ENABLE_SSH,
-                      command="rterm (.+)")
+                      command="rterm (.+)",
+                      help=SSH_TERM_HELP)
 @client.log_exception
 async def ssh_terminal(event):
     cmd = event.pattern_match.group(1)
@@ -137,14 +161,14 @@ async def ssh_terminal(event):
                     break
 
 
-@client.CommandHandler(outgoing=True, command="upload (.+)")
+@client.CommandHandler(outgoing=True, command="upload (.+)", help=UPLOAD_HELP)
 @client.log_exception
 async def upload_file(event):
     to_upload = event.pattern_match.group(1)
     await client.send_from_disk(event, to_upload, force_document=True)
 
 
-@client.CommandHandler(outgoing=True, command="rupload (.+)")
+@client.CommandHandler(outgoing=True, command="rupload (.+)", help=SSH_UPLOAD_HELP)
 @client.log_exception
 async def ssh_upload_file(event):
     to_upload = event.pattern_match.group(1)

@@ -17,8 +17,37 @@ from tg_companion.tgclient import client
 
 from .._version import __version__
 
+PING_HELP = """
+    **Test if the bot is alive and the response time.**
+"""
 
-@client.CommandHandler(outgoing=True, command="ping")
+VER_HELP = """
+    **Get your companion version information.**
+"""
+
+INFO_HELP = """
+    **Get a user's info.**
+"""
+
+REX_HELP = """
+    **Execute your code using rextester's API**
+        __Usage:__
+            __Use the command symbol + language followed by your code that will be executed.__
+        __Example:__
+            `$py3 print("Hello World")`
+"""
+
+SEND_LOG_HELP = """
+    **Send the log files from the logs folder. Requires DEBUG to be enabled in config.env or exported**
+"""
+
+EXEC_HELP = """
+    **Execute your code using your python compiler**
+        __Args:__
+            `<code>` - Your python code that will be executed.
+"""
+
+@client.CommandHandler(outgoing=True, command="ping", help=PING_HELP)
 @client.log_exception
 async def ping(event):
     start_time = time.time()
@@ -29,7 +58,7 @@ async def ping(event):
             await event.edit(f"Ping time was: {ping_time}ms")
 
 
-@client.CommandHandler(outgoing=True, command="version")
+@client.CommandHandler(outgoing=True, command="version", help=VER_HELP)
 @client.log_exception
 async def version(event):
     bot_version = __version__.public()
@@ -39,7 +68,7 @@ async def version(event):
     await event.edit(f"__Bot Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = {telethon_version}")
 
 
-@client.CommandHandler(outgoing=True, command="info")
+@client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
 @client.log_exception
 async def user_info(event):
     message = event.message
@@ -88,7 +117,7 @@ async def user_info(event):
     )
 
 
-@client.CommandHandler(outgoing=True, command="$")
+@client.CommandHandler(outgoing=True, command="$", help=REX_HELP)
 @client.log_exception
 async def rextestercli(event):
     stdin = ""
@@ -135,7 +164,7 @@ async def rextestercli(event):
         await event.edit(output)
 
 
-@client.CommandHandler(outgoing=True, command="sendlog")
+@client.CommandHandler(outgoing=True, command="sendlog", help=SEND_LOG_HELP)
 @client.log_exception
 async def send_logs(event):
 
@@ -145,7 +174,7 @@ async def send_logs(event):
         await event.edit("`There are no logs saved!`")
 
 
-@client.CommandHandler(outgoing=True, command="exec\s+([\s\S]+)")
+@client.CommandHandler(outgoing=True, command="exec ([\s\S]+)", help=EXEC_HELP)
 async def py_execute(event):
     chat = await event.get_chat()
     code = event.pattern_match.group(1)

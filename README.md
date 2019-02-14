@@ -176,7 +176,7 @@ def my_function(event):
 
 This method is a alternative for `client.on()` which uses the same arguments but with some exceptions
 
-  Args:
+  Optional Args:
       command (str):
           If set to any str instance the decorated function will only work if
                   the message matches the command handler symbol ( default "." ) + the word/regex in the command argument
@@ -184,6 +184,35 @@ This method is a alternative for `client.on()` which uses the same arguments but
 
     allow_edited (bool):
           If set True the command will also work when the message is edited.
+
+    help (str):
+        The help message used for displaying the command usage
+
+When adding the help text please follow the example above:
+```
+AFK_HELP = """
+    **Mark yourself as AFK.**
+        __Args:__
+            `<reason>` - **(optional)** __Optional afk reason__
+"""```
+
+**OR:**
+
+```
+AFK_HELP = """
+    **Mark yourself as AFK.**
+        __Usage:__
+            __The way it should be used__
+"""
+```
+
+**OR**:
+
+```
+AFK_HELP = """
+    **Mark yourself as AFK.**
+"""
+```
 
 ## Support
 
