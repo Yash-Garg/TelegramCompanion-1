@@ -20,6 +20,7 @@ from tg_companion._version import __version__
 loop = asyncio.get_event_loop()
 
 
+
 class CompanionClient(TelegramClient):
 
     def __init__(self, session_name, app_id, app_hash):
@@ -71,27 +72,6 @@ class CompanionClient(TelegramClient):
                             self.sign_in(password=password))
 
         LOGGER.info("Connected!!")
-
-    def CommandHandler(self, chats=None, blacklist_chats=False, func=None,
-                       incoming=None, outgoing=None,
-                       from_users=None, forwards=None, command=None):
-        def decorator(f):
-            pattern = None
-            if command:
-                pattern = "\\" + CMD_HANDLER + command
-
-            event = events.NewMessage(
-                chats=chats,
-                blacklist_chats=blacklist_chats,
-                func=func,
-                incoming=incoming,
-                outgoing=None,
-                from_users=from_users,
-                forwards=forwards,
-                pattern=pattern)
-            self.add_event_handler(f, event)
-            return f
-        return decorator
 
     def CommandHandler(self, func=None, command=None, allow_edited=False, **kwargs):
         def decorator(f):
