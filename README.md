@@ -163,19 +163,19 @@ Feel free to open an issue (or even better, send a **Pull Request**) for improvi
 
 Note that a PR needs to reach a certain level of engagement before it gets merged. This criteria is kept to maintain the quality of the bot. Also we won't accept any PR that uses a external api key to work. PR to [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) instead
 
-When making a new pull request that brings a new feature make sure you use `@client.CommandHandler(..)` instead of the default` client.on(event)`
+When making a new pull request that brings a new feature make sure you use @client.CommandHandler(..) instead of the default @client.on(event)
 
 For example:
 
 ```
 @client.CommandHandler(outgoing=True, command="your_command")
 def my_function(event):
-   ...
-
 ```
 
-This method is a alternative for `client.on()` which uses the same arguments but with some exceptions
 
+
+This method is a alternative for `client.on()` which uses the same arguments but with some exceptions
+```
   Optional Args:
       command (str):
           If set to any str instance the decorated function will only work if
@@ -187,18 +187,23 @@ This method is a alternative for `client.on()` which uses the same arguments but
 
     help (str):
         The help message used for displaying the command usage
+```
 
-When adding the help text please follow the example above:
+When adding the help text please follow the example bellow:
+
+
 ```
 AFK_HELP = """
     **Mark yourself as AFK.**
         __Args:__
             `<reason>` - **(optional)** __Optional afk reason__
-"""```
+"""
+```
 
 **OR:**
 
 ```
+
 AFK_HELP = """
     **Mark yourself as AFK.**
         __Usage:__
