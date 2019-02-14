@@ -112,6 +112,10 @@ pip3 install -r requirements.txt
 >
 > -   `.afk` `<optional-reason>` - Sets you as afk and tells everyone that you are away by sending them a message when they mention your username, sends you a PM or replies to your message. Send a message to any chat to dismiss your afk state
 >
+> -   `.profanity` `<on/off>` - Turn the profanity filter on or off.  If is turned on all the incoming messages containing profanity will be deleted
+>
+> -   `.profanity` - Check the status of the profanity filter
+>
 > -   `.ppic` - Reply to a photo/document to set it as your profile photo
 >
 > -   `.pbio` `<bio>` - Change your about message by sending `.pbio` followed by the bio you want to set.
@@ -138,7 +142,7 @@ pip3 install -r requirements.txt
 >
 > -   `.upload` `<command>` - Upload files
 >
-> -   `.rupload` `<command>` - Upload files from a ssh server
+> -   `.rupload` `<command>` - Upload files from a ssh servergood
 >
 > -   `$<language>` `<code>` - Execute code in any programming language using rextester.com api
 
