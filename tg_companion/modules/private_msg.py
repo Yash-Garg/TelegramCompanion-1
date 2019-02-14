@@ -31,23 +31,24 @@ for row in load_privates:
         ACCEPTED_USERS.append(row[0])
 
 
-@client.CommandHandler(incoming=True, func=lambda x: BLOCK_PM)
+@client.CommandHandler(incoming=True, func=lambda e: BLOCK_PM and e.is_private)
 async def block_pm(event):
-    if BLOCK_PM:
+    if BLOCK_PM and not event.sender.bot:
         chat = await event.get_chat()
         if chat.id not in ACCEPTED_USERS:
             await client(BlockRequest(chat.id))
 
 
-@client.CommandHandler(incoming=True, func=lambda x: not BLOCK_PM)
+@client.CommandHandler(incoming=True, func=lambda e: not BLOCK_PM and  e.is_private)
 @client.log_exception
 async def await_permission(event):
     global PM_WARNS
     global ACCEPTED_USERS
 
-    if NOPM_SPAM and event.is_private:
+    if NOPM_SPAM and not event.sender.bot:
+        me = await client.get_me()
         chat = await event.get_chat()
-        if chat.id not in ACCEPTED_USERS:
+        if chat.id not in ACCEPTED_USERS and chat.id != me.id:
 
             if chat.id not in PM_WARNS:
                 PM_WARNS.update({chat.id: 0})
