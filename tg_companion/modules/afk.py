@@ -45,7 +45,13 @@ async def reply_afk(event):
             now = datetime.datetime.now()
 
             dt = now - afk_time
-            days, hours, minutes, seconds = dt.days, dt.seconds // 3600, dt.seconds // 60, dt.seconds
+
+            days = dt.days
+            seconds = dt.seconds
+            hours = (seconds - days*86400) // 3600
+            minutes = (seconds - days*86400 - hours*3600)//60
+
+            days, hours, minutes, seconds = dt.days, dt.seconds // 3600, dt.seconds // 60, dt.seconds % 60
 
             if days == 1:
                 afk_since = "**Yesterday**"
