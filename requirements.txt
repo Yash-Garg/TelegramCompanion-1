@@ -11,3 +11,4 @@ requests
 asyncssh
 aiohttp
 telethon-session-sqlalchemy
+profanity_check
