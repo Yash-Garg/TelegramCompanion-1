@@ -93,6 +93,31 @@ class CompanionClient(TelegramClient):
             return f
         return decorator
 
+    def CommandHandler(self, func=None, command=None, allow_edited=False, **kwargs):
+        def decorator(f):
+            """
+            Decorator alternative for `client.on()` which uses the same arguments but with some exceptions
+
+            Args:
+                command (str):
+                    If set to any str instance the decorated function will only work if
+                            the message matches the command handler symbol ( default "." ) + the word/regex in the command argument
+                            if the command is not set or None it will execute the decorated function when a message event is triggered
+
+                allow_edited (bool):
+                    If set True the command will also work when the message is edited.
+
+            """
+            pattern = None
+            if command:
+                pattern = "\\" + CMD_HANDLER + command
+            self.add_event_handler(f, events.NewMessage(pattern=pattern, func=func, **kwargs))
+
+            if allow_edited:
+                self.add_event_handler(f, events.MessageEdited(pattern=pattern, func=func, **kwargs))
+            return f
+        return decorator
+
     async def send_from_disk(self, event, path, caption=None, force_document=False, use_cache=None, reply_to=None):
         if os.path.isfile(path):
             if os.path.getsize(path) >= 1500000000:
