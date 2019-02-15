@@ -64,7 +64,7 @@ async def version(event):
     python_version = platform.python_version()
     telethon_version = telethon.__version__
 
-    await event.edit(f"__Bot Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = {telethon_version}")
+    await event.edit(f"__Companion Version__ = `{bot_version}`\n\n__Python Version__ = `{python_version}`\n\n__Telethon Version__ = `{telethon_version}`")
 
 
 @client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
