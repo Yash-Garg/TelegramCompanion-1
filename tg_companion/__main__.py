@@ -4,7 +4,7 @@ import importlib
 from tg_companion import LOGGER, CMD_HANDLER, proxy
 from tg_companion.modules import MODULES
 from tg_companion.plugins import PLUGINS
-from tg_companion.tgclient import client, CMD_HELP, CMD_HANDLER
+from tg_companion.tgclient import client, CMD_HELP
 from telethon.errors import FloodWaitError
 
 for module_name in MODULES:
