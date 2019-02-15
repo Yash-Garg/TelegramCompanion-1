@@ -8,7 +8,6 @@ from html import escape
 
 import aiohttp
 import telethon
-from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 

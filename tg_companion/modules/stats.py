@@ -2,7 +2,7 @@ import time
 
 import progressbar
 import sqlalchemy as db
-from telethon import events, utils
+from telethon import utils
 from telethon.tl.functions.channels import GetFullChannelRequest
 
 from tg_companion import STATS_TIMER
