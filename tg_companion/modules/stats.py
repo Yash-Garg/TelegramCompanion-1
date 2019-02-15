@@ -1,9 +1,11 @@
 import time
+import asyncio
 
 import progressbar
 import sqlalchemy as db
 from telethon import utils
 from telethon.tl.functions.channels import GetFullChannelRequest
+from telethon.errors import FloodWaitError
 
 from tg_companion import STATS_TIMER
 from tg_companion.tgclient import DB_URI, LOGGER, client
@@ -143,7 +145,11 @@ async def GetStats():
                 ID = int(strid)
                 if ID not in CachedSupergroups:
                     ent = await client.get_input_entity(ID1)
-                    gotChatFull = await client(GetFullChannelRequest(ent))
+                    try:
+                        gotChatFull = await client(GetFullChannelRequest(ent))
+                    except Exception as exc:
+                        asyncio.sleep(exc.time())
+                        gotChatFull = await client(GetFullChannelRequest(ent))
 
                     connection = engine.connect()
 
@@ -214,7 +220,11 @@ async def GetStats():
             pass
         if ID not in ConvertedGroupsIDs:
             ent = await client.get_input_entity(dialog)
-            msgs = await client.get_messages(ent, limit=0)
+            try:
+                msgs = await client.get_messages(ent, limit=0)
+            except FloodWaitError as exc:
+                asyncio.sleep(exc.seconds)
+                msgs = await client.get_messages(ent, limit=0)
             count = msgs.total
             if dialog.is_channel:
                 if dialog.entity.megagroup:
@@ -227,7 +237,12 @@ async def GetStats():
             if ID in LookIds and ID not in ConvertedGroupsIDs:
                 index = NewGroupsIDs.index(ID)
                 ent = await client.get_input_entity(int("-" + str(ConvertedGroupsIDs[index])))
-                msgs = await client.get_messages(ent)
+                try:
+                    msgs = await client.get_messages(ent)
+                except FloodWaitError as exc:
+                    asyncio.sleep(exc.seconds)
+                    msgs = await client.get_messages(ent)
+
                 OldChatCount = msgs.total
                 UserCount = UserCount + OldChatCount
 
