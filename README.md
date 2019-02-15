@@ -100,55 +100,13 @@ pip3 install -r requirements.txt
 ---
 # Features
 
-> Tg_UserBot brings some small improvments to any Telegram Client
->
-> You can some features using a command. Others are enabled from the config file and they work in background
->
-> #### Available commands are:
->
-> -   `.plugins` - Get a list with your installed plugins
->
-> -   `.plugin` `<plugin_name>` - Get plugin info for a specified plugin
->
-> -   `.afk` `<optional-reason>` - Sets you as afk and tells everyone that you are away by sending them a message when they mention your username, sends you a PM or replies to your message. Send a message to any chat to dismiss your afk state
->
-> -   `.profanity` `<on/off>` - Turn the profanity filter on or off.  If is turned on all the incoming messages containing profanity will be deleted
->
-> -   `.profanity` - Check the status of the profanity filter
->
-> -   `.ppic` - Reply to a photo/document to set it as your profile photo
->
-> -   `.pbio` `<bio>` - Change your about message by sending `.pbio` followed by the bio you want to set.
->
-> -   `.puname` `<username>` - Change your username by sending `.puname` followed by the username you want to set.
->
-> -   `.pname` `<name>` - Change your name by sending `.pname` followed by the username you want to set. Use `\n` to separate your first and last name
->
-> -   You can use `.cpic`, `.cpio`, `.cuname`, `.cname` to do the same for your chats
->
-> -   `.ping` - Test your userbot response time
->
-> -   `.stats` - Get your telegram stats. Works only if stats are not disabled from the config file
->
-> -   `.info` `<optional-username>` - Send it as a message to get your info, reply to one or use the command followed by a username to get user info
->
-> -   `.github` `<github-username>` - Get the info and repositories of any github user
->
-> -   `.exec` `code` - Execute a python code in your local pc
-> s
-> -   `.term` `<command>` - Execute bash commands
->
-> -   `.rterm` `<command>` - Execute bash commands on a ssh server
->
-> -   `.upload` `<command>` - Upload files
->
-> -   `.rupload` `<command>` - Upload files from a ssh servergood
->
-> -   `$<language>` `<code>` - Execute code in any programming language using rextester.com api
+Telegram Companion brings some small improvments and new features to any Telegram Client
 
--   Available languages are:
--   >
-    > `ada`, `asm`, `bash`, `brainfuck`, `c`, `c#`, `c++`, `c_clang`, `c_gcc`, `clang`, `clang++`, `clangplusplus`, `clisp`, `common_lisp`, `cplusplus`, `cplusplus_clang`, `cplusplus_gcc`, `cpp`, `cpp_clang`, `cpp_gcc`, `csharp`, `d`, `elixir`, `erlang`, `f#`, `fortran`, `fpc`, `fsharp`, `g++`, `gcc`, `go`, `golang`, `haskell`, `java`, `javascript`, `js`, `kotlin`, `lisp`, `lua`, `msvc`, `mysql`, `nasm`, `node`, `objc`, `objective_c`, `ocaml`, `oracle`, `pas`, `pascal`, `perl`, `php`, `postgresql`, `prolog`, `py2`, `py3`, `python`, `python2`, `python3`, `r`, `ruby`, `scala`, `scheme`, `sql_server`, `swift`, `tcl`, `v8`, `vb`, `vb.net`, `vc++`, `visual_basic_dotnet`, `visual_c`, `visual_cplusplus`, `visual_cpp`
+You can some features using a command. Others are enabled from the config file and they work in background.
+Every command follows tgbot's syntax but instead of `/<command>` we use `.<command>` (This can be changed from the config.env file)
+
+You can use .help to get all the available commands and what they can do
+
 
 ## Plugins
 
