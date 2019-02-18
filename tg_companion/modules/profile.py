@@ -78,10 +78,18 @@ async def update_profile_pic(event):
                 os.remove(photo)
 
 
-@client.CommandHandler(outgoing=True, command="pbio (.+)", help=PBIO_HELP)
+@client.CommandHandler(outgoing=True, command="pbio", help=PBIO_HELP)
 @client.log_exception
 async def update_profile_bio(event):
-    bio = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(PBIO_HELP)
+        return
+
+
+    bio = split_text[1]
+
     if len(bio) > 70:
         await event.edit("`Your bio is too long.`")
     else:
@@ -89,10 +97,16 @@ async def update_profile_bio(event):
         await event.edit("`Succesfully changed your bio`")
 
 
-@client.CommandHandler(outgoing=True, command="puname (.+)", help=PUNAME_HELP)
+@client.CommandHandler(outgoing=True, command="puname", help=PUNAME_HELP)
 @client.log_exception
 async def change_profile_username(event):
-    username = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(PUNAME_HELP)
+        return
+
+    username = split_text[1]
 
     if "@" in username:
         username = username[1:]
@@ -117,10 +131,16 @@ async def change_profile_username(event):
             await event.edit(f"`{username} is already taken`")
 
 
-@client.CommandHandler(outgoing=True, command="pname (.+)", help=PNAME_HELP)
+@client.CommandHandler(outgoing=True, command="pname", help=PNAME_HELP)
 @client.log_exception
 async def change_profile_name(event):
-    name = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(PNAME_HELP)
+        return
+
+    name = split_text[1]
     firstName = name.split("\\n", 1)[0]
     lastName = " "
 

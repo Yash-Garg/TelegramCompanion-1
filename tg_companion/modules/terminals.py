@@ -34,11 +34,17 @@ SSH_UPLOAD_HELP = """
             `<path>` - The path to the file or folder you want to upload
 """
 
-@client.CommandHandler(outgoing=True, command="term (.+)", help=TERM_HELP)
+@client.CommandHandler(outgoing=True, command="term", help=TERM_HELP)
 @client.log_exception
 async def terminal(event):
 
-    cmd = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(TERM_HELP)
+        return
+
+    cmd = split_text[1]
 
     await event.edit("`Connecting..`")
 
@@ -99,11 +105,20 @@ async def terminal(event):
 @client.CommandHandler(
                       outgoing=True,
                       func=lambda x: ENABLE_SSH,
-                      command="rterm (.+)",
+                      command="rterm",
                       help=SSH_TERM_HELP)
 @client.log_exception
 async def ssh_terminal(event):
-    cmd = event.pattern_match.group(1)
+
+
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(SSH_TERM_HELP)
+        return
+
+    cmd = split_text[1]
+
     OUTPUT = f"**Query:**\n`{cmd}`\n\n**Output:**\n"
     await event.edit("`Connecting..`")
 
@@ -161,17 +176,33 @@ async def ssh_terminal(event):
                     break
 
 
-@client.CommandHandler(outgoing=True, command="upload (.+)", help=UPLOAD_HELP)
+@client.CommandHandler(outgoing=True, command="upload", help=UPLOAD_HELP)
 @client.log_exception
 async def upload_file(event):
-    to_upload = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(UPLOAD_HELP)
+        return
+
+
+    to_upload = split_text[1]
+
     await client.send_from_disk(event, to_upload, force_document=True)
 
 
 @client.CommandHandler(outgoing=True, command="rupload (.+)", help=SSH_UPLOAD_HELP)
 @client.log_exception
 async def ssh_upload_file(event):
-    to_upload = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1:
+        await event.edit(SSH_UPLOAD_HELP)
+        return
+
+
+    to_upload = split_text[1]
+
     await event.edit("`Connecting...`")
 
     async with asyncssh.connect(

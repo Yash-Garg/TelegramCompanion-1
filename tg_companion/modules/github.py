@@ -10,11 +10,16 @@ GITHUB_HELP = """
             `<username` - __Any github username__
 """
 
-@client.CommandHandler(outgoing=True, command="github (.*)", help=GITHUB_HELP)
+@client.CommandHandler(outgoing=True, command="github", help=GITHUB_HELP)
 @client.log_exception
 async def github(event):
+    split_text = event.text.split(None, 1)
 
-    URL = f"https://api.github.com/users/{event.pattern_match.group(1)}"
+    if len(split_text) == 1:
+        await event.edit(GITHUB_HELP)
+        return
+
+    URL = f"https://api.github.com/users/{split_text[1]}"
     chat = await event.get_chat()
     async with aiohttp.ClientSession() as session:
         async with session.get(URL) as request:

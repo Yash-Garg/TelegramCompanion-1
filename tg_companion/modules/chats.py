@@ -81,10 +81,20 @@ async def update_profile_pic(event):
                 os.remove(photo)
 
 
-@client.CommandHandler(outgoing=True, command="cabout (.+)", help=CABOUT_HELP)
+@client.CommandHandler(outgoing=True, command="cabout", help=CABOUT_HELP)
 async def update_profile_bio(event):
-    about = event.pattern_match.group(1)
+
+    split_text = event.text.split(None, 1)
+    print(split_text)
+    return
+    if len(split_text) == 1:
+        await event.edit(CABOUT_HELP)
+        return
+
+    about = split_text[1]
     chat = await event.get_chat()
+
+
     if len(about) > 255:
         await event.edit("`Channel about is too long.`")
 
@@ -148,7 +158,13 @@ async def change_profile_username(event):
 @client.CommandHandler(outgoing=True, command="cname (.+)", help=CNAME_HELP)
 @client.log_exception
 async def change_profile_name(event):
-    title = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 0:
+        await event.edit(CNAME_HELP)
+        return
+
+    title = split_text[1]
     chat = await event.get_chat()
     try:
         await client(EditChatTitleRequest(chat.id, title))

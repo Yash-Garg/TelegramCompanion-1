@@ -16,11 +16,11 @@ async def afk(event):
     global afk_time
 
     reason = None
-    text = event.text.split()
+    split_text = event.text.split(None, 1)
 
-    if len(event.text.split()) > 1:
-        text.pop(0)
-        reason = " ".join(text)
+    if len(split_text) > 1:
+        reason = split_text[1]
+
     if not USER_AFK:
         afk_time = datetime.datetime.now()
         USER_AFK.update({"yes": reason})

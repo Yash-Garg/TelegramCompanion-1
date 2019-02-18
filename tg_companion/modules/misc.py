@@ -176,11 +176,16 @@ async def send_logs(event):
         await event.edit("`There are no logs saved!`")
 
 
-@client.CommandHandler(outgoing=True, command="exec ([\s\S]+)", help=EXEC_HELP)
+@client.CommandHandler(outgoing=True, command="exec", help=EXEC_HELP)
 async def py_execute(event):
     chat = await event.get_chat()
-    code = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
 
+    if len(split_text) == 1:
+        await event.edit(EXEC_HELP)
+        return
+
+    code = split_text[1]
     old_stdout = sys.stdout
     old_stderr = sys.stderr
     redirected_output = sys.stdout = io.StringIO()

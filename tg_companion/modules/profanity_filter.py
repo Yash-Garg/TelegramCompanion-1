@@ -40,13 +40,19 @@ connection.close()
 
 @client.CommandHandler(
     outgoing=True,
-    command="profanity (on|off)",
+    command="profanity",
     help=PROFANITY_HELP,
     func=lambda e: not e.is_private)
 async def profanity_switch(event):
     global PROFANITY_CHECK_CHATS
     chat = await event.get_chat()
-    on_off = event.pattern_match.group(1)
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 1 or len(split_text) > 2:
+        await event.edit(PROFANITY_HELP)
+        return
+
+    on_off = split_text[1]
 
     if not chat.admin_rights:
         await event.edit("You need to have admin righs to disable or enable the profanity filter")

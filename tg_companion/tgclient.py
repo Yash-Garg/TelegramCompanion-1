@@ -103,7 +103,7 @@ class CompanionClient(TelegramClient):
                 module_name = inspect.getmodule(f).__name__
                 cmd_name = module_name.rsplit(".", 1)[-1].replace(".py", "")
                 if command:
-                    cmd_name = command.split()[0]
+                    cmd_name = command.split(None, 1)[0]
 
                 if cmd_name not in CMD_HELP:
 

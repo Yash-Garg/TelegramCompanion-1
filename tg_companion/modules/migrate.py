@@ -19,7 +19,7 @@ MIGRATE_HELP = """
 
 @client.CommandHandler(
         outgoing=True,
-        command="migrate ((?:@)?\w*)?")
+        command="migrate")
 @client.log_exception
 async def account_migrate(event):
     global CHAT_IDS
@@ -30,7 +30,13 @@ async def account_migrate(event):
         "`Migrating Chats. This might take a while so relax. and check this message later`"
     )
 
-    username = event.pattern_match.group(1)[1:]
+    split_text = event.text.split(None, 1)
+
+    if len(split_text) == 0:
+        await event.edit(MIGRATE_HELP)
+        return
+
+    username = split_text[1]
     entity = await client.get_entity(username)
 
     if isinstance(entity, User):
