@@ -14,6 +14,8 @@
 -   [Plugins](#Plugins)
 -   [Contributing](#Contributing)
 -   [Support](#Support)
+-   [Thanks](#Thanks)
+-   [Donate](#Donate)
 -   [License](#License)
 
 ## Installation
@@ -184,6 +186,11 @@ You can ask for support or report a bug in our telegram [group](https://t.me/tgc
 
 ## Thanks
 Thanks to everyone who helped me with ideas and with the project. Including @Yash-Garg for letting me host this project on his private repo, @baalajimaestro for the idea that gave birth to this userbot. (Alse check his [userbot](https://github.com/baalajimaestro/Telegram-UserBot)). And not last @sicrs for all the support he gave me.
+
+## Donate
+It took a lot of work and white nights for me to do this userbot and make it look less like another Bot that you control and more a part of your telegram client.
+I know is not perfect but I'm trying my best and if you enjoy this UserBot and you want to help me you can buy me a beer using [PayPal](https://www.paypal.me/marcelalexandrunitan). Any donation will help. Thanks and I hope you enjoy my UserBot
+
 
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
