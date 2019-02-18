@@ -47,9 +47,38 @@ pip3 install -r requirements.txt
 
 # Setup
 
-#### Before starting the bot you have to configure it as per your requirements.
+#### First you need t create a postgress database. You can create one following the instructions below.
+
+* Install postgress.
+
+`sudo apt-get update && sudo apt-get install postgresql`
+
+* Change to a postgress user.
+
+`sudo su - postgres`
+
+* Create a new user for your database. Replace YOUR_USER with the desired user name.
+
+`createuser -P -s -e YOUR_USER`
+
+* Create a new database table. Change YOUR_USER with the user you used above and YOUR_DB_NAME the desired database name.
+
+`createdb -O YOUR_USER YOUR_DB_NAME`
+
+* Change YOUR_USER and YOUR_DB_NAME with the user and database name you used above.
+
+`psql YOUR_DB_NAME -h YOUR_HOST YOUR_USER`
+
+This will create a database and you can connect to it using the terminal. But we will use it to create a URL that you'll use in the config.env file. By default, your hostname should be 0.0.0.0 and the port should be 5432.
+
+Now build your database URL:
+
+`postgres://username:password@hostname:port/db_name`
+
+
+#### Now before starting the companion you have to configure it as per your requirements.
 > -   Create a config.env file. Follow the example from sample.config.env.
-> -   Write the config values in the created file.
+> -   Write the config values explained below in the created file.
 
 #### The available config values are:
 
@@ -149,7 +178,7 @@ This method is a alternative for `client.on()` which uses the same arguments but
         The help message used for displaying the command usage
 ```
 
-When adding the help text please follow the example bellow:
+When adding the help text please follow the example below:
 
 
 ```
