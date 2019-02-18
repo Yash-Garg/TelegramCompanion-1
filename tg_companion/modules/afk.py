@@ -64,7 +64,8 @@ async def reply_afk(event):
             reason = USER_AFK["yes"]
             now = datetime.datetime.now()
 
-            time = float(now - afk_time)
+            dt = now - afk_time
+            time = float(dt.seconds)
             days = time // (24 * 3600)
             time = time % (24 * 3600)
             hours = time // 3600
