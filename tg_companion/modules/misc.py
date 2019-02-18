@@ -12,6 +12,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 
 from tg_companion.modules.rextester.api import Rextester, UnknownLanguage
+from tg_companion.modules.global_bans import GBANNED_USERS
 from tg_companion.tgclient import client
 
 from .._version import __version__
@@ -86,8 +87,8 @@ async def user_info(event):
         user = event.text.split()[1]
         try:
             user = await client.get_entity(user)
-        except Exception as exc:
-            await event.reply(str(exc))
+        except Exception:
+            await event.reply("`You don't seem to be referring to a user.`")
             return
 
         if not isinstance(user, User):
@@ -109,7 +110,14 @@ async def user_info(event):
         REPLY += f"\nLast Name: {escape(lastName)}"
     if username:
         REPLY += f"\nUsername: @{escape(username)}"
+
+    REPLY += f"\nUser id: <code>{user_id}</code>"
     REPLY += f"\nPermanent user link: <a href=\"tg://user?id={user_id}\">link</a>"
+
+    if user.id in GBANNED_USERS:
+        REPLY += "\n\nThis user is globally banned on this companion"
+        if GBANNED_USERS.get(user.id):
+            REPLY += f"\nReason: {escape(GBANNED_USERS.get(user_id))}"
     if full_user.about:
         REPLY += f"\n\n<b>About User:</b>\n{escape(full_user.about)}"
     if not full_user.user.is_self:
