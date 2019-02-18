@@ -2,7 +2,6 @@ import io
 import os
 import re
 
-from telethon import events
 from telethon.errors import ImageProcessFailedError, PhotoCropSizeSmallError
 from telethon.errors.rpcerrorlist import UsernameOccupiedError
 from telethon.tl.functions.account import (UpdateProfileRequest,
@@ -35,6 +34,7 @@ PNAME_HELP = """
         __Args:__
             `<name>` - __Use \\n to separate first name from second name__
 """
+
 
 @client.CommandHandler(outgoing=True, command="ppic", help=PPIC_HELP)
 @client.log_exception
@@ -86,7 +86,6 @@ async def update_profile_bio(event):
     if len(split_text) == 1:
         await event.edit(PBIO_HELP)
         return
-
 
     bio = split_text[1]
 

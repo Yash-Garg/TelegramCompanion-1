@@ -2,7 +2,7 @@ import io
 import os
 import re
 
-from telethon import errors, events
+from telethon import errors
 from telethon.tl.functions.channels import UpdateUsernameRequest
 from telethon.tl.functions.messages import (EditChatAboutRequest,
                                             EditChatPhotoRequest,
@@ -10,7 +10,6 @@ from telethon.tl.functions.messages import (EditChatAboutRequest,
 from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
 
 from tg_companion.tgclient import client
-
 
 CPIC_HELP = """
     **Change your channel/group profile picture.**
@@ -93,7 +92,6 @@ async def update_profile_bio(event):
 
     about = split_text[1]
     chat = await event.get_chat()
-
 
     if len(about) > 255:
         await event.edit("`Channel about is too long.`")

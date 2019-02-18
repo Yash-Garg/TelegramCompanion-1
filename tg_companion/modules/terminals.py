@@ -3,7 +3,6 @@ import os
 import time
 
 import asyncssh
-from telethon import events
 
 from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
                           SSH_PASSWORD, SSH_PORT, SSH_USERNAME,
@@ -33,6 +32,7 @@ SSH_UPLOAD_HELP = """
         __Args:__
             `<path>` - The path to the file or folder you want to upload
 """
+
 
 @client.CommandHandler(outgoing=True, command="term", help=TERM_HELP)
 @client.log_exception
@@ -103,13 +103,12 @@ async def terminal(event):
 
 
 @client.CommandHandler(
-                      outgoing=True,
-                      func=lambda x: ENABLE_SSH,
-                      command="rterm",
-                      help=SSH_TERM_HELP)
+    outgoing=True,
+    func=lambda x: ENABLE_SSH,
+    command="rterm",
+    help=SSH_TERM_HELP)
 @client.log_exception
 async def ssh_terminal(event):
-
 
     split_text = event.text.split(None, 1)
 
@@ -185,13 +184,15 @@ async def upload_file(event):
         await event.edit(UPLOAD_HELP)
         return
 
-
     to_upload = split_text[1]
 
     await client.send_from_disk(event, to_upload, force_document=True)
 
 
-@client.CommandHandler(outgoing=True, command="rupload (.+)", help=SSH_UPLOAD_HELP)
+@client.CommandHandler(
+    outgoing=True,
+    command="rupload (.+)",
+    help=SSH_UPLOAD_HELP)
 @client.log_exception
 async def ssh_upload_file(event):
     split_text = event.text.split(None, 1)
@@ -199,7 +200,6 @@ async def ssh_upload_file(event):
     if len(split_text) == 1:
         await event.edit(SSH_UPLOAD_HELP)
         return
-
 
     to_upload = split_text[1]
 

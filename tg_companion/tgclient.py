@@ -1,26 +1,26 @@
 import asyncio
+import datetime
 import inspect
 import io
 import os
 import sys
 import zipfile
-import datetime
 from getpass import getpass
 
 from alchemysession import AlchemySessionContainer
-from telethon import TelegramClient
-from telethon import events
-from telethon.errors import SessionPasswordNeededError, FloodWaitError
+from telethon import TelegramClient, events
+from telethon.errors import FloodWaitError, SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 
-from tg_companion import (APP_HASH, APP_ID, DB_URI, DEBUG, LOGGER,
-                          SESSION_NAME, CMD_HANDLER, proxy)
+from tg_companion import (APP_HASH, APP_ID, CMD_HANDLER, DB_URI, DEBUG, LOGGER,
+                          SESSION_NAME, proxy)
 from tg_companion._version import __version__
 
 loop = asyncio.get_event_loop()
 
 
 CMD_HELP = {}
+
 
 class CompanionClient(TelegramClient):
 
@@ -74,8 +74,13 @@ class CompanionClient(TelegramClient):
 
         LOGGER.info("Connected!!")
 
-
-    def CommandHandler(self, func=None, command=None, allow_edited=False, help=None, **kwargs):
+    def CommandHandler(
+            self,
+            func=None,
+            command=None,
+            allow_edited=False,
+            help=None,
+            **kwargs):
         def decorator(f):
             """
             Decorator alternative for `client.on()` which uses the same arguments but with some exceptions
@@ -97,7 +102,9 @@ class CompanionClient(TelegramClient):
             pattern = None
             if command:
                 pattern = "\\" + CMD_HANDLER + command
-            self.add_event_handler(f, events.NewMessage(pattern=pattern, func=func, **kwargs))
+            self.add_event_handler(
+                f, events.NewMessage(
+                    pattern=pattern, func=func, **kwargs))
 
             if help:
                 module_name = inspect.getmodule(f).__name__
@@ -110,7 +117,9 @@ class CompanionClient(TelegramClient):
                     CMD_HELP.update({f"{cmd_name}": help})
 
             if allow_edited:
-                self.add_event_handler(f, events.MessageEdited(pattern=pattern, func=func, **kwargs))
+                self.add_event_handler(
+                    f, events.MessageEdited(
+                        pattern=pattern, func=func, **kwargs))
             return f
         return decorator
 

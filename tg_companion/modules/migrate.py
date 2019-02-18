@@ -1,4 +1,4 @@
-from telethon import errors, events
+from telethon import errors
 from telethon.tl.functions.channels import InviteToChannelRequest
 from telethon.tl.functions.messages import AddChatUserRequest
 from telethon.tl.types import User
@@ -18,8 +18,8 @@ MIGRATE_HELP = """
 
 
 @client.CommandHandler(
-        outgoing=True,
-        command="migrate")
+    outgoing=True,
+    command="migrate")
 @client.log_exception
 async def account_migrate(event):
     global CHAT_IDS

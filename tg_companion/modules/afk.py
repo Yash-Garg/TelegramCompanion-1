@@ -1,5 +1,6 @@
 import datetime
-from tg_companion.tgclient import client, CMD_HANDLER
+
+from tg_companion.tgclient import CMD_HANDLER, client
 
 AFK_HELP = """
     **Mark yourself as AFK.**
@@ -9,6 +10,7 @@ AFK_HELP = """
 
 USER_AFK = {}
 afk_time = None
+
 
 @client.CommandHandler(outgoing=True, command="afk", help=AFK_HELP)
 @client.log_exception
@@ -30,9 +32,10 @@ async def afk(event):
 
         await event.edit(f"**I will be afk for a while.**")
 
+
 @client.CommandHandler(
-                outgoing=True,
-                func=lambda e: True if f"{CMD_HANDLER}afk" not in e.message.text else False)
+    outgoing=True,
+    func=lambda e: True if f"{CMD_HANDLER}afk" not in e.message.text else False)
 @client.log_exception
 async def no_afk(event):
     chat = await event.get_chat()
@@ -40,9 +43,10 @@ async def no_afk(event):
         await client.send_message(chat.id, "`I'm no longer afk`")
         del USER_AFK["yes"]
 
+
 @client.CommandHandler(
-                incoming=True,
-                func=lambda e: True if e.mentioned or e.is_private else False)
+    incoming=True,
+    func=lambda e: True if e.mentioned or e.is_private else False)
 @client.log_exception
 async def reply_afk(event):
     global afk_time
@@ -56,8 +60,8 @@ async def reply_afk(event):
 
             days = dt.days
             seconds = dt.seconds
-            hours = (seconds - days*86400) // 3600
-            minutes = (seconds - days*86400 - hours*3600)//60
+            hours = (seconds - days * 86400) // 3600
+            minutes = (seconds - days * 86400 - hours * 3600) // 60
 
             days, hours, minutes, seconds = dt.days, dt.seconds // 3600, dt.seconds // 60, dt.seconds % 60
 
@@ -65,7 +69,8 @@ async def reply_afk(event):
                 afk_since = "**Yesterday**"
             elif days > 1:
                 if days > 6:
-                    date = now + datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
+                    date = now + \
+                        datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
                     afk_since = date.strftime('%A, %Y %B %m, %H:%I')
                 else:
                     wday = now + datetime.timedelta(days=-days)
@@ -76,7 +81,6 @@ async def reply_afk(event):
                 afk_since = f"`{minutes}m{seconds}s` **ago**"
             else:
                 afk_since = f"`{seconds}s` **ago**"
-
 
             if not reason:
                 await client.send_message(chat.id, f"**I'm afk since** {afk_since} **and I will be back soon**", reply_to=event.id)

@@ -1,12 +1,13 @@
 import asyncio
 import logging
-import re
 import os
+import re
 import sys
 from argparse import ArgumentParser
-from tg_companion.plugins import load_plugins
 
 import aiohttp
+
+from tg_companion.plugins import load_plugins
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

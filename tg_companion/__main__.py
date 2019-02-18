@@ -1,11 +1,12 @@
 import asyncio
 import importlib
 
-from tg_companion import LOGGER, CMD_HANDLER, proxy
+from telethon.errors import FloodWaitError
+
+from tg_companion import CMD_HANDLER, LOGGER, proxy
 from tg_companion.modules import MODULES
 from tg_companion.plugins import PLUGINS
-from tg_companion.tgclient import client, CMD_HELP
-from telethon.errors import FloodWaitError
+from tg_companion.tgclient import CMD_HELP, client
 
 for module_name in MODULES:
     imported_module = importlib.import_module(
@@ -17,15 +18,18 @@ for plugin_name in PLUGINS:
 
 if proxy:
     LOGGER.info(f"Connecting to Telegram over proxy: {proxy[1]}:{proxy[2]}")
-    LOGGER.info(f"Use {CMD_HANDLER}ping in any chat to see if your userbot has connected.")
+    LOGGER.info(
+        f"Use {CMD_HANDLER}ping in any chat to see if your userbot has connected.")
 else:
-    LOGGER.info(f"Your userbot is running. Type {CMD_HANDLER}ping in any chat to test it")
+    LOGGER.info(
+        f"Your userbot is running. Type {CMD_HANDLER}ping in any chat to test it")
 
 SELF_HELP = """
     **Displays this message.**
         __Args:__
             `<command>` - **(optional)** __Optional command name to get display help for.__
 """
+
 
 @client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
 async def send_help(event):
@@ -44,7 +48,6 @@ async def send_help(event):
     if not event.is_private:
         await event.edit("Use this in PM for help!")
         return
-
 
     if CMD_HELP:
         for k, v in sorted(CMD_HELP.items()):

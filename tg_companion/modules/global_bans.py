@@ -147,7 +147,6 @@ async def gban_user(event):
 @client.log_exception
 async def un_gban(event):
     me = await client.get_me()
-    reason = ""
 
     del_cmd_text = event.text.split("gban", 1)[1]
     split_text = del_cmd_text.split(None, 1)
@@ -222,6 +221,7 @@ async def ban_on_msg(event):
     )
     await client(EditBannedRequest(chat.id, user, rights))
 
+
 @client.on(events.ChatAction(chats=GBAN_ALLOWED_CHATS))
 @client.log_exception
 async def ban_on_join(event):
@@ -294,7 +294,7 @@ async def disable_gbans(event):
         incoming=True,
         pattern=r"\.enablegbans"))
 @client.log_exception
-async def disable_gbans(event):
+async def enable_gbans(event):
     if not event.reply_to_msg_id:
         await event.reply("`You need to reply to the user you want to disable global bans from this companion`")
         return

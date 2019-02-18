@@ -1,5 +1,4 @@
 import sqlalchemy as db
-from telethon import events
 from telethon.tl.functions.contacts import BlockRequest
 
 from tg_companion import BLOCK_PM, NOPM_SPAM
@@ -45,7 +44,9 @@ async def block_pm(event):
             await client(BlockRequest(chat.id))
 
 
-@client.CommandHandler(incoming=True, func=lambda e: not BLOCK_PM and  e.is_private)
+@client.CommandHandler(
+    incoming=True,
+    func=lambda e: not BLOCK_PM and e.is_private)
 @client.log_exception
 async def await_permission(event):
     global PM_WARNS

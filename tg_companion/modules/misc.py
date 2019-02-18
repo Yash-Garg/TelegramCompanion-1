@@ -46,6 +46,7 @@ EXEC_HELP = """
             `<code>` - Your python code that will be executed.
 """
 
+
 @client.CommandHandler(outgoing=True, command="ping", help=PING_HELP)
 @client.log_exception
 async def ping(event):
@@ -65,9 +66,9 @@ async def version(event):
     telethon_version = telethon.__version__
 
     await event.edit(f"__Companion__ (**{bot_version}**),"
-                        f" __Python__ (**{python_version}**),"
-                        f" __Telethon__"
-                        f" (**{telethon_version}**)")
+                     f" __Python__ (**{python_version}**),"
+                     f" __Telethon__"
+                     f" (**{telethon_version}**)")
 
 
 @client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)

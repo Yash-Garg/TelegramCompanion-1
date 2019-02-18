@@ -1,14 +1,13 @@
 import aiohttp
-from telethon import events
 
 from tg_companion.tgclient import client
-
 
 GITHUB_HELP = """
     **Get a github user profile.**
         __Args:__
             `<username` - __Any github username__
 """
+
 
 @client.CommandHandler(outgoing=True, command="github", help=GITHUB_HELP)
 @client.log_exception
