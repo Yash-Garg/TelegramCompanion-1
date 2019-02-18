@@ -78,7 +78,7 @@ async def save_note(event):
     connection.execute(query)
     connection.close()
 
-    await event.edit(f"Globally saved `{note_name}`. Get it  using the command `get {note_name}'")
+    await event.edit(f"Globally saved `{note_name}`. Get it using the command `get {note_name}'")
     _load_notes()
 
 
