@@ -12,6 +12,14 @@ USER_AFK = {}
 afk_time = None
 
 
+intervals = (
+    ('weeks', 604800),
+    ('days', 86400),
+    ('hours', 3600),
+    ('minutes', 60),
+    ('seconds', 1),
+    )
+
 @client.CommandHandler(outgoing=True, command="afk", help=AFK_HELP)
 @client.log_exception
 async def afk(event):
@@ -56,14 +64,14 @@ async def reply_afk(event):
             reason = USER_AFK["yes"]
             now = datetime.datetime.now()
 
-            dt = now - afk_time
-
-            days = dt.days
-            seconds = dt.seconds
-            hours = (seconds - days * 86400) // 3600
-            minutes = (seconds - days * 86400 - hours * 3600) // 60
-
-            days, hours, minutes, seconds = dt.days, dt.seconds // 3600, dt.seconds // 60, dt.seconds % 60
+            time = float(now - afk_time)
+            days = time // (24 * 3600)
+            time = time % (24 * 3600)
+            hours = time // 3600
+            time %= 3600
+            minutes = time // 60
+            time %= 60
+            seconds = time
 
             if days == 1:
                 afk_since = "**Yesterday**"
@@ -76,11 +84,11 @@ async def reply_afk(event):
                     wday = now + datetime.timedelta(days=-days)
                     afk_since = wday.strftime('%A')
             elif hours > 1:
-                afk_since = f"`{hours}h{minutes}m` **ago**"
+                afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
             elif minutes > 0:
-                afk_since = f"`{minutes}m{seconds}s` **ago**"
+                afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
             else:
-                afk_since = f"`{seconds}s` **ago**"
+                afk_since = f"`{int(seconds)}s` **ago**"
 
             if not reason:
                 await client.send_message(chat.id, f"**I'm afk since** {afk_since} **and I will be back soon**", reply_to=event.id)
