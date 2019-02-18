@@ -37,6 +37,7 @@ UNGBAN_HELP = """
 metadata.create_all(
     bind=engine,
     tables=[gbans_tbl, gban_chats_tbl],
+    checkfirst=True
 )
 
 
