@@ -22,7 +22,7 @@ if proxy:
         f"Use {CMD_HANDLER}ping in any chat to see if your userbot has connected.")
 else:
     LOGGER.info(
-        f"Your userbot is running. Type {CMD_HANDLER}ping in any chat to test it")
+        f"Your userbot is running. Type {CMD_HANDLER}version in any chat to test it")
 
 SELF_HELP = """
     **Displays this message.**

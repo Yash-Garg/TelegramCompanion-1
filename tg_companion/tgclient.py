@@ -42,7 +42,7 @@ class CompanionClient(TelegramClient):
             loop.run_until_complete(self.connect())
 
         if not loop.run_until_complete(self.is_user_authorized()):
-            LOGGER.info("Welcome to Telegram CompanionCompanion.. \n\n")
+            LOGGER.info("Welcome to Telegram Companion.. \n\n")
             phone = input("Enter your phone: ")
             loop.run_until_complete(self.sign_in(phone))
 
