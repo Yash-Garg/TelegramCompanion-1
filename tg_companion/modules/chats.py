@@ -42,6 +42,9 @@ async def update_profile_pic(event):
     if event.reply:
         message = await event.get_reply_message()
         chat = await event.get_chat()
+        if not chat.admin_rights or not chat.creator:
+            await event.edit("`Chat admin privileges are required to do that`")
+            return
         photo = None
         if message.media:
             if isinstance(message.media, MessageMediaPhoto):
@@ -70,9 +73,6 @@ async def update_profile_pic(event):
                 await event.edit("`Channel picture changed`")
 
             except Exception as exc:
-                if isinstance(exc, errors.ChatAdminRequiredError):
-                    await event.edit("`Chat admin privileges are required to do that`")
-
                 if isinstance(exc, errors.PhotoInvalidError):
                     await event.edit("`The selected photo is invalid`")
 
@@ -93,6 +93,10 @@ async def update_profile_bio(event):
     about = split_text[1]
     chat = await event.get_chat()
 
+    if not chat.admin_rights or not chat.creator:
+        await event.edit("`Chat admin privileges are required to do that`")
+        return
+
     if len(about) > 255:
         await event.edit("`Channel about is too long.`")
 
@@ -105,9 +109,6 @@ async def update_profile_bio(event):
             if isinstance(exc, errors.ChatAboutNotModifiedError):
                 await event.edit("`About text has not changed.`")
 
-            if isinstance(exc, errors.ChatAdminRequiredError):
-                await event.edit("`Chat admin privileges are required to do that`")
-
             if isinstance(exc, errors.ChatNotModifiedError):
                 await event.edit("`The chat wasn't modified`")
 
@@ -117,6 +118,10 @@ async def update_profile_bio(event):
 async def change_profile_username(event):
     username = event.pattern_match.group(1)
     chat = await event.get_chat()
+
+    if not chat.admin_rights or not chat.creator:
+        await event.edit("`Chat admin privileges are required to do that`")
+        return
 
     if "@" in username:
         username = username[1:]
@@ -143,9 +148,6 @@ async def change_profile_username(event):
                     "`You're admin of too many public channels, make some channels private to change the username of this channel.`"
                 )
 
-            if isinstance(exc, errors.ChatAdminRequiredError):
-                await event.edit("Chat admin privileges are required to do that")
-
             if isinstance(exc, errors.UsernameOccupiedError):
                 await event.edit(f"`{username} is already taken`")
 
@@ -164,13 +166,13 @@ async def change_profile_name(event):
 
     title = split_text[1]
     chat = await event.get_chat()
+    if not chat.admin_rights or not chat.creator:
+        await event.edit("`Chat admin privileges are required to do that`")
+        return
     try:
         await client(EditChatTitleRequest(chat.id, title))
         await event.edit("`Succesfully changed channel/chat title`")
 
     except Exception as exc:
-        if isinstance(exc, errors.ChatAdminRequiredError):
-            await event.edit("`Chat admin privileges are required to do that`")
-
         if isinstance(exc, errors.ChatNotModifiedError):
             await event.edit("`The chat or channel wasn't modified`")
