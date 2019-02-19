@@ -35,6 +35,9 @@ SELF_HELP = """
 async def send_help(event):
 
     text = event.text.split()
+    parts = 0
+    limit_exceded = False
+    saved_keys = []
 
     if len(text) == 2:
         if text[1] in CMD_HELP:
@@ -51,12 +54,19 @@ async def send_help(event):
 
     if CMD_HELP:
         for k, v in sorted(CMD_HELP.items()):
-            OUTPUT += f"\n\n`{CMD_HANDLER}{k}`: {v}"
-    try:
-        await event.edit(f"**Here are all the commands you can use.** \n {OUTPUT}")
+            OUTPUT += f"\n\n{CMD_HANDLER}{k}: {v}"
+            saved_keys.append(k)
+            if len(OUTPUT) >= 4096:
+                parts += 1
+                await event.reply(f"**Here are all the commands you can use. Part {parts}** \n {OUTPUT}")
+                OUTPUT = ""
+                limit_exceded = True
+            if limit_exceded is True:
+                if k not in saved_keys:
+                    OUTPUT += f"\n\n{CMD_HANDLER}{k}: {v}"
 
-    except FloodWaitError:
-        await event.reply(f"**Here are all the commands you can use.** \n {OUTPUT}")
+    await event.reply(f"**Here are all the commands you can use. Part {parts + 1}** \n {OUTPUT}")
+
 
 loop = asyncio.get_event_loop()
 
