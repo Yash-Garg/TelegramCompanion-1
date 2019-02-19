@@ -37,6 +37,9 @@ async def regex_no_symb(event):
 
     regex_group = re.search(regex_cmd, event.text)
     group_len = 0
+    if not regex_group:
+        await event.edit(SED_HELP)
+        return
 
     for group in regex_group.groups():
         if group is not None:
