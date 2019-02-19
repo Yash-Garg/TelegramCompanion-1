@@ -45,6 +45,10 @@ REMOVE_HELP = """
             `<notename>`
 """
 
+NOTES_HELP = """
+    **Get a list with all of the globally saved notes**
+"""
+
 
 @client.CommandHandler(outgoing=True, command="save", help=SAVE_HELP)
 async def save_note(event):
@@ -119,3 +123,12 @@ async def remove_note(event):
     connection.close()
     _load_notes()
     await event.edit(f"Deleted `{note_name}` from database")
+
+
+@client.CommandHandler(outgoing=True, command="notes", help=NOTES_HELP)
+async def list_notes(event):
+    listnotes = []
+    for notename, _ in NOTES.items():
+        listnotes.append(notename)
+    await event.edit("`Globally saved notes:`\n-" +
+                    "\n-".join(listnotes))
