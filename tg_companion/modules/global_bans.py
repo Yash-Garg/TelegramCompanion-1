@@ -95,6 +95,7 @@ async def gban_user(event):
             reason = split_text[1]
 
         try:
+            user = int(split_text[0]) if split_text[0].isdigit() else split_text[0]
             user = await client.get_entity(split_text[0])
         except Exception:
             await event.reply("`You don't seem to be referring to a user.`")
