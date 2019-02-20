@@ -52,8 +52,8 @@ async def terminal(event):
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
-
-    OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**Output:**\n"
+    # f"**Query**:\n`{code}`\n\n **Exception:**\n`{exc}`"
+    OUTPUT = f"**Query:**\n\n`{cmd}`\n\n**Result:**\n\n"
 
     if not SUBPROCESS_ANIM:
         stdout, stderr = await process.communicate()

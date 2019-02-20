@@ -217,11 +217,11 @@ async def py_execute(event):
     sys.stderr = old_stderr
 
     if exc:
-        await event.edit(f"**Query**:\n`{code}`\n\n **Exception:**\n`{exc}`")
+        await event.edit(f"**Query**:\n\n`{code}`\n\n**Exception:**\n\n`{exc}`")
         return
 
     if stderr:
-        await event.edit(f"**Query**:\n`{code}`\n\n **Error:**\n`{stderr}`")
+        await event.edit(f"**Query**:\n\n`{code}`\n\n**Error:**\n\n`{stderr}`")
         return
 
     if stdout:
@@ -231,6 +231,6 @@ async def py_execute(event):
                 await client.send_file(chat.id, file=out_file, caption=f"'{code}'")
                 return
 
-        await event.edit(f"**Query**:\n`{code}`\n\n **Result:**\n`{stdout}`")
+        await event.edit(f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
     else:
         await event.edit("Did you forget to output something?")
