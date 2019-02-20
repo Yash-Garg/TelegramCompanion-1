@@ -86,6 +86,7 @@ async def user_info(event):
     if len(event.text.split()) > 1:
         user = int(event.text.split()[1]) if event.text.split()[1].isdigit() else event.text.split()[1]
         user = event.text.split()[1]
+        user = int(user) if user.isdigit() else user
         try:
             user = await client.get_entity(user)
         except Exception:
