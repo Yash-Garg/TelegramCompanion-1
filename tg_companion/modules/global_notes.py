@@ -51,6 +51,7 @@ NOTES_HELP = """
 
 
 @client.CommandHandler(outgoing=True, command="save", help=SAVE_HELP)
+@client.log_exception
 async def save_note(event):
     split_text = event.text.split(None, 2)
 
@@ -87,6 +88,7 @@ async def save_note(event):
 
 
 @client.CommandHandler(outgoing=True, command="get", help=GET_HELP)
+@client.log_exception
 async def get_note(event):
     split_text = event.text.split(None, 1)
 
@@ -126,6 +128,7 @@ async def remove_note(event):
 
 
 @client.CommandHandler(outgoing=True, command="notes", help=NOTES_HELP)
+@client.log_exception
 async def list_notes(event):
     listnotes = []
     for notename, _ in NOTES.items():

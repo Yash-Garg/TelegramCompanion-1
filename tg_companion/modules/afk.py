@@ -23,6 +23,7 @@ intervals = (
     ('seconds', 1),
     )
 
+
 @client.CommandHandler(outgoing=True, command="afk", help=AFK_HELP)
 @client.log_exception
 async def afk(event):

@@ -29,6 +29,7 @@ UNMUTE_HELP = """
 """
 
 @client.CommandHandler(outgoing=True, command="ban", help=BAN_HELP)
+@client.log_exception
 async def ban_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
@@ -76,6 +77,7 @@ async def ban_user(event):
         await event.edit("You need admin permissions to ban users here")
 
 @client.CommandHandler(outgoing=True, command="unban", help=UNBAN_HELP)
+@client.log_exception
 async def ban_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
@@ -128,6 +130,7 @@ async def ban_user(event):
 
 
 @client.CommandHandler(outgoing=True, command="mute", help=MUTE_HELP)
+@client.log_exception
 async def mute_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
@@ -176,6 +179,7 @@ async def mute_user(event):
         await event.edit("You need admin permissions to mute users here")
 
 @client.CommandHandler(outgoing=True, command="unmute", help=UNMUTE_HELP)
+@client.log_exception
 async def unmute_user(event):
     chat = await event.get_chat()
     me = await client.get_me()

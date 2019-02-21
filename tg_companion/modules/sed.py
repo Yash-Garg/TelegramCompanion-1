@@ -31,6 +31,7 @@ SED_HELP = """
 
 
 @client.on(events.NewMessage(outgoing=True, pattern="sed/"))
+@client.log_exception
 async def regex_no_symb(event):
 
     regex_cmd = r"\/((?:\\\/|[^\/])+)\/((?:\\\/|[^\/])*)(?:\/(.*))?"
@@ -74,5 +75,6 @@ async def regex_no_symb(event):
 
 
 @client.CommandHandler(outgoing=True, command="sed/", help=SED_HELP)
+@client.log_exception
 async def regex_cmd(event):
     await regex_no_symb(event)
