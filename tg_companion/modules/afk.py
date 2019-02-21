@@ -1,6 +1,8 @@
 import datetime
 
 from tg_companion.tgclient import CMD_HANDLER, client
+from telethon.tl.functions.account import GetPrivacyRequest
+from telethon.tl.types import InputPrivacyKeyStatusTimestamp
 
 AFK_HELP = """
     **Mark yourself as AFK.**
@@ -9,6 +11,7 @@ AFK_HELP = """
 """
 
 USER_AFK = {}
+ALLOW_SEEN_STATUS = None
 afk_time = None
 
 
@@ -24,6 +27,7 @@ intervals = (
 @client.log_exception
 async def afk(event):
     global afk_time
+    global ALLOW_SEEN_STATUS
 
     reason = None
     split_text = event.text.split(None, 1)
@@ -32,7 +36,10 @@ async def afk(event):
         reason = split_text[1]
 
     if not USER_AFK:
-        afk_time = datetime.datetime.now()
+        last_seen_status = await client(GetPrivacyRequest(InputPrivacyKeyStatusTimestamp()))
+        if last_seen_status.rules:
+            afk_time = datetime.datetime.now()
+
         USER_AFK.update({"yes": reason})
         if reason:
             await event.edit(f"**I will be afk for a while.** \n __Reason__: {reason}")
@@ -59,37 +66,40 @@ async def no_afk(event):
 async def reply_afk(event):
     global afk_time
     chat = await event.get_chat()
+    afk_since = "**a while ago**"
+
     if event.mentioned or event.is_private:
         if USER_AFK:
             reason = USER_AFK["yes"]
-            now = datetime.datetime.now()
+            if afk_time:
+                now = datetime.datetime.now()
 
-            dt = now - afk_time
-            time = float(dt.seconds)
-            days = time // (24 * 3600)
-            time = time % (24 * 3600)
-            hours = time // 3600
-            time %= 3600
-            minutes = time // 60
-            time %= 60
-            seconds = time
+                dt = now - afk_time
+                time = float(dt.seconds)
+                days = time // (24 * 3600)
+                time = time % (24 * 3600)
+                hours = time // 3600
+                time %= 3600
+                minutes = time // 60
+                time %= 60
+                seconds = time
 
-            if days == 1:
-                afk_since = "**Yesterday**"
-            elif days > 1:
-                if days > 6:
-                    date = now + \
-                        datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
-                    afk_since = date.strftime('%A, %Y %B %m, %H:%I')
+                if days == 1:
+                    afk_since = "**Yesterday**"
+                elif days > 1:
+                    if days > 6:
+                        date = now + \
+                            datetime.timedelta(days=-days, hours=-hours, minutes=-minutes)
+                        afk_since = date.strftime('%A, %Y %B %m, %H:%I')
+                    else:
+                        wday = now + datetime.timedelta(days=-days)
+                        afk_since = wday.strftime('%A')
+                elif hours > 1:
+                    afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
+                elif minutes > 0:
+                    afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
                 else:
-                    wday = now + datetime.timedelta(days=-days)
-                    afk_since = wday.strftime('%A')
-            elif hours > 1:
-                afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
-            elif minutes > 0:
-                afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
-            else:
-                afk_since = f"`{int(seconds)}s` **ago**"
+                    afk_since = f"`{int(seconds)}s` **ago**"
 
             if not reason:
                 await client.send_message(chat.id, f"**I'm afk since** {afk_since} **and I will be back soon**", reply_to=event.id)
