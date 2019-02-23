@@ -84,7 +84,7 @@ async def ban_user(event):
 
 @client.CommandHandler(outgoing=True, command="unban", help=UNBAN_HELP)
 @client.log_exception
-async def ban_user(event):
+async def unban_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
