@@ -15,25 +15,27 @@ PLUGINS_HELP = """
 """
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"\.plugin (.+)"))
+@client.CommandHandler(outgoing=True, command="plugin", help=PLUGIN_HELP)
 async def get_plugin_info(event):
-    plugin_name = event.pattern_match.group(1)
-    OUTPUT = f"Plugin Info For: {plugin_name}\n\n"
+    split_text = event.text.split(None, 1)
+    if len(split_text) > 1:
+        plugin_name = split_text[1]
+        OUTPUT = f"Plugin Info For: {plugin_name}\n\n"
 
-    plugins = load_plugins_info()
-    if plugin_name in plugins:
+        plugins = load_plugins_info()
+        if plugin_name in plugins:
 
-        dct = plugins[plugin_name]
+            dct = plugins[plugin_name]
 
-        for k, v in dct.items():
-            OUTPUT += f"\n{k} : `{v}`"
+            for k, v in dct.items():
+                OUTPUT += f"\n{k} : `{v}`"
 
-        await event.reply(OUTPUT)
-    else:
-        await event.edit(f"Plugin `{plugin_name}` is not installed")
+            await event.reply(OUTPUT)
+        else:
+            await event.edit(f"Plugin `{plugin_name}` is not installed")
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r"\.plugins"))
+@client.CommandHandler(outgoing=True, command="plugins", help=PLUGINS_HELP)
 async def get_installed_plugins(event):
     PLUGINS = sorted(load_plugins())
     OUTPUT = f"Installed Plugins:\n\n"
