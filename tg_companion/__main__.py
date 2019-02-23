@@ -56,7 +56,7 @@ async def send_help(event):
         for k, v in sorted(CMD_HELP.items()):
             OUTPUT += f"\n\n{CMD_HANDLER}{k}: {v}"
             saved_keys.append(k)
-            if len(OUTPUT) >= 4096:
+            if len(OUTPUT) >= 3096:
                 parts += 1
                 await event.reply(f"**Here are all the commands you can use. Part {parts}** \n {OUTPUT}")
                 OUTPUT = ""
