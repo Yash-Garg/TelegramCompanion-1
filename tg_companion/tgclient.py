@@ -101,7 +101,10 @@ class CompanionClient(TelegramClient):
             global CMD_HELP
             pattern = None
             if command:
-                pattern = "\\" + CMD_HANDLER + command
+                CMD_SYMBOL = ""
+                for symbol in CMD_HANDLER:
+                    CMD_SYMBOL += "\\" + symbol
+                pattern = CMD_SYMBOL + command
             self.add_event_handler(
                 f, events.NewMessage(
                     pattern=pattern, func=func, **kwargs))
