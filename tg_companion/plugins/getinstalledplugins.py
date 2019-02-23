@@ -1,5 +1,3 @@
-from telethon import events
-
 from tg_companion.pluginmanager import load_plugins_info
 from tg_companion.plugins import load_plugins
 from tg_companion.tgclient import client

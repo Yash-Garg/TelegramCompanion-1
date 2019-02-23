@@ -1,7 +1,6 @@
 import asyncio
 import importlib
 
-from telethon.errors import FloodWaitError
 
 from tg_companion import CMD_HANDLER, LOGGER, proxy
 from tg_companion.modules import MODULES
