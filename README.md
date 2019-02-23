@@ -4,8 +4,6 @@
 
 > TelegramCompanion is simple userbot for Telegram to make your time spent on telegram more enjoyable. It runs in the background of your PC or server and gives you some new and usefull features
 
-**Notice that this version is in BETA and some features are missing. Also there might be some small bugs there and there***
-
 ## Table of Contents
 
 -   [Installation](#Installation)
