@@ -62,7 +62,9 @@ async def save_note(event):
             return
         note_name = split_text[1]
         note_content = repl_msg.text
-
+        if not note_content:
+            await event.edit("`Unsupported note content! Please make sure you reply to a text message!!`")
+            return
     else:
         if len(split_text) <= 2:
             await event.edit(SAVE_HELP)
