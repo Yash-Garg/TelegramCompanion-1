@@ -47,6 +47,9 @@ EXEC_HELP = """
             `<code>` - Your python code that will be executed.
 """
 
+READALL_HELP = """
+    **Mark all messages as read**
+"""
 
 @client.CommandHandler(outgoing=True, command="ping", help=PING_HELP)
 @client.log_exception
@@ -234,3 +237,12 @@ async def py_execute(event):
         await event.edit(f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
     else:
         await event.edit("Did you forget to output something?")
+
+
+@client.CommandHandler(outgoing=True, command="readall", help=READALL_HELP)
+@client.log_exception
+async def readall(event):
+    await event.edit("`Marking all the unread messages as read.. Please wait...`")
+    async for dialog in client.iter_dialogs(limit=None):
+        await client.send_read_acknowledge(dialog, clear_mentions=True)
+    await event.edit("`Done. All the messages are marked as read`")
