@@ -21,7 +21,7 @@ if proxy:
         f"Use {CMD_HANDLER}ping in any chat to see if your userbot has connected.")
 else:
     LOGGER.info(
-        f"Your userbot is running. Type {CMD_HANDLER}version in any chat to test it")
+        f"Your userbot is running. Type {CMD_HANDLER}start in any chat to test it")
 
 SELF_HELP = """
     **Displays this message.**
@@ -29,6 +29,10 @@ SELF_HELP = """
             `<command>` - **(optional)** __Optional command name to get display help for.__
 """
 
+
+@client.CommandHandler(outgoing=True, command="start")
+async def start(event):
+    await event.edit(f"`Telegram Companion is up and running. Use `{CMD_HANDLER}help` in private to get a list with all the available commands `")
 
 @client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
 async def send_help(event):
