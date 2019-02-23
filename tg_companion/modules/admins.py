@@ -56,9 +56,15 @@ async def ban_user(event):
         if user.id == me.id:
             await event.edit("`You can't ban yourself`")
             return
+        user_banned = False
         query = user.username if user.username else user.first_name
         banned = await client.get_participants(chat, filter=ChannelParticipantsKicked(query))
         if banned:
+            for kicked in banned:
+                if user.id == kicked.id:
+                    user_banned = True
+
+        if user_banned is True:
             await event.edit("This user is already banned")
             return
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
@@ -107,9 +113,15 @@ async def ban_user(event):
             await event.edit("`You can't ban yourself`")
             return
 
+        user_banned = False
         query = user.username if user.username else user.first_name
         banned = await client.get_participants(chat, filter=ChannelParticipantsKicked(query))
-        if not banned:
+        if banned:
+            for kicked in banned:
+                if user.id == kicked.id:
+                    user_banned = True
+
+        if user_banned is False:
             await event.edit("This user is not banned yet")
             return
 
@@ -157,9 +169,15 @@ async def mute_user(event):
         if user.id == me.id:
             await event.edit("`You can't mute yourself`")
             return
+        user_muted = False
         query = user.username if user.username else user.first_name
         muted = await client.get_participants(chat, filter=ChannelParticipantsBanned(query))
         if muted:
+            for restricted in muted:
+                if user.id == restricted.id:
+                    user_muted = True
+
+        if user_muted is True:
             await event.edit("This user is already muted")
             return
 
@@ -208,7 +226,13 @@ async def unmute_user(event):
             return
         query = user.username if user.username else user.first_name
         muted = await client.get_participants(chat, filter=ChannelParticipantsBanned(query))
-        if not muted:
+        user_muted = False
+        if muted:
+            for kicked in user_muted:
+                if user.id == kicked.id:
+                    user_muted = True
+
+        if user_muted is True:
             await event.edit("This user is not muted")
             return
 
