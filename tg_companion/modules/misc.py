@@ -51,6 +51,14 @@ READALL_HELP = """
     **Mark all messages as read**
 """
 
+DISCONNECT_HELP = """
+    **Disconnects the companion from Telegram**
+"""
+
+LOGOUT_HELP = """
+    **Logs out the companion from Telegram and deletes the session**
+"""
+
 @client.CommandHandler(outgoing=True, command="ping", help=PING_HELP)
 @client.log_exception
 async def ping(event):
@@ -250,3 +258,13 @@ async def readall(event):
     async for dialog in client.iter_dialogs(limit=None):
         await client.send_read_acknowledge(dialog, clear_mentions=True)
     await client.update_message(event, "`Done. All the messages are marked as read`")
+
+@client.CommandHandler(outgoing=True, command="disconnect", help=DISCONNECT_HELP)
+async def disconnect_companion(event):
+    await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
+    await client.disconnect()
+
+@client.CommandHandler(outgoing=True, command="logout")
+async def logout(event):
+    await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
+    await client.log_out()
