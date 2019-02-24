@@ -30,7 +30,7 @@ async def get_plugin_info(event):
 
             await event.reply(OUTPUT)
         else:
-            await event.edit(f"Plugin `{plugin_name}` is not installed")
+            await client.update_message(event, f"Plugin `{plugin_name}` is not installed")
 
 
 @client.CommandHandler(outgoing=True, command="plugins", help=PLUGINS_HELP)

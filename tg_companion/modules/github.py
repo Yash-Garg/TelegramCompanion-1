@@ -15,7 +15,7 @@ async def github(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(GITHUB_HELP)
+        await client.update_message(event, GITHUB_HELP)
         return
 
     URL = f"https://api.github.com/users/{split_text[1]}"
@@ -50,7 +50,7 @@ async def github(event):
                 result = request.json
 
                 if request.status == 404:
-                    await event.edit(REPLY)
+                    await client.update_message(event, REPLY)
                     return
 
                 result = await request.json()

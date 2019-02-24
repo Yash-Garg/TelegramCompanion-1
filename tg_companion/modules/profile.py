@@ -44,7 +44,7 @@ async def update_profile_pic(event):
         photo = None
         if message.media:
             if isinstance(message.media, MessageMediaPhoto):
-                await event.edit("`DOWNLOADING`")
+                await client.update_message(event, "`DOWNLOADING`")
                 photo = await client.download_media(message.photo)
 
             elif isinstance(message.media, MessageMediaDocument):
@@ -53,26 +53,26 @@ async def update_profile_pic(event):
                 media_ext = mime_type[1]
 
                 if media_type == "image":
-                    await event.edit("`DOWNLOADING`")
+                    await client.update_message(event, "`DOWNLOADING`")
                     photo = await client.download_file(message.media.document)
                     photo = io.BytesIO(photo)
                     photo.name = "image." + media_ext
 
             else:
-                await event.edit("`The type of this media entity is invalid.`")
+                await client.update_message(event, "`The type of this media entity is invalid.`")
 
         if photo:
-            await event.edit("`UPLOADING`")
+            await client.update_message(event, "`UPLOADING`")
             file = await client.upload_file(photo)
             try:
                 await client(UploadProfilePhotoRequest(file))
-                await event.edit("`Profile picture changed`")
+                await client.update_message(event, "`Profile picture changed`")
 
             except Exception as exc:
                 if isinstance(exc, PhotoCropSizeSmallError):
-                    await event.edit("`The image is too small`")
+                    await client.update_message(event, "`The image is too small`")
                 if isinstance(exc, ImageProcessFailedError):
-                    await event.edit("`Failure while processing the image`")
+                    await client.update_message(event, "`Failure while processing the image`")
 
             if isinstance(photo, str):
                 os.remove(photo)
@@ -84,16 +84,16 @@ async def update_profile_bio(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(PBIO_HELP)
+        await client.update_message(event, PBIO_HELP)
         return
 
     bio = split_text[1]
 
     if len(bio) > 70:
-        await event.edit("`Your bio is too long.`")
+        await client.update_message(event, "`Your bio is too long.`")
     else:
         await client(UpdateProfileRequest(about=bio))
-        await event.edit("`Succesfully changed your bio`")
+        await client.update_message(event, "`Succesfully changed your bio`")
 
 
 @client.CommandHandler(outgoing=True, command="puname", help=PUNAME_HELP)
@@ -102,7 +102,7 @@ async def change_profile_username(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(PUNAME_HELP)
+        await client.update_message(event, PUNAME_HELP)
         return
 
     username = split_text[1]
@@ -113,21 +113,21 @@ async def change_profile_username(event):
     allowed_char = re.match(r"[a-zA-Z][\w\d]{3,30}[a-zA-Z\d]", username)
 
     if not allowed_char:
-        await event.edit("`Invalid Username`")
+        await client.update_message(event, "`Invalid Username`")
 
     elif len(username) > 30:
-        await event.edit("`Your username is too long.`")
+        await client.update_message(event, "`Your username is too long.`")
 
     elif len(username) < 5:
-        await event.edit("`Your username is too short`")
+        await client.update_message(event, "`Your username is too short`")
 
     else:
         try:
             await client(UpdateUsernameRequest(username))
-            await event.edit("`Succesfully changed your username`")
+            await client.update_message(event, "`Succesfully changed your username`")
 
         except UsernameOccupiedError:
-            await event.edit(f"`{username} is already taken`")
+            await client.update_message(event, f"`{username} is already taken`")
 
 
 @client.CommandHandler(outgoing=True, command="pname", help=PNAME_HELP)
@@ -136,7 +136,7 @@ async def change_profile_name(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(PNAME_HELP)
+        await client.update_message(event, PNAME_HELP)
         return
 
     name = split_text[1]
@@ -147,4 +147,4 @@ async def change_profile_name(event):
         lastName = name.split("\\n", 1)[1]
 
     await client(UpdateProfileRequest(first_name=firstName, last_name=lastName))
-    await event.edit("`Succesfully changed your name`")
+    await client.update_message(event, "`Succesfully changed your name`")

@@ -331,6 +331,6 @@ async def show_stats(event):
     Last Update Time :  `{updatetime}`
     """
 
-        await event.edit(REPLY)
+        await client.update_message(event, REPLY)
     else:
-        await event.edit("`Stats are unavailable!! Try again later. `")
+        await client.update_message(event, "`Stats are unavailable!! Try again later. `")

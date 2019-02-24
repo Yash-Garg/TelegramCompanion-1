@@ -58,16 +58,16 @@ async def save_note(event):
     if event.reply_to_msg_id:
         repl_msg = await event.get_reply_message()
         if len(split_text) == 1:
-            await event.edit(SAVE_HELP)
+            await client.update_message(event, SAVE_HELP)
             return
         note_name = split_text[1]
         note_content = repl_msg.text
         if not note_content:
-            await event.edit("`Unsupported note content! Please make sure you reply to a text message!!`")
+            await client.update_message(event, "`Unsupported note content! Please make sure you reply to a text message!!`")
             return
     else:
         if len(split_text) <= 2:
-            await event.edit(SAVE_HELP)
+            await client.update_message(event, SAVE_HELP)
             return
 
         note_name = split_text[1]
@@ -85,7 +85,7 @@ async def save_note(event):
     connection.execute(query)
     connection.close()
 
-    await event.edit(f"Globally saved `{note_name}`. Get it using the command `get {note_name}'")
+    await client.update_message(event, f"Globally saved `{note_name}`. Get it using the command `get {note_name}'")
     _load_notes()
 
 
@@ -95,16 +95,16 @@ async def get_note(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(GET_HELP)
+        await client.update_message(event, GET_HELP)
         return
 
     note_name = split_text[1]
 
     if note_name not in NOTES:
-        await event.edit("There's no note with that name")
+        await client.update_message(event, "There's no note with that name")
         return
 
-    await event.edit(NOTES.get(note_name))
+    await client.update_message(event, NOTES.get(note_name))
 
 
 @client.CommandHandler(outgoing=True, command="remove", help=REMOVE_HELP)
@@ -112,13 +112,13 @@ async def remove_note(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(REMOVE_HELP)
+        await client.update_message(event, REMOVE_HELP)
         return
 
     note_name = split_text[1]
 
     if note_name not in NOTES:
-        await event.edit("There's no note with that name")
+        await client.update_message(event, "There's no note with that name")
         return
 
     query = notes_tbl.delete().where(notes_tbl.columns.notename == note_name)
@@ -126,7 +126,7 @@ async def remove_note(event):
     connection.execute(query)
     connection.close()
     _load_notes()
-    await event.edit(f"Deleted `{note_name}` from database")
+    await client.update_message(event, f"Deleted `{note_name}` from database")
 
 
 @client.CommandHandler(outgoing=True, command="notes", help=NOTES_HELP)
@@ -135,5 +135,5 @@ async def list_notes(event):
     listnotes = []
     for notename, _ in NOTES.items():
         listnotes.append(notename)
-    await event.edit("`Globally saved notes:`\n-" +
+    await client.update_message(event, "`Globally saved notes:`\n-" +
                     "\n-".join(listnotes))

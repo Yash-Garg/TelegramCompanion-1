@@ -26,14 +26,14 @@ async def account_migrate(event):
     global FAILED_CHATS
     global FAILED_CHATS_COUNT
 
-    await event.edit(
+    await client.update_message(event, 
         "`Migrating Chats. This might take a while so relax. and check this message later`"
     )
 
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 0:
-        await event.edit(MIGRATE_HELP)
+        await client.update_message(event, MIGRATE_HELP)
         return
 
     username = split_text[1]
@@ -81,6 +81,6 @@ async def account_migrate(event):
 
                 await event.reply(REPLY)
         else:
-            await event.edit("`The specified user is not a contact.`")
+            await client.update_message(event, "`The specified user is not a contact.`")
     else:
-        await event.edit("The specified username is not a User")
+        await client.update_message(event, "The specified username is not a User")

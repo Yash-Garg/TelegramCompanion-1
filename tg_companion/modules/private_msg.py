@@ -92,4 +92,4 @@ async def accept_permission(event):
                 ACCEPTED_USERS.append(chat.id)
                 connection.execute(query)
                 connection.close()
-                await event.edit("Private Message Accepted")
+                await client.update_message(event, "Private Message Accepted")

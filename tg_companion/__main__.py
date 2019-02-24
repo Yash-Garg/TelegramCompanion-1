@@ -31,12 +31,9 @@ SELF_HELP = """
 """
 
 
-@client.TestHanlder(outgoing=True, command="test")
-async def test_hndlr(event, arg):
-    print("This is a test")
 @client.CommandHandler(outgoing=True, command="start")
 async def start(event):
-    await event.edit(f"**Telegram Companion is up and running. Use** `{CMD_HANDLER}help` **in private to get a list with all the available commands**")
+    await client.update_message(event, f"**Telegram Companion is up and running. Use** `{CMD_HANDLER}help` **in private to get a list with all the available commands**")
 
 @client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
 async def send_help(event):
@@ -48,15 +45,15 @@ async def send_help(event):
 
     if len(text) == 2:
         if text[1] in CMD_HELP:
-            await event.edit(f"Here is the help for the `{text[1]}` command:\n{CMD_HELP.get(text[1])}")
+            await client.update_message(event, f"Here is the help for the `{text[1]}` command:\n{CMD_HELP.get(text[1])}")
             return
         else:
-            await event.edit(f"No help available for `{text[1]}`")
+            await client.update_message(event, f"No help available for `{text[1]}`")
             return
 
     OUTPUT = ""
     if not event.is_private:
-        await event.edit("Use this in PM for help!")
+        await client.update_message(event, "Use this in PM for help!")
         return
 
     if CMD_HELP:
@@ -80,4 +77,4 @@ loop = asyncio.get_event_loop()
 
 if __name__ == "__main__":
 
-    client.run_until_disconnected()
+    client.loop_until_disconnected()

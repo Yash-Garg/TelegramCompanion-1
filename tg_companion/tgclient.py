@@ -15,6 +15,7 @@ from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 from tg_companion import (APP_HASH, APP_ID, CMD_HANDLER, DB_URI, DEBUG, LOGGER,
                           SESSION_NAME, proxy)
 from tg_companion._version import __version__
+from telethon.client.users import UserMethods
 
 loop = asyncio.get_event_loop()
 
@@ -22,10 +23,28 @@ loop = asyncio.get_event_loop()
 CMD_HELP = {}
 
 
-class CompanionClient(TelegramClient):
+class CustomDisconnect(UserMethods):
+    async def _run_until_disconnected(self):
+        try:
+            await self.disconnected
+        except KeyboardInterrupt:
+            LOGGER.info("Thanks for using Telegram Companion. Goodbye!")
+            self.disconnect()
+
+    def loop_until_disconnected(self):
+        if self.loop.is_running():
+            return self._run_until_disconnected()
+        try:
+            return self.loop.run_until_complete(self.disconnected)
+        except KeyboardInterrupt:
+            LOGGER.info("Thanks for using Telegram Companion. Goodbye!")
+            self.disconnect()
+
+
+
+class CustomClient(TelegramClient):
 
     def __init__(self, session_name, app_id, app_hash):
-        LOGGER.info("Starting TelegramCompanion")
         super().__init__(
             session_name,
             app_id,
@@ -33,8 +52,7 @@ class CompanionClient(TelegramClient):
             proxy=proxy,
             app_version=__version__.public())
 
-        ("Connecting to Telegram")
-
+        LOGGER.info("Connecting to Telegram servers")
         try:
             loop.run_until_complete(self.connect())
         except ConnectionError:
@@ -42,7 +60,10 @@ class CompanionClient(TelegramClient):
             loop.run_until_complete(self.connect())
 
         if not loop.run_until_complete(self.is_user_authorized()):
-            LOGGER.info("Welcome to Telegram Companion.. \n\n")
+            LOGGER.info("Welcome to Telegram Companion!")
+            LOGGER.info("Telegram Companion is a python app trying to bring new features to other official or unofficial Telegram clients")
+            LOGGER.info("You can report a bug or a give a suggestion in our telegram group at https://t.me/tgcompanion")
+            LOGGER.info("Because this is your first time using the companion, you have to sign in with your telegram account:\n\n")
             phone = input("Enter your phone: ")
             loop.run_until_complete(self.sign_in(phone))
 
@@ -126,14 +147,25 @@ class CompanionClient(TelegramClient):
             return f
         return decorator
 
+    async def update_message(self, entity, text):
+        """ Alternative for `client.edit_message()` or `client.update_message(event, )`
+            which edit a message and if the edit is not allowed is replying to the respective message.
+        """
+        try:
+            await self.edit_message(entity, text)
+        except Exception:
+            chat = await entity.get_chat()
+            await self.send_message(chat, text, reply_to=entity)
+
+
     async def send_from_disk(self, event, path, caption=None, force_document=False, use_cache=None, reply_to=None):
         if os.path.isfile(path):
             if os.path.getsize(path) >= 1500000000:
-                await event.edit("`File size too big. Max 1.5GB.`")
+                await self.update_message(event, "`File size too big. Max 1.5GB.`")
                 return
             f_name = os.path.basename(path)
             f_size, unit = self.convert_file_size(os.path.getsize(f_name))
-            await event.edit(
+            await client.update_message(event,
                 f"**Uploading**:\n\n"
                 f"  __File Name:__ `{f_name}`\n"
                 f"  __Size__: `{f_size}` {unit}\n"
@@ -150,7 +182,7 @@ class CompanionClient(TelegramClient):
                     fp = os.path.join(dirpath, f)
                     d_size += os.path.getsize(fp)
                     if d_size >= 1500000000:
-                        await event.edit("`Folder size too big. Max 1.5GB`")
+                        await client.update_message(event, "`Folder size too big. Max 1.5GB`")
                         return
 
             d_name = os.path.dirname(path)
@@ -158,14 +190,14 @@ class CompanionClient(TelegramClient):
             try:
                 with io.BytesIO() as memzip:
                     with zipfile.ZipFile(memzip, mode="w") as zf:
-                        await event.edit("Processing ZipFile from folder")
+                        await client.update_message(event, "Processing ZipFile from folder")
                         for file in os.listdir(path):
                             zf.write(f"{path}{file}")
 
                     memzip.name = f"{d_name}.zip"
                     memzip.seek(0)
                     d_size, unit = self.convert_file_size(d_size)
-                    await event.edit(
+                    await client.update_message(event,
                         f"**Uploading**:\n\n"
                         f"  __Folder Name:__ `{d_name}`\n"
                         f"  __Size__: `{d_size}` {unit}\n"
@@ -174,10 +206,10 @@ class CompanionClient(TelegramClient):
                     await client.send_file(event.chat_id, file=memzip, allow_cache=None, progress_callback=None)
                     await event.delete()
             except FileNotFoundError:
-                await event.edit(f"`{path}` doesn't exist.")
+                await client.update_message(event, f"`{path}` doesn't exist.")
                 return
         else:
-            await event.edit(f"{path} doesn't exist.")
+            await client.update_message(event, f"{path} doesn't exist.")
             return
 
     def convert_file_size(self, size):
@@ -262,6 +294,9 @@ class CompanionClient(TelegramClient):
 
         return wrapper
 
+
+class CompanionClient(CustomClient, CustomDisconnect):
+    pass
 
 container = AlchemySessionContainer(DB_URI)
 session = container.new_session(SESSION_NAME)

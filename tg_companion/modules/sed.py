@@ -39,7 +39,7 @@ async def regex_no_symb(event):
     regex_group = re.search(regex_cmd, event.text)
     group_len = 0
     if not regex_group:
-        await event.edit(SED_HELP)
+        await client.update_message(event, SED_HELP)
         return
 
     for group in regex_group.groups():
@@ -47,7 +47,7 @@ async def regex_no_symb(event):
             group_len += 1
 
     if group_len < 2 or not event.reply_to_msg_id:
-        await event.edit(SED_HELP)
+        await client.update_message(event, SED_HELP)
         return
 
     rep_msg = await event.get_reply_message(
@@ -71,7 +71,7 @@ async def regex_no_symb(event):
         rep_msg.text,
         count=count,
         flags=flags)
-    await event.edit(final_text)
+    await client.update_message(event, final_text)
 
 
 @client.CommandHandler(outgoing=True, command="sed/", help=SED_HELP)

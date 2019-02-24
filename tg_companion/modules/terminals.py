@@ -8,6 +8,7 @@ from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
                           SSH_PASSWORD, SSH_PORT, SSH_USERNAME,
                           SUBPROCESS_ANIM)
 from tg_companion.tgclient import client
+from telethon.errors import FloodWaitError
 
 TERM_HELP = """
     **Execute a bash command on your pc/server**
@@ -41,18 +42,17 @@ async def terminal(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(TERM_HELP)
+        await client.update_message(event, TERM_HELP)
         return
 
     cmd = split_text[1]
 
-    await event.edit("`Connecting..`")
+    await client.update_message(event, "`Connecting..`")
 
     start_time = time.time() + 10
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
-    # f"**Query**:\n`{code}`\n\n **Exception:**\n`{exc}`"
     OUTPUT = f"**Query:**\n\n`{cmd}`\n\n**Result:**\n\n"
 
     if not SUBPROCESS_ANIM:
@@ -63,17 +63,17 @@ async def terminal(event):
             return
 
         if stderr.decode():
-            await event.edit(f"{OUTPUT}`{stderr.decode()}`")
+            await client.update_message(event, f"{OUTPUT}`{stderr.decode()}`")
             return
 
-        await event.edit(f"{OUTPUT}`{stdout.decode()}`")
+        await client.update_message(event, f"{OUTPUT}`{stdout.decode()}`")
         return
 
     while process:
         if time.time() > start_time:
             if process:
                 process.kill()
-            await event.edit(f"{OUTPUT}\n__Process killed__: `Time limit reached`")
+            await client.update_message(event, f"{OUTPUT}\n__Process killed__: `Time limit reached`")
             break
 
         stdout = await process.stdout.readline()
@@ -83,7 +83,7 @@ async def terminal(event):
             if stderr.decode():
                 OUTPUT += f"`{stderr.decode()}`"
                 try:
-                    await event.edit(OUTPUT)
+                    await client.update_message(event, OUTPUT)
                 except Exception:
                     break
                 break
@@ -98,7 +98,13 @@ async def terminal(event):
             break
         try:
             await event.edit(OUTPUT)
-        except Exception:
+        except FloodWaitError:
+            stdout, stderr = await process.communicate()
+            if stderr:
+                await client.update_message(event, f"{OUTPUT}`{stderr}`")
+                break
+
+            await client.update_message(event, f"{OUTPUT}`{stdout}`")
             break
 
 
@@ -113,13 +119,13 @@ async def ssh_terminal(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(SSH_TERM_HELP)
+        await client.update_message(event, SSH_TERM_HELP)
         return
 
     cmd = split_text[1]
 
     OUTPUT = f"**Query:**\n`{cmd}`\n\n**Output:**\n"
-    await event.edit("`Connecting..`")
+    await client.update_message(event, "`Connecting..`")
 
     async with asyncssh.connect(
         str(SSH_HOSTNAME),
@@ -141,10 +147,10 @@ async def ssh_terminal(event):
                     return
 
                 if stderr:
-                    await event.edit(f"{OUTPUT}`{stderr}`")
+                    await client.update_message(event, f"{OUTPUT}`{stderr}`")
                     return
 
-                await event.edit(f"{OUTPUT}`{stdout}`")
+                await client.update_message(event, f"{OUTPUT}`{stdout}`")
                 return
 
             while True:
@@ -158,7 +164,7 @@ async def ssh_terminal(event):
                     if stderr:
                         OUTPUT += f"`{stderr}`"
                         try:
-                            await event.edit(OUTPUT)
+                            await client.update_message(event, OUTPUT)
                         except Exception:
                             break
                         break
@@ -170,8 +176,14 @@ async def ssh_terminal(event):
                     await event.reply("__Process killed:__ `Messasge too long`")
                     break
                 try:
-                    await event.edit(OUTPUT)
-                except Exception:
+                    await client.update_message(event, OUTPUT)
+                except FloodWaitError:
+                    stdout, stderr = await process.communicate()
+                    if stderr:
+                        await client.update_message(event, f"{OUTPUT}`{stderr}`")
+                        break
+
+                    await client.update_message(event, f"{OUTPUT}`{stdout}`")
                     break
 
 
@@ -181,7 +193,7 @@ async def upload_file(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(UPLOAD_HELP)
+        await client.update_message(event, UPLOAD_HELP)
         return
 
     to_upload = split_text[1]
@@ -198,12 +210,12 @@ async def ssh_upload_file(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(SSH_UPLOAD_HELP)
+        await client.update_message(event, SSH_UPLOAD_HELP)
         return
 
     to_upload = split_text[1]
 
-    await event.edit("`Connecting...`")
+    await client.update_message(event, "`Connecting...`")
 
     async with asyncssh.connect(
             str(SSH_HOSTNAME),
@@ -218,10 +230,10 @@ async def ssh_upload_file(event):
             stdout, _ = await process.communicate()
             if stdout:
                 async with conn.start_sftp_client() as ftp:
-                    await event.edit("`Downloading...`")
+                    await client.update_message(event, "`Downloading...`")
                     await ftp.get(to_upload, to_upload)
                     await client.send_from_disk(event, to_upload, force_document=True)
 
                 os.remove(to_upload)
             else:
-                await event.edit(f"__File Not Found__: `{to_upload}`")
+                await client.update_message(event, f"__File Not Found__: `{to_upload}`")

@@ -43,10 +43,10 @@ async def afk(event):
 
         USER_AFK.update({"yes": reason})
         if reason:
-            await event.edit(f"**I will be afk for a while.** \n __Reason__: {reason}")
+            await client.update_message(event, f"**I will be afk for a while.** \n __Reason__: {reason}")
             return
 
-        await event.edit(f"**I will be afk for a while.**")
+        await client.update_message(event, f"**I will be afk for a while.**")
 
 
 @client.CommandHandler(

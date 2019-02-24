@@ -49,18 +49,18 @@ async def profanity_switch(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1 or len(split_text) > 2:
-        await event.edit(PROFANITY_HELP)
+        await client.update_message(event, PROFANITY_HELP)
         return
 
     on_off = split_text[1]
 
     if not chat.admin_rights:
-        await event.edit("You need to have admin righs to disable or enable the profanity filter")
+        await client.update_message(event, "You need to have admin righs to disable or enable the profanity filter")
         return
 
     if on_off.lower() == "on":
         if chat.id in PROFANITY_CHECK_CHATS:
-            await event.edit("The profanity filter is already on."
+            await client.update_message(event, "The profanity filter is already on."
                              " All the incoming messages containing profanity will be deleted")
             return
 
@@ -83,12 +83,12 @@ async def profanity_switch(event):
         PROFANITY_CHECK_CHATS.append(chat.id)
         connection.execute(query)
         connection.close()
-        await event.edit("The profanity filter is on."
+        await client.update_message(event, "The profanity filter is on."
                          " All the incoming messages containing profanity will be deleted")
 
     if on_off.lower() == "off":
         if chat.id not in PROFANITY_CHECK_CHATS:
-            await event.edit("The profanity filter is already off."
+            await client.update_message(event, "The profanity filter is already off."
                              " All the incoming messages containing profanity will be ignored")
             return
 
@@ -111,7 +111,7 @@ async def profanity_switch(event):
         PROFANITY_CHECK_CHATS.remove(chat.id)
         connection.execute(query)
         connection.close()
-        await event.edit("The profanity filter is off."
+        await client.update_message(event, "The profanity filter is off."
                          " Users can use swear words here")
 
 
@@ -145,8 +145,8 @@ async def check_profanity_filter(event):
 async def profanity_filter_status(event):
     chat = await event.get_chat()
     if chat.id in PROFANITY_CHECK_CHATS:
-        await event.edit("The profanity filter is on."
+        await client.update_message(event, "The profanity filter is on."
                          " All the incoming messages containing profanity will be deleted")
     else:
-        await event.edit("The profanity filter is off."
+        await client.update_message(event, "The profanity filter is off."
                          " All the incoming messages containing profanity will be ignored")

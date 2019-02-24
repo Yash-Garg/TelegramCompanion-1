@@ -59,7 +59,7 @@ async def ping(event):
         async with session.get("https://www.google.com"):
             end_time = time.time()
             ping_time = float(end_time - start_time) * 1000
-            await event.edit(f"Ping time was: {ping_time}ms")
+            await client.update_message(event, f"Ping time was: {ping_time}ms")
 
 
 @client.CommandHandler(outgoing=True, command="version", help=VER_HELP)
@@ -69,7 +69,7 @@ async def version(event):
     python_version = platform.python_version()
     telethon_version = telethon.__version__
 
-    await event.edit(f"__Companion__ (**{bot_version}**),"
+    await client.update_message(event, f"__Companion__ (**{bot_version}**),"
                      f" __Python__ (**{python_version}**),"
                      f" __Telethon__"
                      f" (**{telethon_version}**)")
@@ -154,7 +154,7 @@ async def rextestercli(event):
             rextester = Rextester(language, code, stdin)
             res = await rextester.exec()
         except UnknownLanguage as exc:
-            await event.edit(str(exc))
+            await client.update_message(event, str(exc))
             return
 
         output = ""
@@ -174,10 +174,10 @@ async def rextestercli(event):
             with io.BytesIO(str.encode(res.result)) as out_file:
                 out_file.name = "result.txt"
                 await client.send_file(chat.id, file=out_file)
-                await event.edit(code)
+                await client.update_message(event, code)
             return
 
-        await event.edit(output)
+        await client.update_message(event, output)
 
 
 @client.CommandHandler(outgoing=True, command="sendlog", help=SEND_LOG_HELP)
@@ -187,7 +187,7 @@ async def send_logs(event):
     if os.path.isdir("logs/"):
         await client.send_from_disk(event, "logs/")
     else:
-        await event.edit("`There are no logs saved!`")
+        await client.update_message(event, "`There are no logs saved!`")
 
 
 @client.CommandHandler(outgoing=True, command="exec", help=EXEC_HELP)
@@ -196,7 +196,7 @@ async def py_execute(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await event.edit(EXEC_HELP)
+        await client.update_message(event, EXEC_HELP)
         return
 
     code = split_text[1]
@@ -220,11 +220,11 @@ async def py_execute(event):
     sys.stderr = old_stderr
 
     if exc:
-        await event.edit(f"**Query**:\n\n`{code}`\n\n**Exception:**\n\n`{exc}`")
+        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Exception:**\n\n`{exc}`")
         return
 
     if stderr:
-        await event.edit(f"**Query**:\n\n`{code}`\n\n**Error:**\n\n`{stderr}`")
+        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Error:**\n\n`{stderr}`")
         return
 
     if stdout:
@@ -234,15 +234,15 @@ async def py_execute(event):
                 await client.send_file(chat.id, file=out_file, caption=f"'{code}'")
                 return
 
-        await event.edit(f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
+        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
     else:
-        await event.edit("Did you forget to output something?")
+        await client.update_message(event, "Did you forget to output something?")
 
 
 @client.CommandHandler(outgoing=True, command="readall", help=READALL_HELP)
 @client.log_exception
 async def readall(event):
-    await event.edit("`Marking all the unread messages as read.. Please wait...`")
+    await client.update_message(event, "`Marking all the unread messages as read.. Please wait...`")
     async for dialog in client.iter_dialogs(limit=None):
         await client.send_read_acknowledge(dialog, clear_mentions=True)
-    await event.edit("`Done. All the messages are marked as read`")
+    await client.update_message(event, "`Done. All the messages are marked as read`")
