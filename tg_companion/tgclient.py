@@ -152,10 +152,10 @@ class CustomClient(TelegramClient):
             which edit a message and if the edit is not allowed is replying to the respective message.
         """
         try:
-            await self.edit_message(entity, text)
+            await self.edit_message(await entity.get_chat(), entity, text)
         except Exception:
-            chat = await entity.get_chat()
-            await self.send_message(chat, text, reply_to=entity)
+
+            await self.send_message(await entity.get_chat(), text, reply_to=entity)
 
 
     async def send_from_disk(self, event, path, caption=None, force_document=False, use_cache=None, reply_to=None):
