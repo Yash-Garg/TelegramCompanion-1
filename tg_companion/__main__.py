@@ -7,6 +7,7 @@ from tg_companion.modules import MODULES
 from tg_companion.plugins import PLUGINS
 from tg_companion.tgclient import CMD_HELP, client
 
+
 for module_name in MODULES:
     imported_module = importlib.import_module(
         "tg_companion.modules." + module_name)
@@ -30,9 +31,12 @@ SELF_HELP = """
 """
 
 
+@client.TestHanlder(outgoing=True, command="test")
+async def test_hndlr(event, arg):
+    print("This is a test")
 @client.CommandHandler(outgoing=True, command="start")
 async def start(event):
-    await event.edit(f"`Telegram Companion is up and running. Use `{CMD_HANDLER}help` in private to get a list with all the available commands `")
+    await event.edit(f"**Telegram Companion is up and running. Use** `{CMD_HANDLER}help` **in private to get a list with all the available commands**")
 
 @client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
 async def send_help(event):
