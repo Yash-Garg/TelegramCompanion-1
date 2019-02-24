@@ -32,9 +32,9 @@ INFO_HELP = """
 REX_HELP = """
     **Execute your code using rextester's API**
         __Usage:__
-            __Use the command symbol + language followed by your code that will be executed.__
+            __Use the command + language followed by your code that will be executed.__
         __Example:__
-            `$py3 print("Hello World")`
+            `rex py3 print('Hello World')`
 """
 
 SEND_LOG_HELP = """
@@ -133,51 +133,55 @@ async def user_info(event):
     )
 
 
-@client.CommandHandler(outgoing=True, command="$", help=REX_HELP)
+@client.CommandHandler(outgoing=True, command="rex", help=REX_HELP)
 @client.log_exception
 async def rextestercli(event):
     stdin = ""
-    message = event.text
+    message = event.text.split("rex ", 1)
     chat = await event.get_chat()
 
-    if len(message.split()) > 1:
-        regex = re.search(
-            r"^\$([\w.#+]+)\s+([\s\S]+?)(?:\s+\/stdin\s+([\s\S]+))?$",
-            message,
-            re.IGNORECASE,
-        )
-        language = regex.group(1)
-        code = regex.group(2)
-        stdin = regex.group(3)
+    if len(message) < 2:
+        await client.update_message(event, REX_HELP)
+        return
 
-        try:
-            rextester = Rextester(language, code, stdin)
-            res = await rextester.exec()
-        except UnknownLanguage as exc:
-            await client.update_message(event, str(exc))
-            return
+    regex = re.search(
+        r"([\w.#+]+)\s+([\s\S]+?)(?:\s+\/stdin\s+([\s\S]+))?$",
+        message[1],
+        re.IGNORECASE,
+    )
+    language = regex.group(1)
+    code = regex.group(2)
+    stdin = regex.group(3)
 
-        output = ""
-        output += f"**Language:**\n```{language}```"
-        output += f"\n\n**Source:** \n```{code}```"
+    try:
+        rextester = Rextester(language, code, stdin)
+        res = await rextester.exec()
+    except UnknownLanguage as exc:
+        await client.update_message(event, str(exc))
+        return
 
-        if res.result:
-            output += f"\n\n**Result:** \n```{res.result}```"
+    output = ""
+    output += f"**Language:**\n```{language}```"
+    output += f"\n\n**Source:** \n```{code}```"
 
-        if res.warnings:
-            output += f"\n\n**Warnings:** \n```{res.warnings}```\n"
+    if res.result:
+        output += f"\n\n**Result:** \n```{res.result}```"
 
-        if res.errors:
-            output += f"\n\n**Errors:** \n'```{res.errors}```"
+    if res.warnings:
+        output += f"\n\n**Warnings:** \n```{res.warnings}```\n"
 
-        if len(res.result) > 4096:
-            with io.BytesIO(str.encode(res.result)) as out_file:
-                out_file.name = "result.txt"
-                await client.send_file(chat.id, file=out_file)
-                await client.update_message(event, code)
-            return
+    if res.errors:
+        output += f"\n\n**Errors:** \n```{res.errors}```"
 
-        await client.update_message(event, output)
+
+    if len(output) > 4096:
+        with io.BytesIO(str.encode(output)) as out_file:
+            out_file.name = "output.txt"
+            await client.send_file(chat.id, file=out_file)
+            await client.update_message(event, code)
+        return
+
+    await client.update_message(event, output)
 
 
 @client.CommandHandler(outgoing=True, command="sendlog", help=SEND_LOG_HELP)
