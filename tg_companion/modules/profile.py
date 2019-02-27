@@ -90,10 +90,10 @@ async def update_profile_bio(event):
     bio = split_text[1]
 
     if len(bio) > 70:
-        await client.update_message(event, "`Your bio is too long.`")
+        await client.update_message(event, "`The specified bio is too long.`")
     else:
         await client(UpdateProfileRequest(about=bio))
-        await client.update_message(event, "`Succesfully changed your bio`")
+        await client.update_message(event, "`Succesfully changed the profile bio`")
 
 
 @client.CommandHandler(outgoing=True, command="puname", help=PUNAME_HELP)
@@ -116,7 +116,7 @@ async def change_profile_username(event):
         await client.update_message(event, "`Invalid Username`")
 
     elif len(username) > 30:
-        await client.update_message(event, "`Your username is too long.`")
+        await client.update_message(event, "`The specified username is too long.`")
 
     elif len(username) < 5:
         await client.update_message(event, "`Your username is too short`")
@@ -124,7 +124,7 @@ async def change_profile_username(event):
     else:
         try:
             await client(UpdateUsernameRequest(username))
-            await client.update_message(event, "`Succesfully changed your username`")
+            await client.update_message(event, "`Succesfully changed profile username`")
 
         except UsernameOccupiedError:
             await client.update_message(event, f"`{username} is already taken`")
@@ -147,4 +147,4 @@ async def change_profile_name(event):
         lastName = name.split("\\n", 1)[1]
 
     await client(UpdateProfileRequest(first_name=firstName, last_name=lastName))
-    await client.update_message(event, "`Succesfully changed your name`")
+    await client.update_message(event, "`Succesfully changed profile name`")
