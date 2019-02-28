@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import importlib
 import os
 import re
 import sys
@@ -79,14 +80,10 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
         if get_req:
             requirements = get_req.group(1)
 
-            if "," in requirements:
-                requirements = requirements.replace(",", "")
-
-            LOGGER.info("Installing Requirements:")
-
-            process = await asyncio.create_subprocess_shell(f"{sys.executable} -m pip install {requirements}", stdin=asyncio.subprocess.PIPE)
-
-            stdout, stderr = await process.communicate()
+            for module in requirements.split(","):
+                if not importlib.util.find_spec(module.replace(" ", "")):
+                    process = await asyncio.create_subprocess_shell(f"{sys.executable} -m pip install {module}", stdin=asyncio.subprocess.PIPE)
+                    await process.communicate()
 
             LOGGER.info(f"Installed {plugin}")
             LOGGER.info(f"Plugin {plugin} Installed")
