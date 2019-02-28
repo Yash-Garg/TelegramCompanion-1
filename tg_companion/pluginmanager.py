@@ -84,7 +84,7 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
 
             LOGGER.info("Installing Requirements:")
 
-            process = await asyncio.create_subprocess_shell(f"pip3 install {requirements}", stdin=asyncio.subprocess.PIPE)
+            process = await asyncio.create_subprocess_shell(f"{sys.executable} -m pip install {requirements}", stdin=asyncio.subprocess.PIPE)
 
             stdout, stderr = await process.communicate()
 
