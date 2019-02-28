@@ -74,7 +74,7 @@ async def regex_no_symb(event):
         rep_msg.text,
         count=count,
         flags=flags)
-    await client.update_message(event, f"*Did you mean:**\n{final_text}")
+    await client.update_message(event, f"**Did you mean:**\n\n{final_text}")
 
 
 @client.CommandHandler(outgoing=True, command="sed/", help=SED_HELP)
