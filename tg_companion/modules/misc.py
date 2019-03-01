@@ -83,7 +83,7 @@ async def version(event):
                      f" (**{telethon_version}**)")
 
 
-@client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
+@@client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
 @client.log_exception
 async def user_info(event):
     message = event.message
@@ -107,6 +107,9 @@ async def user_info(event):
         if not isinstance(user, User):
             await event.reply(f"`@{user.username}` is not a User")
             return
+        if user.deleted:
+            await event.edit("This user has deleted his account. I can't get his info")
+            return
 
     full_user = await client(GetFullUserRequest(user.id))
     firstName = full_user.user.first_name
@@ -117,7 +120,8 @@ async def user_info(event):
 
     REPLY = "<b>User Info:</b>\n"
 
-    REPLY += f"\nFirst Name: {escape(firstName)}"
+    if firstName:
+        REPLY += f"\nFirst Name: {escape(firstName)}"
 
     if lastName:
         REPLY += f"\nLast Name: {escape(lastName)}"
@@ -139,6 +143,7 @@ async def user_info(event):
     await client.send_message(
         chat.id, REPLY, reply_to=message.id, link_preview=False, file=full_user.profile_photo, parse_mode="html"
     )
+
 
 
 @client.CommandHandler(outgoing=True, command="rex", help=REX_HELP)
