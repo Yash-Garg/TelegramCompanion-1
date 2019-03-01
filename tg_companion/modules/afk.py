@@ -38,7 +38,7 @@ async def afk(event):
 
     if not USER_AFK:
         last_seen_status = await client(GetPrivacyRequest(InputPrivacyKeyStatusTimestamp()))
-        if last_seen_status.rules or not isinstance(last_seen_status.rules, PrivacyValueAllowContacts):
+        if last_seen_status.rules or isinstance(last_seen_status.rules, PrivacyValueAllowContacts):
             afk_time = datetime.datetime.now()
 
         USER_AFK.update({"yes": reason})
