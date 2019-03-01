@@ -11,7 +11,7 @@ import telethon
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 
-from tg_companion.modules.rextester.api import Rextester, UnknownLanguage
+from tg_companion.modules.rextester.api import rexec, UnknownLanguage
 from tg_companion.modules.global_bans import GBANNED_USERS
 from tg_companion.tgclient import client
 
@@ -167,24 +167,22 @@ async def rextestercli(event):
     stdin = regex.group(3)
 
     try:
-        rextester = Rextester(language, code, stdin)
-        res = await rextester.exec()
+        res = await rexec(language, code, stdin)
     except UnknownLanguage as exc:
         await client.update_message(event, str(exc))
         return
 
-    output = ""
-    output += f"**Language:**\n```{language}```"
-    output += f"\n\n**Source:** \n```{code}```"
+    output = f"**Language:**\n\n```{language}```"
+    output += f"\n\n**Source:** \n\n```{code}```"
 
-    if res.result:
-        output += f"\n\n**Result:** \n```{res.result}```"
+    if res.results:
+        output += f"\n\n**Result:** \n\n```{res.result}```"
 
     if res.warnings:
-        output += f"\n\n**Warnings:** \n```{res.warnings}```\n"
+        output += f"\n\n**Warnings:** \n\n```{res.warnings}```\n"
 
     if res.errors:
-        output += f"\n\n**Errors:** \n```{res.errors}```"
+        output += f"\n\n**Errors:** \n\n```{res.errors}```"
 
 
     if len(output) > 4096:

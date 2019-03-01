@@ -1,39 +1,39 @@
-import asyncio
-
 import aiohttp
 
 from tg_companion.modules.rextester.langs import languages
 
 
-class Rextester(object):
-    def __init__(self, lang, code, stdin):
-        self.lang = lang
-        self.code = code
-        self.stdin = stdin
-        self._test = None
+async def __fetch(session, url, data):
+    async with session.get(url, data=data) as response:
+        return await response.json()
 
-    async def fetch(self, session, url, data):
-        async with session.get(url, data=data) as response:
-            return await response.json()
 
-    async def exec(self):
-        if self.lang not in languages:
-            raise UnknownLanguage("Unknown Language")
+async def rexec(lang, code, stdin):
+    if lang.lower() not in languages:
+        raise UnknownLanguage("Unknown Language")
 
-        data = {
-            "LanguageChoice": languages[self.lang],
-            "Program": self.code,
-            "Input": self.stdin}
+    data = {
+        "LanguageChoice": languages[lang.lower()],
+        "Program": code,
+        "Input": stdin}
 
-        async with aiohttp.ClientSession() as session:
-            response = await self.fetch(session, "https://rextester.com/rundotnet/api", data)
-            self.result = response["Result"]
-            self.warnings = response["Warnings"]
-            self.errors = response["Errors"]
-            self.stats = response["Stats"]
-            self.files = response["Files"]
-        return self
+    async with aiohttp.ClientSession() as session:
+        response = await __fetch(session, "https://rextester.com/rundotnet/api", data)
+        return RextesterResult(response.get("Result"),
+                               response.get("Warnings"),
+                               response.get("Errors"),
+                               response.get("Stats"),
+                               response.get("Files"))
 
 
 class UnknownLanguage(Exception):
     pass
+
+
+class RextesterResult(object):
+    def __init__(self, results, warnings, errors, stats, files):
+        self.results = results
+        self.warnings = warnings
+        self.errors = errors
+        self.stats = stats
+        self.files = files
