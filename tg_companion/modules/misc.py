@@ -83,7 +83,7 @@ async def version(event):
                      f" (**{telethon_version}**)")
 
 
-@@client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
+@client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
 @client.log_exception
 async def user_info(event):
     message = event.message
