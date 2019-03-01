@@ -176,7 +176,7 @@ async def rextestercli(event):
     output += f"\n\n**Source:** \n\n```{code}```"
 
     if res.results:
-        output += f"\n\n**Result:** \n\n```{res.result}```"
+        output += f"\n\n**Result:** \n\n```{res.results}```"
 
     if res.warnings:
         output += f"\n\n**Warnings:** \n\n```{res.warnings}```\n"
