@@ -248,7 +248,7 @@ async def py_execute(event):
 
         await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
     else:
-        await client.update_message(event, "Did you forget to output something?")
+        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`Success`")
 
 
 @client.CommandHandler(outgoing=True, command="readall", help=READALL_HELP)
