@@ -205,6 +205,14 @@ async def send_logs(event):
         await client.update_message(event, "`There are no logs saved!`")
 
 
+async def aexec(code, event):
+    exec(
+            f'async def __aexec(event): ' +
+            ''.join(f'\n {l}' for l in code.split('\n'))
+        )
+    return await locals()['__aexec'](event)
+
+
 @client.CommandHandler(outgoing=True, command="exec", help=EXEC_HELP)
 async def py_execute(event):
     chat = await event.get_chat()
@@ -223,7 +231,10 @@ async def py_execute(event):
     stdout, stderr, exc = None, None, None
 
     try:
-        exec(code)
+        if "await" in code:
+            await aexec(code, event)
+        else:
+            exec(code)
     except Exception:
         import traceback
         exc = traceback.format_exc()
