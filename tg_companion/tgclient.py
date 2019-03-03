@@ -150,7 +150,7 @@ class CustomClient(TelegramClient):
         return decorator
 
     async def update_message(self, entity, text):
-        """ Alternative for `client.edit_message()` or `client.update_message(event, )`
+        """ Alternative for `client.edit_message()` or `self.update_message(event, )`
             which edit a message and if the edit is not allowed is replying to the respective message.
         """
         try:
@@ -166,7 +166,7 @@ class CustomClient(TelegramClient):
                 return
             f_name = os.path.basename(path)
             f_size, unit = self.convert_file_size(os.path.getsize(f_name))
-            await client.update_message(event,
+            await self.update_message(event,
                                         f"**Uploading**:\n\n"
                                         f"  __File Name:__ `{f_name}`\n"
                                         f"  __Size__: `{f_size}` {unit}\n"
@@ -183,7 +183,7 @@ class CustomClient(TelegramClient):
                     fp = os.path.join(dirpath, f)
                     d_size += os.path.getsize(fp)
                     if d_size >= 1500000000:
-                        await client.update_message(event, "`Folder size too big. Max 1.5GB`")
+                        await self.update_message(event, "`Folder size too big. Max 1.5GB`")
                         return
 
             d_name = os.path.dirname(path)
@@ -191,29 +191,30 @@ class CustomClient(TelegramClient):
             try:
                 with io.BytesIO() as memzip:
                     with zipfile.ZipFile(memzip, mode="w") as zf:
-                        await client.update_message(event, "Processing ZipFile from folder")
+                        await self.update_message(event, "Processing ZipFile from folder")
                         for file in os.listdir(path):
                             zf.write(f"{path}{file}")
 
                     memzip.name = f"{d_name}.zip"
                     memzip.seek(0)
                     d_size, unit = self.convert_file_size(d_size)
-                    await client.update_message(event,
+                    await self.update_message(event,
                                                 f"**Uploading**:\n\n"
                                                 f"  __Folder Name:__ `{d_name}`\n"
                                                 f"  __Size__: `{d_size}` {unit}\n"
                                                 )
 
-                    await client.send_file(event.chat_id, file=memzip, allow_cache=None, progress_callback=None)
+                    await self.send_file(event.chat_id, file=memzip, allow_cache=None, progress_callback=None)
                     await event.delete()
             except FileNotFoundError:
-                await client.update_message(event, f"`{path}` doesn't exist.")
+                await self.update_message(event, f"`{path}` doesn't exist.")
                 return
         else:
-            await client.update_message(event, f"{path} doesn't exist.")
+            await self.update_message(event, f"{path} doesn't exist.")
             return
 
-    def convert_file_size(self, size):
+    @staticmethod
+    def convert_file_size(size):
         power = 2**10
         n = 0
         units = {
@@ -237,7 +238,7 @@ class CustomClient(TelegramClient):
         """
         def decorator(fcn):
             async def wrapper():
-                while not client.is_connected():
+                while not self.is_connected():
                     await asyncio.sleep(1)
                 while True:
                     if int(seconds) == 0:
@@ -249,7 +250,8 @@ class CustomClient(TelegramClient):
             return wrapper
         return decorator
 
-    def log_exception(self, func):
+    @staticmethod
+    def log_exception(func):
 
         async def wrapper(*args, **kwds):
             __lgw_marker_local__ = 0
