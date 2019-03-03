@@ -1,12 +1,10 @@
 import asyncio
 import importlib
 
-
 from tg_companion import CMD_HANDLER, LOGGER, proxy
 from tg_companion.modules import MODULES
 from tg_companion.plugins import PLUGINS
 from tg_companion.tgclient import CMD_HELP, client
-
 
 for module_name in MODULES:
     imported_module = importlib.import_module(
@@ -34,6 +32,7 @@ SELF_HELP = """
 @client.CommandHandler(outgoing=True, command="start")
 async def start(event):
     await client.update_message(event, f"**Telegram Companion is up and running. Use** `{CMD_HANDLER}help` **in private to get a list with all the available commands**")
+
 
 @client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
 async def send_help(event):

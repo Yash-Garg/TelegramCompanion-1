@@ -26,9 +26,9 @@ async def account_migrate(event):
     global FAILED_CHATS
     global FAILED_CHATS_COUNT
 
-    await client.update_message(event, 
-        "`Migrating Chats. This might take a while so relax. and check this message later`"
-    )
+    await client.update_message(event,
+                                "`Migrating Chats. This might take a while so relax. and check this message later`"
+                                )
 
     split_text = event.text.split(None, 1)
 

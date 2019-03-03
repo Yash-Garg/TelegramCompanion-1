@@ -144,9 +144,9 @@ async def change_profile_username(event):
 
         except Exception as exc:
             if isinstance(exc, errors.AdminsTooMuchError):
-                await client.update_message(event, 
-                    "`You're admin of too many public channels, make some channels private to change the username of this channel.`"
-                )
+                await client.update_message(event,
+                                            "`You're admin of too many public channels, make some channels private to change the username of this channel.`"
+                                            )
 
             if isinstance(exc, errors.UsernameOccupiedError):
                 await client.update_message(event, f"`{username} is already taken`")

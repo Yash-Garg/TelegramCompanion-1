@@ -1,6 +1,6 @@
 import asyncio
-import logging
 import importlib
+import logging
 import os
 import re
 import sys

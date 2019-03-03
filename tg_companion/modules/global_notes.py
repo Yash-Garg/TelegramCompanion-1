@@ -136,4 +136,4 @@ async def list_notes(event):
     for notename, _ in NOTES.items():
         listnotes.append(notename)
     await client.update_message(event, "`Globally saved notes:`\n-" +
-                    "\n-".join(listnotes))
+                                "\n-".join(listnotes))

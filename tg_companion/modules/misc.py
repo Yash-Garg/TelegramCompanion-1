@@ -11,8 +11,8 @@ import telethon
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 
-from tg_companion.modules.rextester.api import rexec, UnknownLanguage
 from tg_companion.modules.global_bans import GBANNED_USERS
+from tg_companion.modules.rextester.api import UnknownLanguage, rexec
 from tg_companion.tgclient import client
 
 from .._version import __version__
@@ -59,6 +59,7 @@ LOGOUT_HELP = """
     **Logs out the companion from Telegram and deletes the session**
 """
 
+
 @client.CommandHandler(outgoing=True, command="ping", help=PING_HELP)
 @client.log_exception
 async def ping(event):
@@ -78,9 +79,9 @@ async def version(event):
     telethon_version = telethon.__version__
 
     await client.update_message(event, f"__Companion__ (**{bot_version}**),"
-                     f" __Python__ (**{python_version}**),"
-                     f" __Telethon__"
-                     f" (**{telethon_version}**)")
+                                f" __Python__ (**{python_version}**),"
+                                f" __Telethon__"
+                                f" (**{telethon_version}**)")
 
 
 @client.CommandHandler(outgoing=True, command="info", help=INFO_HELP)
@@ -95,7 +96,8 @@ async def user_info(event):
         user = await message.get_sender()
 
     if len(event.text.split()) > 1:
-        user = int(event.text.split()[1]) if event.text.split()[1].isdigit() else event.text.split()[1]
+        user = int(event.text.split()[1]) if event.text.split()[
+            1].isdigit() else event.text.split()[1]
         user = event.text.split()[1]
         user = int(user) if user.isdigit() else user
         try:
@@ -145,7 +147,6 @@ async def user_info(event):
     )
 
 
-
 @client.CommandHandler(outgoing=True, command="rex", help=REX_HELP)
 @client.log_exception
 async def rextestercli(event):
@@ -184,7 +185,6 @@ async def rextestercli(event):
     if res.errors:
         output += f"\n\n**Errors:** \n\n```{res.errors}```"
 
-
     if len(output) > 4096:
         with io.BytesIO(str.encode(output)) as out_file:
             out_file.name = "output.txt"
@@ -207,9 +207,9 @@ async def send_logs(event):
 
 async def aexec(code, event):
     exec(
-            f'async def __aexec(event): ' +
-            ''.join(f'\n {l}' for l in code.split('\n'))
-        )
+        f'async def __aexec(event): ' +
+        ''.join(f'\n {l}' for l in code.split('\n'))
+    )
     return await locals()['__aexec'](event)
 
 
@@ -273,10 +273,15 @@ async def readall(event):
         await client.send_read_acknowledge(dialog, clear_mentions=True)
     await client.update_message(event, "`Done. All the messages are marked as read`")
 
-@client.CommandHandler(outgoing=True, command="disconnect", help=DISCONNECT_HELP)
+
+@client.CommandHandler(
+    outgoing=True,
+    command="disconnect",
+    help=DISCONNECT_HELP)
 async def disconnect_companion(event):
     await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
     await client.disconnect()
+
 
 @client.CommandHandler(outgoing=True, command="logout")
 async def logout(event):

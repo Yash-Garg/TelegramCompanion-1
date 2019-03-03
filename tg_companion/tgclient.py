@@ -9,13 +9,13 @@ from getpass import getpass
 
 from alchemysession import AlchemySessionContainer
 from telethon import TelegramClient, events
+from telethon.client.users import UserMethods
 from telethon.errors import FloodWaitError, SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 
 from tg_companion import (APP_HASH, APP_ID, CMD_HANDLER, DB_URI, DEBUG, LOGGER,
                           SESSION_NAME, proxy)
 from tg_companion._version import __version__
-from telethon.client.users import UserMethods
 
 loop = asyncio.get_event_loop()
 
@@ -41,7 +41,6 @@ class CustomDisconnect(UserMethods):
             self.disconnect()
 
 
-
 class CustomClient(TelegramClient):
 
     def __init__(self, session_name, app_id, app_hash):
@@ -61,9 +60,12 @@ class CustomClient(TelegramClient):
 
         if not loop.run_until_complete(self.is_user_authorized()):
             LOGGER.info("Welcome to Telegram Companion!")
-            LOGGER.info("Telegram Companion is a python app trying to bring new features to other official or unofficial Telegram clients")
-            LOGGER.info("You can report a bug or a give a suggestion in our telegram group at https://t.me/tgcompanion")
-            LOGGER.info("Because this is your first time using the companion, you have to sign in with your telegram account:\n\n")
+            LOGGER.info(
+                "Telegram Companion is a python app trying to bring new features to other official or unofficial Telegram clients")
+            LOGGER.info(
+                "You can report a bug or a give a suggestion in our telegram group at https://t.me/tgcompanion")
+            LOGGER.info(
+                "Because this is your first time using the companion, you have to sign in with your telegram account:\n\n")
             phone = input("Enter your phone: ")
             loop.run_until_complete(self.sign_in(phone))
 
@@ -157,7 +159,6 @@ class CustomClient(TelegramClient):
 
             await self.send_message(await entity.get_chat(), text, reply_to=entity)
 
-
     async def send_from_disk(self, event, path, caption=None, force_document=False, use_cache=None, reply_to=None):
         if os.path.isfile(path):
             if os.path.getsize(path) >= 1500000000:
@@ -166,10 +167,10 @@ class CustomClient(TelegramClient):
             f_name = os.path.basename(path)
             f_size, unit = self.convert_file_size(os.path.getsize(f_name))
             await client.update_message(event,
-                f"**Uploading**:\n\n"
-                f"  __File Name:__ `{f_name}`\n"
-                f"  __Size__: `{f_size}` {unit}\n"
-            )
+                                        f"**Uploading**:\n\n"
+                                        f"  __File Name:__ `{f_name}`\n"
+                                        f"  __Size__: `{f_size}` {unit}\n"
+                                        )
 
             await self.send_file(event.chat_id, path, file_name=f_name,
                                  force_document=force_document, reply_to=reply_to, progress_callback=None)
@@ -198,10 +199,10 @@ class CustomClient(TelegramClient):
                     memzip.seek(0)
                     d_size, unit = self.convert_file_size(d_size)
                     await client.update_message(event,
-                        f"**Uploading**:\n\n"
-                        f"  __Folder Name:__ `{d_name}`\n"
-                        f"  __Size__: `{d_size}` {unit}\n"
-                    )
+                                                f"**Uploading**:\n\n"
+                                                f"  __Folder Name:__ `{d_name}`\n"
+                                                f"  __Size__: `{d_size}` {unit}\n"
+                                                )
 
                     await client.send_file(event.chat_id, file=memzip, allow_cache=None, progress_callback=None)
                     await event.delete()
@@ -297,6 +298,7 @@ class CustomClient(TelegramClient):
 
 class CompanionClient(CustomClient, CustomDisconnect):
     pass
+
 
 container = AlchemySessionContainer(DB_URI)
 session = container.new_session(SESSION_NAME)

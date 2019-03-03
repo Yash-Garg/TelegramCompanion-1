@@ -1,7 +1,8 @@
-from tg_companion.tgclient import client
-from telethon import events
 import re
 
+from telethon import events
+
+from tg_companion.tgclient import client
 
 FLAGS = {
     "i": re.I,

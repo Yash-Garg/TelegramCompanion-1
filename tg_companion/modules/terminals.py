@@ -3,12 +3,12 @@ import os
 import time
 
 import asyncssh
+from telethon.errors import FloodWaitError
 
 from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
                           SSH_PASSWORD, SSH_PORT, SSH_USERNAME,
                           SUBPROCESS_ANIM)
 from tg_companion.tgclient import client
-from telethon.errors import FloodWaitError
 
 TERM_HELP = """
     **Execute a bash command on your pc/server**

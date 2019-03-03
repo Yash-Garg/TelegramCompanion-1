@@ -1,9 +1,8 @@
-from tg_companion.tgclient import client
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChatBannedRights
-from telethon.tl.types import ChannelParticipantsKicked
-from telethon.tl.types import ChannelParticipantsBanned
+from telethon.tl.types import (ChannelParticipantsBanned,
+                               ChannelParticipantsKicked, ChatBannedRights)
 
+from tg_companion.tgclient import client
 
 BAN_HELP = """
     **Ban a user from your chat.**
@@ -27,6 +26,7 @@ UNMUTE_HELP = """
         __Usage:__
             Reply to or mention a mutes user to unmute him.
 """
+
 
 @client.CommandHandler(outgoing=True, command="ban", help=BAN_HELP)
 @client.log_exception
@@ -68,19 +68,20 @@ async def ban_user(event):
             await client.update_message(event, "This user is already banned")
             return
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
-                    until_date=None,
-                    view_messages=True,
-                    send_messages=True,
-                    send_media=True,
-                    send_stickers=True,
-                    send_gifs=True,
-                    send_games=True,
-                    send_inline=True,
-                    embed_links=True
+            until_date=None,
+            view_messages=True,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True
         )))
         await client.update_message(event, f"`Succesfully banned {user.first_name}`")
     else:
         await client.update_message(event, "You need admin permissions to ban users here")
+
 
 @client.CommandHandler(outgoing=True, command="unban", help=UNBAN_HELP)
 @client.log_exception
@@ -126,15 +127,15 @@ async def unban_user(event):
             return
 
         await client(EditBannedRequest(chat, user, ChatBannedRights(
-                    until_date=None,
-                    view_messages=None,
-                    send_messages=None,
-                    send_media=None,
-                    send_stickers=None,
-                    send_gifs=None,
-                    send_games=None,
-                    send_inline=None,
-                    embed_links=None
+            until_date=None,
+            view_messages=None,
+            send_messages=None,
+            send_media=None,
+            send_stickers=None,
+            send_gifs=None,
+            send_games=None,
+            send_inline=None,
+            embed_links=None
         )))
         await client.update_message(event, f"`Succesfully unbanned {user.first_name}`")
     else:
@@ -182,19 +183,20 @@ async def mute_user(event):
             return
 
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
-                    until_date=None,
-                    view_messages=None,
-                    send_messages=True,
-                    send_media=True,
-                    send_stickers=True,
-                    send_gifs=True,
-                    send_games=True,
-                    send_inline=True,
-                    embed_links=True
+            until_date=None,
+            view_messages=None,
+            send_messages=True,
+            send_media=True,
+            send_stickers=True,
+            send_gifs=True,
+            send_games=True,
+            send_inline=True,
+            embed_links=True
         )))
         await client.update_message(event, f"`Succesfully muted {user.first_name}`")
     else:
         await client.update_message(event, "You need admin permissions to mute users here")
+
 
 @client.CommandHandler(outgoing=True, command="unmute", help=UNMUTE_HELP)
 @client.log_exception
@@ -237,15 +239,15 @@ async def unmute_user(event):
             return
 
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
-                    until_date=None,
-                    view_messages=None,
-                    send_messages=None,
-                    send_media=None,
-                    send_stickers=None,
-                    send_gifs=None,
-                    send_games=None,
-                    send_inline=None,
-                    embed_links=None
+            until_date=None,
+            view_messages=None,
+            send_messages=None,
+            send_media=None,
+            send_stickers=None,
+            send_gifs=None,
+            send_games=None,
+            send_inline=None,
+            embed_links=None
         )))
         await client.update_message(event, f"`Succesfully unmuted {user.first_name}`")
     else:
