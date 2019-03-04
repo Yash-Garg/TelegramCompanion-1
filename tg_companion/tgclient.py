@@ -214,6 +214,15 @@ class CustomClient(TelegramClient):
             return
 
     @staticmethod
+    async def is_user_admin(chat):
+        if chat.admin_rights:
+            return True
+        elif chat.creator:
+            return True
+        else:
+            return False
+
+    @staticmethod
     def convert_file_size(size):
         power = 2**10
         n = 0

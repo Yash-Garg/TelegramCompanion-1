@@ -7,7 +7,9 @@ from telethon.tl.functions.channels import UpdateUsernameRequest
 from telethon.tl.functions.messages import (EditChatAboutRequest,
                                             EditChatPhotoRequest,
                                             EditChatTitleRequest)
-from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
+from telethon.tl.functions.channels import EditPhotoRequest, EditTitleRequest
+
+from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto, InputChannel
 
 from tg_companion.tgclient import client
 
@@ -39,10 +41,13 @@ CNAME_HELP = """
 @client.CommandHandler(outgoing=True, command="cpic", help=CPIC_HELP)
 @client.log_exception
 async def update_profile_pic(event):
+    if event.is_private:
+        await client.update_message(event, "Invalid chat type")
+        return
     if event.reply:
         message = await event.get_reply_message()
         chat = await event.get_chat()
-        if not chat.admin_rights or not chat.creator:
+        if not await client.is_user_admin(chat):
             await client.update_message(event, "`Chat admin privileges are required to do that`")
             return
         photo = None
@@ -69,12 +74,17 @@ async def update_profile_pic(event):
             await client.update_message(event, "`UPLOADING`")
             file = await client.upload_file(photo)
             try:
-                await client(EditChatPhotoRequest(chat.id, file))
+                if chat.megagroup:
+                    await client(EditPhotoRequest((chat.id), file))
+                else:
+                    await client(EditChatPhotoRequest((chat.id), file))
                 await client.update_message(event, "`Channel picture changed`")
 
             except Exception as exc:
                 if isinstance(exc, errors.PhotoInvalidError):
                     await client.update_message(event, "`The selected photo is invalid`")
+                else:
+                    raise
 
             if isinstance(photo, str):
                 os.remove(photo)
@@ -82,6 +92,9 @@ async def update_profile_pic(event):
 
 @client.CommandHandler(outgoing=True, command="cabout", help=CABOUT_HELP)
 async def update_profile_bio(event):
+    if event.is_private:
+        await client.update_message(event, "Invalid chat type")
+        return
 
     split_text = event.text.split(None, 1)
     print(split_text)
@@ -93,7 +106,7 @@ async def update_profile_bio(event):
     about = split_text[1]
     chat = await event.get_chat()
 
-    if not chat.admin_rights or not chat.creator:
+    if not await client.is_user_admin(chat):
         await client.update_message(event, "`Chat admin privileges are required to do that`")
         return
 
@@ -116,10 +129,13 @@ async def update_profile_bio(event):
 @client.CommandHandler(outgoing=True, command="cuname (.+)", help=CUNAME_HELP)
 @client.log_exception
 async def change_profile_username(event):
+    if event.is_private:
+        await client.update_message(event, "Invalid chat type")
+        return
     username = event.pattern_match.group(1)
     chat = await event.get_chat()
 
-    if not chat.admin_rights or not chat.creator:
+    if not await client.is_user_admin(chat):
         await client.update_message(event, "`Chat admin privileges are required to do that`")
         return
 
@@ -158,6 +174,9 @@ async def change_profile_username(event):
 @client.CommandHandler(outgoing=True, command="cname (.+)", help=CNAME_HELP)
 @client.log_exception
 async def change_profile_name(event):
+    if event.is_private:
+        await client.update_message(event, "Invalid chat type")
+        return
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 0:
@@ -166,11 +185,14 @@ async def change_profile_name(event):
 
     title = split_text[1]
     chat = await event.get_chat()
-    if not chat.admin_rights or not chat.creator:
+    if not await client.is_user_admin(chat):
         await client.update_message(event, "`Chat admin privileges are required to do that`")
         return
     try:
-        await client(EditChatTitleRequest(chat.id, title))
+        if chat.megagroup:
+            await client(EditTitleRequest(chat.id, title))
+        else:
+            await client(EditChatTitleRequest(chat.id, title))
         await client.update_message(event, "`Succesfully changed channel/chat title`")
 
     except Exception as exc:
