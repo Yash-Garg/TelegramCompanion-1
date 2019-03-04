@@ -8,7 +8,9 @@ from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import (DocumentAttributeFilename,
                                InputMediaUploadedDocument,
                                InputStickerSetShortName,
-                               MessageMediaPhoto)
+                               MessageMediaPhoto,
+                               InputStickerSetID)
+from telethon.tl.types import DocumentAttributeSticker
 
 from tg_companion.tgclient import client
 
@@ -20,6 +22,17 @@ KANG_HELP = """
             `<emoji>` (**optional**) __The emoji you want to attach to your sticker__
 """
 
+PACKINFO_HELP = """
+    **Get sticker pack info**
+        __Usage:__
+            __Reply to any sticker to get his pack info.__
+"""
+
+GET_HELP = """
+    **Send a sticker as a PMG document**
+        __Usage:__
+            __Reply to any sticker to get it as a PMG document.__
+"""
 
 @client.CommandHandler(outgoing=True, command="kang", help=KANG_HELP)
 async def kang_sticker(event):
@@ -39,7 +52,7 @@ async def kang_sticker(event):
     me = await client.get_me()
     user_name = me.username if me.username else me.firstname
     packname = f"{user_name}'s sticker pack"
-    packshortname = f"tg_companion_{me.id}" # format: tg_companion_userid
+    packshortname = f"tg_companion_{me.id}"  # format: tg_companion_userid
     await client.update_message(event, "`Processing your sticker. Please Wait!`")
     async with client.conversation('Stickers') as bot_conv:
         file = await client.download_file(rep_msg.media)
@@ -86,7 +99,50 @@ async def kang_sticker(event):
     await client.update_message(event, f"sticker added! Your pack can be found [here](https://t.me/addstickers/{packshortname})")
 
 
+@client.CommandHandler(outgoing=True, command="packinfo", help=PACKINFO_HELP)
+async def get_pack_info(event):
+    if not event.is_reply:
+        await client.update_message(event, PACKINFO_HELP)
+        return
+    rep_msg = await event.get_reply_message()
+    if not rep_msg.document:
+        await client.update_message(event, "`Reply to a sticker to get the pack details`")
+        return
+    stickerset_attr = rep_msg.document.attributes[1]
+    if not isinstance(stickerset_attr, DocumentAttributeSticker):
+        await client.update_message(event, "`Not a valid sticker`")
+        return
+    get_stickerset = await client(GetStickerSetRequest(InputStickerSetID(id=stickerset_attr.stickerset.id, access_hash=stickerset_attr.stickerset.access_hash)))
+    pack_emojis = []
+    for document_sticker in get_stickerset.packs:
+        if document_sticker.emoticon not in pack_emojis:
+            pack_emojis.append(document_sticker.emoticon)
+    OUTPUT = f"**Sticker Title:** `{get_stickerset.set.title}\n`" \
+             f"**Sticker Short Name:** `{get_stickerset.set.short_name}`\n" \
+             f"**Official:** `{get_stickerset.set.official}`\n" \
+             f"**Archived:** `{get_stickerset.set.archived}`\n" \
+             f"**Stickers In Pack:** `{len(get_stickerset.packs)}`\n" \
+             f"**Emojis In Pack:** {' '.join(pack_emojis)}"
+    await client.update_message(event, OUTPUT)
+
+
+@client.CommandHandler(outgoing=True, command="stickerget", help=GET_HELP)
+async def sticker_to_png(event):
+    if not event.is_reply:
+        await client.update_message(event, GET_HELP)
+        return
+    rep_msg = await event.get_reply_message()
+    if not rep_msg.document:
+        await client.update_message(event, "`Reply to a sticker to get the pack details`")
+        return
+    stickerset_attr = rep_msg.document.attributes[1]
+    if not isinstance(stickerset_attr, DocumentAttributeSticker):
+        await client.update_message(event, "`Not a valid sticker`")
+        return
+    chat = await event.get_chat()
+    await client.send_file(chat.id, rep_msg.document)
 # Helpers
+
 
 def is_message_image(message):
     if message.media:
