@@ -39,8 +39,7 @@ async def kang_sticker(event):
     me = await client.get_me()
     user_name = me.username if me.username else me.firstname
     packname = f"{user_name}'s sticker pack"
-    # format: tg_companion_userid_username/firstname
-    packshortname = f"tg_companion_{me.id}_{user_name}"
+    packshortname = f"tg_companion_{me.id}" # format: tg_companion_userid
     await client.update_message(event, "`Processing your sticker. Please Wait!`")
     async with client.conversation('Stickers') as bot_conv:
         file = await client.download_file(rep_msg.media)
