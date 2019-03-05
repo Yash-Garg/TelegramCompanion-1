@@ -14,4 +14,6 @@ echo " <b>Changelog for TelegramCompanion</b>${NEWLINE}"
 printf '%s\n' "$GIT_COMMIT_LOG" | while IFS= read -r line
 do
   echo "- ${line}"
+  echo "${NEWLINE}"
+  echo "https://github.com/nitanmarcel/TelegramCompanion/compare/$TRAVIS_COMMIT_RANGE"
 done
