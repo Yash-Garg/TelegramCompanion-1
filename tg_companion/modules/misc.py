@@ -4,12 +4,14 @@ import platform
 import re
 import sys
 import time
+import datetime
 from html import escape
 
 import aiohttp
 import telethon
+from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import User
+from telethon.tl.types import User, InputPeerNotifySettings
 
 from tg_companion.modules.global_bans import GBANNED_USERS
 from tg_companion.modules.rextester.api import UnknownLanguage, rexec
@@ -57,6 +59,17 @@ DISCONNECT_HELP = """
 
 LOGOUT_HELP = """
     **Logs out the companion from Telegram and deletes the session**
+"""
+
+CHAT_MUTE_HELP = """
+    **Execute your code using your python compiler**
+        __Args:__
+            `<number>d <number>h <number>m <number>s` - The time in days, hours, minutes and seconds
+                At least one of them is required but not more than 4
+        __Usage:__
+            Use these arguments as an example: 1d 2h 3m 4s
+            the chat will be now muted for one day, two hours, three mintues, and four seconds.
+            Please remember that at least one of the values are required but not more than 4
 """
 
 
@@ -287,3 +300,44 @@ async def disconnect_companion(event):
 async def logout(event):
     await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
     await client.log_out()
+
+
+@client.CommandHandler(outgoing=True, command="chatmute", help=CHAT_MUTE_HELP)
+async def mute(event):
+    chat = await event.get_chat()
+    split_text = event.text.split(None, 1)
+    if len(split_text) == 1:
+        await client.update_message(event, "...")
+        return
+    elif len(split_text[1].split()) > 4:
+        await client.update_message(event, "`Invalid time format`")
+        return
+
+    days = 0
+    hours = 0
+    minutes = 0
+    seconds = 0
+    for val in split_text[1].split():
+        if len(val) > 1 and val.endswith("d"):
+            days = val[:-1] if val[:-1].isdigit() else 0
+        if len(val) > 1 and val.endswith("h"):
+            hours = val[:-1] if val[:-1].isdigit() else 0
+        if len(val) > 1 and val.endswith("m"):
+            minutes = val[:-1] if val[:-1].isdigit() else 0
+        if len(val) > 1 and val.endswith("s"):
+            seconds = val[:-1] if val[:-1].isdigit() else 0
+    if all([days, hours, minutes, seconds]) == 0:
+        await client.update_message(event, "`Invalid time format`")
+        return
+
+    now = datetime.datetime.now()
+    dt = now + datetime.timedelta(days=int(days),
+                                  hours=int(hours),
+                                  minutes=int(minutes),
+                                  seconds=int(seconds))
+    print(dt)
+    mute_for = await client(UpdateNotifySettingsRequest(peer=chat.id, settings=InputPeerNotifySettings(show_previews=False, mute_until=int(dt.timestamp()))))
+    if mute_for:
+        await client.update_message(event, f"`Chat muted until: {dt.strftime('%m/%d/%Y')}`")
+    else:
+        await client.update_message(event, "`Failed to mute this chat`")
