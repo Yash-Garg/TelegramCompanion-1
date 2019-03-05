@@ -61,41 +61,32 @@ async def kang_sticker(event):
             sticker.seek(0)
             uploaded_sticker = await client.upload_file(sticker, file_name="sticker.png")
             if not await stickerset_exists(bot_conv, packshortname):
-                await bot_conv.send_message("/cancel")
-                await bot_conv.get_response()
-                await bot_conv.send_message("/newpack")
-                response = await bot_conv.get_response()
+                await silently_send_message(bot_conv, "/cancel")
+                response = await silently_send_message(bot_conv, "/newpack")
                 if response.text != "Yay! A new stickers pack. How are we going to call it? Please choose a name for your pack.":
                     await client.update_message(event, response.text)
                     return
-                await bot_conv.send_message(packname)
-                response = await bot_conv.get_response()
+                response = silently_send_message(bot_conv, packname)
                 if not response.text.startswith("Alright!"):
                     await client.update_message(event, response.text)
                     return
 
                 await bot_conv.send_file(InputMediaUploadedDocument(file=uploaded_sticker, mime_type='image/png', attributes=[DocumentAttributeFilename("sticker.png")]), force_document=True)
                 await bot_conv.get_response()
-                await bot_conv.send_message(sticker_emoji)
-                response = await bot_conv.get_response()
-                await bot_conv.send_message("/publish")
-                await bot_conv.get_response()
-                await bot_conv.send_message(packshortname)
-                response = await bot_conv.get_response()
+                await silently_send_message(bot_conv, sticker_emoji)
+                await silently_send_message(bot_conv, "/publish")
+                response = await silently_send_message(packshortname)
                 if response.text == "Sorry, this short name is already taken.":
                     await client.update_message(event, "There has been an error processing your sticker!")
                     return
             else:
-                await bot_conv.send_message("/cancel")
-                await bot_conv.get_response()
-                await bot_conv.send_message("/addsticker")
-                await bot_conv.get_response()
-                await bot_conv.send_message(packshortname)
+                await silently_send_message(bot_conv, "/cancel")
+                await silently_send_message(bot_conv, "/addsticker")
+                await silently_send_message(bot_conv, packshortname)
                 await bot_conv.send_file(InputMediaUploadedDocument(file=uploaded_sticker, mime_type='image/png', attributes=[DocumentAttributeFilename("sticker.png")]), force_document=True)
-                await bot_conv.get_response()
-                await bot_conv.send_message(sticker_emoji)
-                await bot_conv.get_response()
-                await bot_conv.send_message("/done")
+                await bot_conv.mark_read(message=await bot_conv.get_response())
+                await silently_send_message(bot_conv, sticker_emoji)
+                await silently_send_message(bot_conv, "/done")
     await client.update_message(event, f"sticker added! Your pack can be found [here](https://t.me/addstickers/{packshortname})")
 
 
@@ -155,15 +146,21 @@ def is_message_image(message):
     return False
 
 
+async def silently_send_message(conv, text):
+    await conv.send_message(text)
+    response = await conv.get_response()
+    await conv.mark_read(message=response)
+    return response
+
+
 async def stickerset_exists(conv, setname):
     try:
         await client(GetStickerSetRequest(InputStickerSetShortName(setname)))
-        await conv.send_message("/addsticker")
-        response = await conv.get_response()
+        response = await silently_send_message(conv, "/addsticker")
         if response.text == "Invalid pack selected.":
-            await conv.send_message("/cancel")
+            await silently_send_message(conv, "/cancel")
             return False
-        await conv.send_message("/cancel")
+        await silently_send_message(conv, "/cancel")
         return True
     except StickersetInvalidError:
         return False
