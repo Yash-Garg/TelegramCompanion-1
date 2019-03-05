@@ -12,6 +12,7 @@ from telethon.tl.types import (DocumentAttributeFilename,
                                InputMediaUploadedDocument,
                                InputPeerNotifySettings, InputStickerSetID,
                                InputStickerSetShortName, MessageMediaPhoto)
+from telethon.tl.types import DocumentAttributeFilename
 
 from tg_companion.tgclient import client
 
@@ -135,8 +136,13 @@ async def sticker_to_png(event):
     if not isinstance(stickerset_attr, DocumentAttributeSticker):
         await client.update_message(event, "`Not a valid sticker`")
         return
+    await client.update_message(event, "`Converting sticker to PNG`")
     chat = await event.get_chat()
-    await client.send_file(chat.id, rep_msg.document)
+    file = await client.download_file(rep_msg.document)
+    with BytesIO(file) as mem_file:
+        mem_file.seek(0)
+        uploaded_file = await client.upload_file(mem_file, file_name="sticker.png")
+        await client.send_file(chat.id, InputMediaUploadedDocument(file=uploaded_file, mime_type='image/png', attributes=[DocumentAttributeFilename("sticker.png")]), force_document=True)
 # Helpers
 
 
