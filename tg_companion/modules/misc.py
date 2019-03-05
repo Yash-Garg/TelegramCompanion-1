@@ -318,15 +318,16 @@ async def mute(event):
     minutes = 0
     seconds = 0
     for val in split_text[1].split():
-        if len(val) > 1 and val.endswith("d"):
+        if val.endswith("d"):
             days = val[:-1] if val[:-1].isdigit() else 0
-        if len(val) > 1 and val.endswith("h"):
+        if val.endswith("h"):
             hours = val[:-1] if val[:-1].isdigit() else 0
-        if len(val) > 1 and val.endswith("m"):
+        if val.endswith("m"):
             minutes = val[:-1] if val[:-1].isdigit() else 0
-        if len(val) > 1 and val.endswith("s"):
+        if val.endswith("s"):
             seconds = val[:-1] if val[:-1].isdigit() else 0
-    if all([days, hours, minutes, seconds]) == 0:
+
+    if any((int(days), int(hours), int(minutes), int(seconds))) == 0:
         await client.update_message(event, "`Invalid time format`")
         return
 
@@ -335,7 +336,7 @@ async def mute(event):
                                   hours=int(hours),
                                   minutes=int(minutes),
                                   seconds=int(seconds))
-    print(dt)
+
     mute_for = await client(UpdateNotifySettingsRequest(peer=chat.id, settings=InputPeerNotifySettings(show_previews=False, mute_until=int(dt.timestamp()))))
     if mute_for:
         await client.update_message(event, f"`Chat muted until: {dt.strftime('%m/%d/%Y')}`")
