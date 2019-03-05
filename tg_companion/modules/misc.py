@@ -339,6 +339,6 @@ async def mute(event):
 
     mute_for = await client(UpdateNotifySettingsRequest(peer=chat.id, settings=InputPeerNotifySettings(show_previews=False, mute_until=int(dt.timestamp()))))
     if mute_for:
-        await client.update_message(event, f"`Chat muted until: {dt.strftime('%m/%d/%Y')}`")
+        await client.update_message(event, f"`Chat muted until: {dt.strftime('%d/%m/%Y %I:%M:%S%p')}`")
     else:
         await client.update_message(event, "`Failed to mute this chat`")
