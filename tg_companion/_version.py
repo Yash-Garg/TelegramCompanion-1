@@ -7,5 +7,5 @@ Provides tg_companion version information.
 
 from incremental import Version
 
-__version__ = Version('tg_companion', 1, 2, 2)
+__version__ = Version('tg_companion', 1, 2, 3)
 __all__ = ["__version__"]
