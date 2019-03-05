@@ -12,7 +12,6 @@ from telethon.tl.types import (DocumentAttributeFilename,
                                InputMediaUploadedDocument,
                                InputPeerNotifySettings, InputStickerSetID,
                                InputStickerSetShortName, MessageMediaPhoto)
-from telethon.tl.types import DocumentAttributeFilename
 
 from tg_companion.tgclient import client
 
