@@ -1,16 +1,17 @@
+import datetime
 import math
 from io import BytesIO
 
 import emoji
 from PIL import Image
 from telethon.errors.rpcerrorlist import StickersetInvalidError
+from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import (DocumentAttributeFilename,
+                               DocumentAttributeSticker,
                                InputMediaUploadedDocument,
-                               InputStickerSetShortName,
-                               MessageMediaPhoto,
-                               InputStickerSetID)
-from telethon.tl.types import DocumentAttributeSticker
+                               InputPeerNotifySettings, InputStickerSetID,
+                               InputStickerSetShortName, MessageMediaPhoto)
 
 from tg_companion.tgclient import client
 
@@ -34,6 +35,7 @@ GET_HELP = """
             __Reply to any sticker to get it as a PMG document.__
 """
 
+
 @client.CommandHandler(outgoing=True, command="kang", help=KANG_HELP)
 async def kang_sticker(event):
     if not event.is_reply:
@@ -55,6 +57,9 @@ async def kang_sticker(event):
     packshortname = f"tg_companion_{me.id}"  # format: tg_companion_userid
     await client.update_message(event, "`Processing your sticker. Please Wait!`")
     async with client.conversation('Stickers') as bot_conv:
+        now = datetime.datetime.now()
+        dt = now + datetime.timedelta(minutes=1)
+        await client(UpdateNotifySettingsRequest(peer="Stickers", settings=InputPeerNotifySettings(show_previews=False, mute_until=int(dt.timestamp()))))
         file = await client.download_file(rep_msg.media)
         with BytesIO(file) as mem_file, BytesIO() as sticker:
             resize_image(mem_file, sticker)
