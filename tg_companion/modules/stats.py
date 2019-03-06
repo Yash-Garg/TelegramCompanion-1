@@ -5,6 +5,7 @@ import progressbar
 import sqlalchemy as db
 from telethon import utils
 from telethon.errors import FloodWaitError
+from telethon.errors.rpcerrorlist import ChannelPrivateError
 from telethon.tl.functions.channels import GetFullChannelRequest
 
 from tg_companion import STATS_TIMER
@@ -222,9 +223,14 @@ async def GetStats():
             ent = await client.get_input_entity(dialog)
             try:
                 msgs = await client.get_messages(ent, limit=0)
-            except FloodWaitError as exc:
-                asyncio.sleep(exc.seconds)
-                msgs = await client.get_messages(ent, limit=0)
+            except (FloodWaitError, ChannelPrivateError) as exc:
+                if isinstance(exc, FloodWaitError):
+                    asyncio.sleep(exc.seconds)
+                    msgs = await client.get_messages(ent, limit=0)
+                elif isinstance(exc, ChannelPrivateError):
+                    pass
+                else:
+                    raise
             count = msgs.total
             if dialog.is_channel:
                 if dialog.entity.megagroup:
@@ -239,9 +245,14 @@ async def GetStats():
                 ent = await client.get_input_entity(int("-" + str(ConvertedGroupsIDs[index])))
                 try:
                     msgs = await client.get_messages(ent)
-                except FloodWaitError as exc:
-                    asyncio.sleep(exc.seconds)
-                    msgs = await client.get_messages(ent)
+                except (FloodWaitError, ChannelPrivateError) as exc:
+                    if isinstance(exc, FloodWaitError):
+                        asyncio.sleep(exc.seconds)
+                        msgs = await client.get_messages(ent)
+                    elif isinstance(exc, ChannelPrivateError):
+                        pass
+                    else:
+                        raise
 
                 OldChatCount = msgs.total
                 UserCount = UserCount + OldChatCount
