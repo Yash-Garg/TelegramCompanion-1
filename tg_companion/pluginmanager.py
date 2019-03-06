@@ -35,6 +35,7 @@ parser.add_argument(
 args = parser.parse_args()
 config = configparser.ConfigParser()
 
+
 async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin=None):
     if plugin is None:
         LOGGER.error("No plugin specified")
@@ -76,7 +77,7 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
                     await process.communicate()
         for module in modules_to_load:
 
-            async with session.get(f"{github}/{module}.py") as request:
+            async with session.get(f"{github}/{module.strip()}.py") as request:
 
                 if request.status == 404:
                     LOGGER.error(f"Can't find the py file of {plugin} plugin")
@@ -116,7 +117,8 @@ def load_plugin_info(pluginname):
     PLUGINS = sorted(load_plugins())
     plugin_dct = {}
     for plugin in PLUGINS:
-        if plugin.split("/")[-1] == pluginname and os.path.isfile(plugin + ".plugin"):
+        if plugin.split(
+                "/")[-1] == pluginname and os.path.isfile(plugin + ".plugin"):
             config.read(plugin + ".plugin")
             for section in config.sections():
                 for option in config.options(section):
