@@ -5,6 +5,7 @@ import os
 import re
 import sys
 from argparse import ArgumentParser
+import configparser
 
 import aiohttp
 
@@ -31,7 +32,7 @@ parser.add_argument(
     help="Disply the installed plugins", action="store_true")
 
 args = parser.parse_args()
-
+config = configparser.ConfigParser()
 
 async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin=None):
     if plugin is None:
@@ -40,26 +41,11 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
 
     LOGGER.info(f"Downloading Plugin: {plugin}")
 
-    github = f"https://api.github.com/repos/{user}/{repo}/contents/{plugin}/{plugin}"
+    github = f"https://api.github.com/repos/{user}/{repo}/contents/{plugin}"
     requirements = None
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"{github}.py") as request:
-
-            if request.status == 404:
-                LOGGER.error(f"Can't find the py file of {plugin} plugin")
-                return
-            result = await request.json()
-
-        async with session.get(result.get("download_url")) as pyfile:
-
-            text = await pyfile.text(encoding="utf8")
-            LOGGER.info("Writing python module")
-            with open(f"tg_companion/plugins/{plugin}.py", "w+") as file:
-
-                file.write(text)
-
-        async with session.get(f"{github}.plugin") as request:
+        async with session.get(f"{github}/{plugin}.plugin") as request:
 
             if request.status == 404:
                 LOGGER.error(
@@ -72,28 +58,45 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
             text = await plugfile.text(encoding="utf8")
 
             LOGGER.info("Writing plugin file")
+            if not os.path.isdir(f"tg_companion/plugins/{plugin}"):
+                os.makedirs(f"tg_companion/plugins/{plugin}")
 
-            with open(f"tg_companion/plugins/{plugin}.plugin", "w+") as file:
+            with open(f"tg_companion/plugins/{plugin}/{plugin}.plugin", "w+") as file:
                 file.write(text)
+        config.read(
+            f"tg_companion/plugins/{plugin}/{plugin}.plugin")
 
-        get_req = re.search("Requirements = (.+)", text)
-        if get_req:
-            requirements = get_req.group(1)
-
-            for module in requirements.split(","):
+        modules_to_load = config.get("CORE", "modules").split(",")
+        requirements = config.get("CORE", "requirements").split(",")
+        if requirements:
+            for module in requirements:
                 if not importlib.util.find_spec(module.replace(" ", "")):
                     process = await asyncio.create_subprocess_shell(f"{sys.executable} -m pip install {module}", stdin=asyncio.subprocess.PIPE)
                     await process.communicate()
+        for module in modules_to_load:
 
-            LOGGER.info(f"Installed {plugin}")
-            LOGGER.info(f"Plugin {plugin} Installed")
+            async with session.get(f"{github}/{module}.py") as request:
+
+                if request.status == 404:
+                    LOGGER.error(f"Can't find the py file of {plugin} plugin")
+                    return
+                result = await request.json()
+
+            async with session.get(result.get("download_url")) as pyfile:
+
+                text = await pyfile.text(encoding="utf8")
+                LOGGER.info("Writing python module")
+                with open(f"tg_companion/plugins/{plugin}/{module}.py", "w+") as file:
+                    file.write(text)
+
+        LOGGER.info(f"Installed {plugin}")
+        LOGGER.info(f"Plugin {plugin} Installed")
 
 
 def remove_plugin(plugin_name):
-    if os.path.isfile(f"tg_companion/plugins/{plugin_name}.plugin"):
-        for plugin in os.listdir("tg_companion/plugins/"):
-            if re.search(plugin_name, plugin):
-                os.remove(os.path.join("tg_companion/plugins/", plugin))
+    path = f"tg_companion/plugins/{plugin_name}"
+    if os.path.isdir(path):
+        os.remove(path)
         LOGGER.info(f"Plugin {plugin_name} removed")
     else:
         LOGGER.info("Can't find the specified plugin.")
@@ -101,31 +104,23 @@ def remove_plugin(plugin_name):
 
 def list_plugins():
     PLUGINS = sorted(load_plugins())
-    OUTPUT = f"Installed Plugins:\n"
+    OUTPUT = ""
     for plugin in PLUGINS:
-        OUTPUT += f"\n{plugin}"
-    print(OUTPUT)
+        installed = plugin.split("/")[-1]
+        OUTPUT += f"\n{installed}"
+    return OUTPUT
 
 
-def load_plugins_info():
+def load_plugin_info(pluginname):
 
-    path = "tg_companion/plugins/"
+    PLUGINS = sorted(load_plugins())
     plugin_dct = {}
-    if os.path.isdir(path):
-        for plugin in os.listdir("tg_companion/plugins/"):
-            if plugin.endswith(".plugin"):
-                with open(path + plugin) as config_file:
-                    for line in config_file.read().splitlines():
-                        if "Module" in line:
-                            module_name = line.split("Module = ")[1]
-                        item = line.split("=")[0]
-                        val = line.split("=")[1]
-
-                        if module_name not in plugin_dct.keys():
-                            plugin_dct[module_name] = {item: val}
-                        if val not in plugin_dct:
-                            plugin_dct[module_name].update({item: val})
-
+    for plugin in PLUGINS:
+        if plugin.split("/")[-1] == pluginname and os.path.isfile(plugin + ".plugin"):
+            config.read(plugin + ".plugin")
+            for section in config.sections():
+                for option in config.options(section):
+                    plugin_dct[option] = config.get(section, option)
     return plugin_dct
 
 

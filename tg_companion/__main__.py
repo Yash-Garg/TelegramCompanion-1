@@ -10,9 +10,8 @@ for module_name in MODULES:
     imported_module = importlib.import_module(
         "tg_companion.modules." + module_name)
 
-for plugin_name in PLUGINS:
-    imported_plugin = importlib.import_module(
-        "tg_companion.plugins." + plugin_name)
+for plugin in PLUGINS:
+    imported_plugin = importlib.import_module(plugin.replace("/", "."))
 
 if proxy:
     LOGGER.info(f"Connecting to Telegram over proxy: {proxy[1]}:{proxy[2]}")

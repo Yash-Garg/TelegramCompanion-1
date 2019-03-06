@@ -1,6 +1,0 @@
-Module = getinstalledplugins
-Name = Get Installed Plugins
-Description = Use .plugins to  list all the installed plugins or .plugin name to get the info for a specific plugin
-Author = Nitan Alexandru Marcel
-Version = 1.0
-Requirements = telethon
