@@ -1,0 +1,8 @@
+[CORE]
+main = getinstalledplugins
+modules = __init__, getinstalledplugins
+name = Get Installed Plugins
+description = Get a list with all the installed plugins
+author = Nitan Alexandru Marcel
+version = 1.0
+requirements = telethon
