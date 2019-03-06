@@ -71,7 +71,7 @@ async def kang_sticker(event):
                 if response.text != "Yay! A new stickers pack. How are we going to call it? Please choose a name for your pack.":
                     await client.update_message(event, response.text)
                     return
-                response = silently_send_message(bot_conv, packname)
+                response = await silently_send_message(bot_conv, packname)
                 if not response.text.startswith("Alright!"):
                     await client.update_message(event, response.text)
                     return
