@@ -88,7 +88,7 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
 
                 text = await pyfile.text(encoding="utf8")
                 LOGGER.info("Writing python module")
-                with open(f"tg_companion/plugins/{plugin}/{module}.py", "w+") as file:
+                with open(f"tg_companion/plugins/{plugin}/{module.strip()}.py", "w+") as file:
                     file.write(text)
         LOGGER.info(f"Installed {plugin}")
         LOGGER.info(f"Plugin {plugin} Installed")
