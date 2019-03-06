@@ -62,7 +62,7 @@ LOGOUT_HELP = """
 """
 
 CHAT_MUTE_HELP = """
-    **Execute your code using your python compiler**
+    **Mutes a chat for a given time**
         __Args:__
             `<number>d <number>h <number>m <number>s` - The time in days, hours, minutes and seconds
                 At least one of them is required but not more than 4
