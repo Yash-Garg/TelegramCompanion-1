@@ -6,6 +6,7 @@ import re
 import sys
 from argparse import ArgumentParser
 import configparser
+import shutil
 
 import aiohttp
 
@@ -88,7 +89,6 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
                 LOGGER.info("Writing python module")
                 with open(f"tg_companion/plugins/{plugin}/{module}.py", "w+") as file:
                     file.write(text)
-
         LOGGER.info(f"Installed {plugin}")
         LOGGER.info(f"Plugin {plugin} Installed")
 
@@ -96,7 +96,7 @@ async def download_plugins(user="nitanmarcel", repo="TgCompanionPlugins", plugin
 def remove_plugin(plugin_name):
     path = f"tg_companion/plugins/{plugin_name}"
     if os.path.isdir(path):
-        os.remove(path)
+        shutil.rmtree(path, ignore_errors=True)
         LOGGER.info(f"Plugin {plugin_name} removed")
     else:
         LOGGER.info("Can't find the specified plugin.")
