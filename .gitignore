@@ -5,6 +5,7 @@ logs
 tg_companion/__pycache__/*
 tg_companion/modules/__pycache__/**
 tg_companion/plugins/__pycache__/**
+tg_companion/plugins/getinstalledplugins/__pycache__/**
 tg_companion/utils/__pycache__/**
 tg_companion/modules/rextester/__pycache__/**
 tg_companion/modules/sql/__pycache__/**
