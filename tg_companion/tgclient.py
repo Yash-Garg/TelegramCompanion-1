@@ -150,7 +150,7 @@ class CustomClient(TelegramClient):
         return decorator
 
     async def update_message(self, entity, text):
-        """ Alternative for `client.edit_message()` or `self.update_message(event, )`
+        """ Alternative for `client.edit_message()`
             which edit a message and if the edit is not allowed is replying to the respective message.
         """
         try:

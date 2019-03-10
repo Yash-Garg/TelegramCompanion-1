@@ -46,10 +46,10 @@ async def kang_sticker(event):
     if len(event.text.split()) > 1:
         sticker_emoji = event.text.split()[1]
     if not is_message_image(rep_msg):
-        await client.update_message(event, "`Invalid message type`")
+        await client.update_message(event, "`Invalid message type`!")
         return
     if sticker_emoji not in list(emoji.EMOJI_UNICODE.values()):
-        await client.update_message(event, "`Please use a valid emoji`")
+        await client.update_message(event, "`Please use a valid emoji`!")
         return
     me = await client.get_me()
     user_name = me.username if me.username else me.firstname
@@ -60,7 +60,7 @@ async def kang_sticker(event):
         try:
             await silently_send_message(bot_conv, "/cancel")
         except YouBlockedUserError:
-            await client.update_message(event, "`You blocked the sticker bot. Please unblock it and try again`")
+            await client.update_message(event, "`You blocked the sticker bot. Please unblock it and try again`.")
             return
         now = datetime.datetime.now()
         dt = now + datetime.timedelta(minutes=1)
@@ -133,13 +133,13 @@ async def sticker_to_png(event):
         return
     rep_msg = await event.get_reply_message()
     if not rep_msg.document:
-        await client.update_message(event, "`Reply to a sticker to get the pack details`")
+        await client.update_message(event, "`Reply to a sticker to get the pack details`.")
         return
     stickerset_attr = rep_msg.document.attributes[1]
     if not isinstance(stickerset_attr, DocumentAttributeSticker):
-        await client.update_message(event, "`Not a valid sticker`")
+        await client.update_message(event, "`Not a valid sticker`!")
         return
-    await client.update_message(event, "`Converting sticker to PNG`")
+    await client.update_message(event, "`Converting sticker to PNG`!")
     chat = await event.get_chat()
     file = await client.download_file(rep_msg.document)
     with BytesIO(file) as mem_file:

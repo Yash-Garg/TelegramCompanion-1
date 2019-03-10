@@ -81,7 +81,7 @@ async def ping(event):
         async with session.get("https://www.google.com"):
             end_time = time.time()
             ping_time = float(end_time - start_time) * 1000
-            await client.update_message(event, f"Ping time was: {ping_time}ms")
+            await client.update_message(event, f"Ping time was: {ping_time}ms.")
 
 
 @client.CommandHandler(outgoing=True, command="version", help=VER_HELP)
@@ -116,14 +116,14 @@ async def user_info(event):
         try:
             user = await client.get_entity(user)
         except Exception:
-            await event.reply("`You don't seem to be referring to a user.`")
+            await client.update_message(event, f"`I don't seem to find this user by {event.text.split()[1]}`.")
             return
 
         if not isinstance(user, User):
             await event.reply(f"`@{user.username}` is not a User")
             return
         if user.deleted:
-            await event.edit("This user has deleted his account. I can't get his info")
+            await event.edit("This user has deleted his account. I can't get his info.")
             return
 
     full_user = await client(GetFullUserRequest(user.id))
@@ -147,13 +147,13 @@ async def user_info(event):
     REPLY += f"\nPermanent user link: <a href=\"tg://user?id={user_id}\">link</a>"
 
     if user.id in GBANNED_USERS:
-        REPLY += "\n\nThis user is globally banned on this companion"
+        REPLY += "\n\nThis user is globally banned on this companion!"
         if GBANNED_USERS.get(user.id):
             REPLY += f"\nReason: {escape(GBANNED_USERS.get(user_id))}"
     if full_user.about:
         REPLY += f"\n\n<b>About User:</b>\n{escape(full_user.about)}"
     if not full_user.user.is_self:
-        REPLY += f"\n\nYou have <code>{common_chats}</code> chats in common with this user"
+        REPLY += f"\n\nI have <code>{common_chats}</code> chats in common with this user."
 
     await client.send_message(
         chat.id, REPLY, reply_to=message.id, link_preview=False, file=full_user.profile_photo, parse_mode="html"
@@ -215,7 +215,7 @@ async def send_logs(event):
     if os.path.isdir("logs/"):
         await client.send_from_disk(event, "logs/")
     else:
-        await client.update_message(event, "`There are no logs saved!`")
+        await client.update_message(event, "`There are no logs saved!`.")
 
 
 async def aexec(code, event):
@@ -259,23 +259,23 @@ async def py_execute(event):
     sys.stderr = old_stderr
 
     if exc:
-        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Exception:**\n\n`{exc}`")
+        await client.update_message(event, f"**Query**:\n`{code}`\n\n**Exception:**\n`{exc}`")
         return
 
     if stderr:
-        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Error:**\n\n`{stderr}`")
+        await client.update_message(event, f"**Query**:\n`{code}`\n\n**Error:**\n`{stderr}`")
         return
 
     if stdout:
         if len(stdout) > 4096:
             with io.BytesIO(str.encode(stdout)) as out_file:
                 out_file.name = "result.txt"
-                await client.send_file(chat.id, file=out_file, caption=f"'{code}'")
+                await client.send_file(chat.id, file=out_file, caption=f"`{code}`")
                 return
 
-        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`{stdout}`")
+        await client.update_message(event, f"**Query**:\n`{code}`\n\n**Result:**\n`{stdout}`")
     else:
-        await client.update_message(event, f"**Query**:\n\n`{code}`\n\n**Result:**\n\n`Success`")
+        await client.update_message(event, f"**Query**:\n`{code}`\n\n**Result:**\n`Success`")
 
 
 @client.CommandHandler(outgoing=True, command="readall", help=READALL_HELP)
@@ -284,7 +284,7 @@ async def readall(event):
     await client.update_message(event, "`Marking all the unread messages as read.. Please wait...`")
     async for dialog in client.iter_dialogs(limit=None):
         await client.send_read_acknowledge(dialog, clear_mentions=True)
-    await client.update_message(event, "`Done. All the messages are marked as read`")
+    await client.update_message(event, "`Done. All the messages are marked as read`.")
 
 
 @client.CommandHandler(
@@ -310,7 +310,7 @@ async def mute(event):
         await client.update_message(event, "...")
         return
     elif len(split_text[1].split()) > 4:
-        await client.update_message(event, "`Invalid time format`")
+        await client.update_message(event, "`Invalid time format`!")
         return
 
     days = 0
@@ -328,7 +328,7 @@ async def mute(event):
             seconds = val[:-1] if val[:-1].isdigit() else 0
 
     if any((int(days), int(hours), int(minutes), int(seconds))) == 0:
-        await client.update_message(event, "`Invalid time format`")
+        await client.update_message(event, "`Invalid time format`!")
         return
 
     now = datetime.datetime.now()
@@ -341,4 +341,4 @@ async def mute(event):
     if mute_for:
         await client.update_message(event, f"`Chat muted until: {dt.strftime('%d/%m/%Y %I:%M:%S%p')}`")
     else:
-        await client.update_message(event, "`Failed to mute this chat`")
+        await client.update_message(event, "`Failed to mute this chat`!")

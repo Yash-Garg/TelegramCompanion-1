@@ -66,7 +66,7 @@ async def update_profile_pic(event):
             file = await client.upload_file(photo)
             try:
                 await client(UploadProfilePhotoRequest(file))
-                await client.update_message(event, "`Profile picture changed`")
+                await client.update_message(event, "`My profile picture was succesfully changed`")
 
             except Exception as exc:
                 if isinstance(exc, PhotoCropSizeSmallError):
@@ -93,7 +93,7 @@ async def update_profile_bio(event):
         await client.update_message(event, "`The specified bio is too long.`")
     else:
         await client(UpdateProfileRequest(about=bio))
-        await client.update_message(event, "`Succesfully changed the profile bio`")
+        await client.update_message(event, "`Succesfully changed my profile bio`")
 
 
 @client.CommandHandler(outgoing=True, command="puname", help=PUNAME_HELP)
@@ -119,12 +119,12 @@ async def change_profile_username(event):
         await client.update_message(event, "`The specified username is too long.`")
 
     elif len(username) < 5:
-        await client.update_message(event, "`Your username is too short`")
+        await client.update_message(event, "`The specified username is too short.`")
 
     else:
         try:
             await client(UpdateUsernameRequest(username))
-            await client.update_message(event, "`Succesfully changed profile username`")
+            await client.update_message(event, "`Succesfully changed my profile username`")
 
         except UsernameOccupiedError:
             await client.update_message(event, f"`{username} is already taken`")
@@ -147,4 +147,4 @@ async def change_profile_name(event):
         lastName = name.split("\\n", 1)[1]
 
     await client(UpdateProfileRequest(first_name=firstName, last_name=lastName))
-    await client.update_message(event, "`Succesfully changed profile name`")
+    await client.update_message(event, "`Succesfully changed my profile name`")
