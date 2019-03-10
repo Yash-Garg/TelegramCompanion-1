@@ -153,11 +153,13 @@ def is_message_image(message):
     if message.media:
         if message.web_preview:
             return False
+        if message.poll:
+            return False
         if isinstance(message.media, MessageMediaPhoto):
             return True
-        if message.media.document:
-            if message.media.document.mime_type.split("/")[0] == "image":
-                return True
+    elif message.document:
+        if message.media.document.mime_type.split("/")[0] == "image":
+            return True
         return False
     return False
 
