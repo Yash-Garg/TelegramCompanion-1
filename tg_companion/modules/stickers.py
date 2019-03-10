@@ -4,7 +4,7 @@ from io import BytesIO
 
 import emoji
 from PIL import Image
-from telethon.errors.rpcerrorlist import StickersetInvalidError
+from telethon.errors.rpcerrorlist import StickersetInvalidError, YouBlockedUserError
 from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import (DocumentAttributeFilename,
@@ -57,6 +57,11 @@ async def kang_sticker(event):
     packshortname = f"tg_companion_{me.id}"  # format: tg_companion_userid
     await client.update_message(event, "`Processing your sticker. Please Wait!`")
     async with client.conversation('Stickers') as bot_conv:
+        try:
+            await silently_send_message(bot_conv, "/cancel")
+        except YouBlockedUserError:
+            await client.update_message(event, "`You blocked the sticker bot. Please unblock it and try again`")
+            return
         now = datetime.datetime.now()
         dt = now + datetime.timedelta(minutes=1)
         await client(UpdateNotifySettingsRequest(peer="Stickers", settings=InputPeerNotifySettings(show_previews=False, mute_until=int(dt.timestamp()))))
@@ -66,7 +71,6 @@ async def kang_sticker(event):
             sticker.seek(0)
             uploaded_sticker = await client.upload_file(sticker, file_name="sticker.png")
             if not await stickerset_exists(bot_conv, packshortname):
-                await silently_send_message(bot_conv, "/cancel")
                 response = await silently_send_message(bot_conv, "/newpack")
                 if response.text != "Yay! A new stickers pack. How are we going to call it? Please choose a name for your pack.":
                     await client.update_message(event, response.text)
