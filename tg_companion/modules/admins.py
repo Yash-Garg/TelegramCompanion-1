@@ -152,7 +152,7 @@ async def mute_user(event):
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
-                await client.update_message(event, "I don't have permission to mute users here"!)
+                await client.update_message(event, "I don't have permission to mute users here!")
         if event.reply_to_msg_id:
             rep_msg = await event.get_reply_message()
             user = await rep_msg.get_sender()
