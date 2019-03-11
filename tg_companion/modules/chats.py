@@ -19,7 +19,7 @@ async def update_profile_pic(event):
     """
     **Change your channel/group profile picture.**
         __Usage:__
-            __Reply to any image or photo document.__
+            Reply to any image or photo document.
     """
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
@@ -75,7 +75,7 @@ async def update_profile_bio(event):
     """
     **Change your channel/group bio.**
         __Args:__
-            `<bio>`
+            `<bio>` - The about text you want to use for your profile.
     """
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
@@ -113,6 +113,12 @@ async def update_profile_bio(event):
 
 @client.CommandHandler(outgoing=True, command="cuname (.+)")
 async def change_profile_username(event):
+    """
+    **Change your channel/group username.**
+        __Args:__
+            `<name>` -The username you want to use for your chat.
+    """
+
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
         return
@@ -158,9 +164,9 @@ async def change_profile_username(event):
 @client.CommandHandler(outgoing=True, command="cname (.+)")
 async def change_profile_name(event):
     """
-    **Change your channel/group username.**
+    **Change your channel/group name.**
         __Args:__
-            `<username>`
+            `<name>` -The name you want to use for your chat.
     """
     if event.is_private:
         await client.update_message(event, "Invalid chat type.")

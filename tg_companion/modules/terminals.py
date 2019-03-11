@@ -14,7 +14,7 @@ from tg_companion.tgclient import client
 @client.CommandHandler(outgoing=True, command="term")
 async def terminal(event):
     """
-    **Execute a bash command on your pc/server**
+    **Execute a bash command on your pc/server.**
         __Args:__
             `<command>` - Your bash command that will be executed.
     """
@@ -95,7 +95,7 @@ async def terminal(event):
 )
 async def ssh_terminal(event):
     """
-    **Execute a bash command on your ssh connection**
+    **Execute a bash command on your ssh connection.**
         __Args:__
             `<command>` - Your bash command that will be executed.
     """
@@ -173,9 +173,9 @@ async def ssh_terminal(event):
 @client.CommandHandler(outgoing=True, command="upload")
 async def upload_file(event):
     """
-    **Upload a file or folder from your pc/server**
+    **Upload a file or folder from your pc/server.**
         __Args:__
-            `<path>` - The path to the file or folder you want to upload
+            `<path>` - The path to the file or folder you want to upload.
     """
     split_text = event.text.split(None, 1)
 
@@ -194,9 +194,9 @@ async def upload_file(event):
 )
 async def ssh_upload_file(event):
     """
-    **Upload a file or folder from your ssh connection**
+    **Upload a file or folder from your ssh connection.**
         __Args:__
-            `<path>` - The path to the file or folder you want to upload
+            `<path>` - The path to the file or folder you want to upload.
     """
     split_text = event.text.split(None, 1)
 

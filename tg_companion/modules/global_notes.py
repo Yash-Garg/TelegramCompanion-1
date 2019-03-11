@@ -25,7 +25,7 @@ async def save_note(event):
     """
     **Globally save a note.**
         __Args:__
-            `<notename>` `<notecontent>` __The notecontent argument is required only if you don't reply to a message__
+            `<notename>` `<notecontent>` The notecontent argument is required only if you don't reply to a message.
     """
     message = event.message
     split_text = event.text.split(None, 2)
@@ -101,7 +101,7 @@ async def get_note(event):
     """
     **Get a globally saved note.**
         __Args:__
-            `<notename>`
+            `<notename>` - The name of the note.
     """
     split_text = event.text.split(None, 1)
     chat = await event.get_chat()
@@ -146,7 +146,7 @@ async def remove_note(event):
     """
     **Remove a globally saved note.**
         __Args:__
-            `<notename>`
+            `<notename>` - The name of the note.
     """
     split_text = event.text.split(None, 1)
 
@@ -171,7 +171,7 @@ async def remove_note(event):
 @client.CommandHandler(outgoing=True, command="notes")
 async def list_notes(event):
     """
-    **Get a list with all of the globally saved notes**
+    **Get a list with all of the globally saved notes.**
     """
     listnotes = []
     with engine.connect() as conn:

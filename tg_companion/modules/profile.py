@@ -17,7 +17,7 @@ async def update_profile_pic(event):
     """
     **Changes your profile picture.**
         __Usage:__
-            __Reply to any image or photo document.__
+            Reply to any image or photo document.
     """
     if not event.reply_to_msg_id:
         await client.update_message(event, update_profile_pic.__doc__)
@@ -65,7 +65,7 @@ async def update_profile_bio(event):
     """
     **Changes your bio.**
         __Args:__
-            `<bio>`
+            `<bio>` - The bio you want to use for your profile.
     """
     split_text = event.text.split(None, 1)
 
@@ -87,7 +87,7 @@ async def change_profile_username(event):
     """
    **Change your username.**
        __Args:__
-           `<username>`
+           `<username>` - The username you want to use for your profile.
    """
 
     split_text = event.text.split(None, 1)
@@ -126,7 +126,8 @@ async def change_profile_name(event):
     """
     **Change your name.**
         __Args:__
-            `<name>` - __Use \\n to separate first name from second name__
+            `<name>` - The name you want to use for your profile.
+                    Use \\n to separate first name from second name.
     """
     split_text = event.text.split(None, 1)
 

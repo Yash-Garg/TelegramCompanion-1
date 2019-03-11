@@ -25,7 +25,7 @@ async def afk(event):
     """
     **Mark yourself as AFK.**
         __Args:__
-            `<reason>` - **(optional)** Optional afk reason
+            `<reason>` - **(optional)** Optional afk reason.
     """
     global afk_time
     global ALLOW_SEEN_STATUS

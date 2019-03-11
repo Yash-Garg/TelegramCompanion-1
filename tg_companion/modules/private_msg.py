@@ -74,9 +74,9 @@ async def await_permission(event):
 @client.CommandHandler(outgoing=True, command="approve")
 async def accept_permission(event):
     """
-    **Aprove a private message from a user. Works only if NOPM_SPAM is enabled in config.env or exported**
+    **Aprove a private message from a user. Works only if NOPM_SPAM is enabled in config.env or exported!**
         __Usage:__
-            __Send in in PM of any unaproved user__ **Works only in private**
+            Send in in PM of any unaproved user. **Works only in private!**
     """
     chat = await event.get_chat()
     if NOPM_SPAM or BLOCK_PM:

@@ -66,7 +66,7 @@ async def regex_cmd(event):
     **Sed-like commands**
     __Usage:__
         Reply to a message to get send back a modified version.
-        The sed format is: `sed/<to_replace>/<replace_with>/<optional_flag>`
+        The sed format is: `sed/<to_replace>/<replace_with>/<optional_flag>`.
     __Flags:__
         `i` : Ignore case
         `l` : Locale
@@ -74,7 +74,7 @@ async def regex_cmd(event):
         `s` : Dotall
         `a` : Ascii
         `x` : Verbose
-        __You can find all about these flags here:__ https://docs.python.org/3.7/library/re.html#module-contents
+        __You can find all about these flags here:__ https://docs.python.org/3.7/library/re.html#module-contents.
 
     """
     await regex_no_symb(event)

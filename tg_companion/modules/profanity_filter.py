@@ -23,10 +23,10 @@ PROFANITY_CHECK_CHATS = []
 PROFANITY_HELP = """
     **Toggle the profanity filter on/off.**
         __Args:__
-            `<on/off>` - **(admin only)** **(optional)** __The state of the profanity filter.
+            `<on/off>` - **(admin only)** **(optional)** The state of the profanity filter.
                             If activated will delete any messages that contains profanity
-                            from the chat where it was enabled
-                            Will display the filter status in the chat if sent without any value.__
+                            from the chat where it was enabled.
+                            Will display the filter status in the chat if sent without any value.
 """
 
 query = db.select([profanity_tbl.columns.chat_id]).where(

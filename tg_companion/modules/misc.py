@@ -236,12 +236,12 @@ async def py_execute(event):
 @client.CommandHandler(outgoing=True, command="readall")
 async def readall(event):
     """
-    **Mark all messages as read**
+    **Mark all messages as read.**
     """
     await client.update_message(event, "`Marking all the unread messages as read.. Please wait...`")
     async for dialog in client.iter_dialogs(limit=None):
         await client.send_read_acknowledge(dialog, clear_mentions=True)
-    await client.update_message(event, "`Done. All the messages are marked as read`.")
+    await client.update_message(event, "`Done. All the messages are marked as read`")
 
 
 @client.CommandHandler(
@@ -249,7 +249,7 @@ async def readall(event):
     command="disconnect")
 async def disconnect_companion(event):
     """
-    **Disconnects the companion from Telegram**
+    **Disconnects the companion from Telegram.**
     """
     await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
     await client.disconnect()
@@ -258,7 +258,7 @@ async def disconnect_companion(event):
 @client.CommandHandler(outgoing=True, command="logout")
 async def logout(event):
     """
-    **Logs out the companion from Telegram and deletes the session**
+    **Logs out the companion from Telegram and deletes the session.**
     """
     await client.update_message(event, "Thanks for using Telegram Companion. Goodbye!")
     await client.log_out()
@@ -270,11 +270,11 @@ async def mute(event):
     **Mutes a chat for a given time**
         __Args:__
             `<number>d <number>h <number>m <number>s` - The time in days, hours, minutes and seconds
-                At least one of them is required but not more than 4
+                At least one of them is required but not more than 4.
         __Usage:__
             Use these arguments as an example: 1d 2h 3m 4s
             the chat will be now muted for one day, two hours, three mintues, and four seconds.
-            Please remember that at least one of the values are required but not more than 4
+            Please remember that at least one of the values are required but not more than 4.
     """
     chat = await event.get_chat()
     split_text = event.text.split(None, 1)

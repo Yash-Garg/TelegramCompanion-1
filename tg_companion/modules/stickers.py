@@ -21,9 +21,9 @@ async def kang_sticker(event):
     """
     **Save any image/sticker to a sticker pack**
         __Usage:__
-            __Reply to any image or photo document/sticker.__
+            Reply to any image or photo document/sticker.
         __Args:__
-            `<emoji>` (**optional**) __The emoji you want to attach to your sticker__
+            `<emoji>` (**optional**) - The emoji you want to attach to your sticker
     """
     if not event.is_reply:
         await client.update_message(event, kang_sticker.__doc__)
@@ -91,7 +91,7 @@ async def get_pack_info(event):
     """
     **Get sticker pack info**
         __Usage:__
-            __Reply to any sticker to get his pack info.__
+            Reply to any sticker to get his pack info.
     """
     if not event.is_reply:
         await client.update_message(event, get_pack_info.__doc__)
@@ -123,7 +123,7 @@ async def sticker_to_png(event):
     """
     **Send a sticker as a PMG document**
         __Usage:__
-            __Reply to any sticker to get it as a PMG document.__
+            Reply to any sticker to get it as a PMG document.
     """
     if not event.is_reply:
         await client.update_message(event, sticker_to_png.__doc__)

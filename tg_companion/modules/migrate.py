@@ -18,7 +18,7 @@ async def account_migrate(event):
     """
     **Migrate all your chats to a second account**
         __Args:__
-            `<username` - __The username of your second account__
+            `<username` - The username of your second account.
     """
     global CHAT_IDS
     global FAILED_CHATS
