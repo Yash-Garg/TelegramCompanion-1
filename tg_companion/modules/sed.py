@@ -65,7 +65,7 @@ async def regex_cmd(event):
     """
     **Sed-like commands**
     __Usage:__
-        Reply to a message to get send back a modified version.
+        Reply to a message to reply back with a modified version.
         The sed format is: `sed/<to_replace>/<replace_with>/<optional_flag>`.
     __Flags:__
         `i` : Ignore case

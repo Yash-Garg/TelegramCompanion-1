@@ -63,7 +63,7 @@ async def gban_user(event):
        __Usage:__
            Reply to or mention a user to globally ban him.
            This will only work if the owner accepts global bans from your companion by replying to you with `.enablegbans`.
-           The owner can also disable gloal bans from your companion by replying to you with `.disalegbans`.
+           The owner can also disable global bans from your companion by replying to you with `.disalegbans`.
    """
 
     me = await client.get_me()
@@ -143,7 +143,7 @@ async def un_gban(event):
     **Globally uban any user.**
         __Usage:__
             Reply to or mention a user to globally unban him.
-            **Because of the API limitations you'll need to manually unban the user from your chats.**
+            **Because of the API limitations, you'll need to manually unban the user from your chats.**
     """
     me = await client.get_me()
 

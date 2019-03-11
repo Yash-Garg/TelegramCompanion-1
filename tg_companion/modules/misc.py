@@ -273,7 +273,7 @@ async def mute(event):
                 At least one of them is required but not more than 4.
         __Usage:__
             Use these arguments as an example: 1d 2h 3m 4s
-            the chat will be now muted for one day, two hours, three mintues, and four seconds.
+            the chat will be now muted for one day, two hours, three minutes, and four seconds.
             Please remember that at least one of the values are required but not more than 4.
     """
     chat = await event.get_chat()

@@ -127,7 +127,7 @@ async def change_profile_name(event):
     **Change your name.**
         __Args:__
             `<name>` - The name you want to use for your profile.
-                    Use \\n to separate first name from second name.
+                     Use \n to separate the first name from the second name.
     """
     split_text = event.text.split(None, 1)
 

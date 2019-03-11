@@ -298,7 +298,7 @@ async def GetStats():
 @client.CommandHandler(outgoing=True, command="stats")
 async def show_stats(event):
     """
-    **Counts all the messages in joined chats and all the chats/groups/PMs you have a conversations with.**
+    **Counts all the messages in joined chats and all the chats/groups/PMs you have a conversation with.**
     """
     stats = None
 
