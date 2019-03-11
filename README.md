@@ -18,7 +18,7 @@
 
 ## Installation
 
--   Install python3.7 and python3.7-dev. python3.6 and python3-dev works too:
+-   Install python3.7 and python3.7-dev. python3.6 and python3-dev will work too:
 
 ```
 sudo apt install python3.7 python3.7-dev
@@ -45,15 +45,15 @@ pip3 install -r requirements.txt
 
 # Setup
 
-#### First you need t create a postgress database. You can create one following the instructions below.
+#### First you need to create a Postgres database. You can create one following the instructions below.
 
-* Install postgress.
+* Install Postgres.
 
 `sudo apt-get update && sudo apt-get install postgresql`
 
-* Change to a postgress user.
+* Change to a Postgres user.
 
-`sudo su - postgres`
+`sudo su - Postgres`
 
 * Create a new user for your database. Replace YOUR_USER with the desired user name.
 
@@ -129,9 +129,9 @@ Now build your database URL:
 ---
 # Features
 
-Telegram Companion brings some small improvments and new features to any Telegram Client
+Telegram Companion brings some small improvements and new features to any Telegram Client
 
-You can some features using a command. Others are enabled from the config file and they work in background.
+You can some features using a command. Others are enabled from the config file and they work in the background.
 Every command follows tgbot's syntax but instead of `/<command>` we use `.<command>` (This can be changed from the config.env file)
 
 You can use .help to get all the available commands and what they can do
@@ -148,7 +148,7 @@ Check [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) re
 
 Feel free to open an issue (or even better, send a **Pull Request**) for improving the bot's code. **Contributions** are very welcome !! :smiley:
 
-Note that a PR needs to reach a certain level of engagement before it gets merged. This criteria is kept to maintain the quality of the bot. Also we won't accept any PR that uses a external api key to work. PR to [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) instead
+Note that the PR needs to reach a certain level of engagement before it gets merged. This way we keep the quality of the bot intact. Also, we won't accept any PR that uses an external API key to work. PR to [TgCompanionPlugins](https://github.com/nitanmarcel/TgCompanionPlugins) instead
 
 When making a new pull request that brings a new feature make sure you use @client.CommandHandler(..) instead of the default @client.on(event)
 
@@ -161,7 +161,7 @@ def my_function(event):
 
 
 
-This method is a alternative for `client.on()` which uses the same arguments but with some exceptions
+This method is an alternative for `client.on()` which uses the same arguments but with some exceptions
 ```
   Optional Args:
       command (str):
@@ -181,7 +181,7 @@ You can add an help text for a command by adding a docstring:
 async def example(event):
     """
     **What the function does**
-        __Args,Usage or Example:__
+        __Args, Usage or Example:__
             `<arg>` - **(optional/required)** argument description
     """
 ```
@@ -191,10 +191,10 @@ You can ask for support or report a bug in our telegram [group](https://t.me/tgc
 
 
 ## Thanks
-Thanks to everyone who helped me with ideas and with the project. Including @Yash-Garg for letting me host this project on his private repo, @baalajimaestro for the idea that gave birth to this userbot. (Alse check his [userbot](https://github.com/baalajimaestro/Telegram-UserBot)). And not last @sicrs for all the support he gave me.
+Thanks to everyone who helped me with ideas and with the project. Including @Yash-Garg for letting me host this project on his private repo, @baalajimaestro for the idea that gave birth to this user-bot. (Also check his [userbot](https://github.com/baalajimaestro/Telegram-UserBot)). And not last @sicrs for all the support he gave me.
 
 ## Donate
-It took a lot of work and white nights for me to do this userbot and make it look less like another Bot that you control and more a part of your telegram client.
+It took a lot of work and white nights for me to do this user-bot and make it look less like another Bot that you control and more a part of your telegram client.
 I know is not perfect but I'm trying my best and if you enjoy this UserBot and you want to help me you can buy me a beer using [PayPal](https://www.paypal.me/marcelalexandrunitan). Any donation will help. Thanks and I hope you enjoy my UserBot
 
 
