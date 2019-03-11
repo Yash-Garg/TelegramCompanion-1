@@ -171,41 +171,20 @@ This method is a alternative for `client.on()` which uses the same arguments but
 
     allow_edited (bool):
           If set True the command will also work when the message is edited.
-
-    help (str):
-        The help message used for displaying the command usage
 ```
 
-When adding the help text please follow the example below:
+You can add an help text for a command by adding a docstring:
 
 
 ```
-AFK_HELP = """
-    **Mark yourself as AFK.**
-        __Args:__
-            `<reason>` - **(optional)** __Optional afk reason__
-"""
+@client.CommandHandler(outgoing=True, command="example")
+async def example(event):
+    """
+    **What the function does**
+        __Args,Usage or Example:__
+            `<arg>` - **(optional/required)** argument description
+    """
 ```
-
-**OR:**
-
-```
-
-AFK_HELP = """
-    **Mark yourself as AFK.**
-        __Usage:__
-            __The way it should be used__
-"""
-```
-
-**OR**:
-
-```
-AFK_HELP = """
-    **Mark yourself as AFK.**
-"""
-```
-
 ## Support
 
 You can ask for support or report a bug in our telegram [group](https://t.me/tgcompanion)

@@ -6,12 +6,6 @@ from telethon.tl.types import (InputPrivacyKeyStatusTimestamp,
 
 from tg_companion.tgclient import CMD_HANDLER, client
 
-AFK_HELP = """
-    **Mark yourself as AFK.**
-        __Args:__
-            `<reason>` - **(optional)** __Optional afk reason__
-"""
-
 USER_AFK = {}
 ALLOW_SEEN_STATUS = None
 afk_time = None
@@ -26,9 +20,13 @@ intervals = (
 )
 
 
-@client.CommandHandler(outgoing=True, command="afk", help=AFK_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="afk")
 async def afk(event):
+    """
+    **Mark yourself as AFK.**
+        __Args:__
+            `<reason>` - **(optional)** Optional afk reason
+    """
     global afk_time
     global ALLOW_SEEN_STATUS
 
@@ -54,7 +52,6 @@ async def afk(event):
 @client.CommandHandler(
     outgoing=True,
     func=lambda e: True if f"{CMD_HANDLER}afk" not in e.message.text else False)
-@client.log_exception
 async def no_afk(event):
     chat = await event.get_chat()
     if "yes" in USER_AFK:
@@ -65,7 +62,6 @@ async def no_afk(event):
 @client.CommandHandler(
     incoming=True,
     func=lambda e: True if e.mentioned or e.is_private else False)
-@client.log_exception
 async def reply_afk(event):
     global afk_time
     chat = await event.get_chat()

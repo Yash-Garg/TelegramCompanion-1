@@ -1,19 +1,16 @@
 import asyncio
-import datetime
-import inspect
 import io
 import os
-import sys
 import zipfile
 from getpass import getpass
-
+import inspect
 from alchemysession import AlchemySessionContainer
 from telethon import TelegramClient, events
 from telethon.client.users import UserMethods
-from telethon.errors import FloodWaitError, SessionPasswordNeededError
+from telethon.errors import SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import PhoneCodeInvalidError
 
-from tg_companion import (APP_HASH, APP_ID, CMD_HANDLER, DB_URI, DEBUG, LOGGER,
+from tg_companion import (APP_HASH, APP_ID, CMD_HANDLER, DB_URI, LOGGER,
                           SESSION_NAME, proxy)
 from tg_companion._version import __version__
 
@@ -123,6 +120,9 @@ class CustomClient(TelegramClient):
             """
             global CMD_HELP
             pattern = None
+            if help:
+                LOGGER.warning(
+                    f"Deprecated help argument in: {inspect.getmodule(f).__name__}. Please make sure you updated the your companion and plugins")
             if command:
                 CMD_SYMBOL = ""
                 for symbol in CMD_HANDLER:
@@ -132,15 +132,10 @@ class CustomClient(TelegramClient):
                 f, events.NewMessage(
                     pattern=pattern, func=func, **kwargs))
 
-            if help:
-                module_name = inspect.getmodule(f).__name__
-                cmd_name = module_name.rsplit(".", 1)[-1].replace(".py", "")
-                if command:
-                    cmd_name = command.split(None, 1)[0]
-
-                if cmd_name not in CMD_HELP:
-
-                    CMD_HELP.update({f"{cmd_name}": help})
+            if f.__doc__ and command:
+                cmd_name = command.split(None, 1)[0]
+                if cmd_name not in CMD_HELP.keys():
+                    CMD_HELP.update({cmd_name: f.__doc__})
 
             if allow_edited:
                 self.add_event_handler(
@@ -167,10 +162,10 @@ class CustomClient(TelegramClient):
             f_name = os.path.basename(path)
             f_size, unit = self.convert_file_size(os.path.getsize(f_name))
             await self.update_message(event,
-                                        f"**Uploading**:\n\n"
-                                        f"  __File Name:__ `{f_name}`\n"
-                                        f"  __Size__: `{f_size}` {unit}\n"
-                                        )
+                                      f"**Uploading**:\n\n"
+                                      f"  __File Name:__ `{f_name}`\n"
+                                      f"  __Size__: `{f_size}` {unit}\n"
+                                      )
 
             await self.send_file(event.chat_id, path, file_name=f_name,
                                  force_document=force_document, reply_to=reply_to, progress_callback=None)
@@ -199,10 +194,10 @@ class CustomClient(TelegramClient):
                     memzip.seek(0)
                     d_size, unit = self.convert_file_size(d_size)
                     await self.update_message(event,
-                                                f"**Uploading**:\n\n"
-                                                f"  __Folder Name:__ `{d_name}`\n"
-                                                f"  __Size__: `{d_size}` {unit}\n"
-                                                )
+                                              f"**Uploading**:\n\n"
+                                              f"  __Folder Name:__ `{d_name}`\n"
+                                              f"  __Size__: `{d_size}` {unit}\n"
+                                              )
 
                     await self.send_file(event.chat_id, file=memzip, allow_cache=None, progress_callback=None)
                     await event.delete()
@@ -258,53 +253,6 @@ class CustomClient(TelegramClient):
 
             return wrapper
         return decorator
-
-    @staticmethod
-    def log_exception(func):
-
-        async def wrapper(*args, **kwds):
-            __lgw_marker_local__ = 0
-
-            try:
-                return await func(*args, **kwds)
-            except Exception as e:
-                if isinstance(e, FloodWaitError):
-                    LOGGER.info(
-                        f"We have reached a flood limitation."
-                        f" You won't be able to edit your messages for {str(datetime.timedelta(seconds=e.seconds))}.")
-                    return
-
-                exc_time = datetime.datetime.now().strftime("%m_%d_%H:%M:%S")
-
-                file_name = f"{exc_time}_{type(e).__name__}_{func.__name__}"
-
-                if not DEBUG:
-                    raise
-
-                if not os.path.exists('logs/'):
-                    os.mkdir('logs/')
-
-                with open(f"logs/{file_name}.log", "a") as log_file:
-                    log_file.write(f"Exception thrown, {type(e)}: {str(e)}\n")
-                    frames = inspect.getinnerframes(sys.exc_info()[2])
-                    for frame_info in reversed(frames):
-                        f_locals = frame_info[0].f_locals
-                        if "__lgw_marker_local__" in f_locals:
-                            continue
-
-                        log_file.write(f"File{frame_info[1]},"
-                                       f"line {frame_info[2]}"
-                                       f" in {frame_info[3]}\n"
-                                       f"{     frame_info[4][0]}\n")
-
-                        for k, v in f_locals.items():
-                            log_to_str = str(v).replace("\n", "\\n")
-                            log_file.write(f"    {k} = {log_to_str}\n")
-                    log_file.write("\n")
-
-                raise
-
-        return wrapper
 
 
 class CompanionClient(CustomClient, CustomDisconnect):

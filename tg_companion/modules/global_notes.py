@@ -19,32 +19,14 @@ notes_tbl = db.Table("global_notes", metadata,
 
 metadata.create_all(engine, [notes_tbl], checkfirst=True)
 
-SAVE_HELP = """
+
+@client.CommandHandler(outgoing=True, command="save")
+async def save_note(event):
+    """
     **Globally save a note.**
         __Args:__
             `<notename>` `<notecontent>` **The notecontent argument is required only if you don't reply to a message**
-"""
-
-GET_HELP = """
-    **Get a globally saved note.**
-        __Args:__
-            `<notename>`
-"""
-
-REMOVE_HELP = """
-    **Remove a globally saved note.**
-        __Args:__
-            `<notename>`
-"""
-
-NOTES_HELP = """
-    **Get a list with all of the globally saved notes**
-"""
-
-
-@client.CommandHandler(outgoing=True, command="save", help=SAVE_HELP)
-@client.log_exception
-async def save_note(event):
+    """
     message = event.message
     split_text = event.text.split(None, 2)
 
@@ -114,9 +96,13 @@ async def save_note(event):
     await client.update_message(event, f"Globally saved `{note_name}`. Get it using the command `get {note_name}`")
 
 
-@client.CommandHandler(outgoing=True, command="get", help=GET_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="get")
 async def get_note(event):
+    """
+    **Get a globally saved note.**
+        __Args:__
+            `<notename>`
+    """
     split_text = event.text.split(None, 1)
     chat = await event.get_chat()
 
@@ -155,8 +141,13 @@ async def get_note(event):
     await client.update_message(event, note_text)
 
 
-@client.CommandHandler(outgoing=True, command="remove", help=REMOVE_HELP)
+@client.CommandHandler(outgoing=True, command="remove")
 async def remove_note(event):
+    """
+    **Remove a globally saved note.**
+        __Args:__
+            `<notename>`
+    """
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
@@ -177,9 +168,11 @@ async def remove_note(event):
     await client.update_message(event, f"Deleted `{note_name}` from database")
 
 
-@client.CommandHandler(outgoing=True, command="notes", help=NOTES_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="notes")
 async def list_notes(event):
+    """
+    **Get a list with all of the globally saved notes**
+    """
     listnotes = []
     with engine.connect() as conn:
         query = (db.select([notes_tbl]))

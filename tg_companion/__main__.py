@@ -33,7 +33,7 @@ async def start(event):
     await client.update_message(event, f"**Telegram Companion is up and running. Use** `{CMD_HANDLER}help` **in private to get a list with all the available commands**")
 
 
-@client.CommandHandler(outgoing=True, command="help", help=SELF_HELP)
+@client.CommandHandler(outgoing=True, command="help")
 async def send_help(event):
 
     text = event.text.split()

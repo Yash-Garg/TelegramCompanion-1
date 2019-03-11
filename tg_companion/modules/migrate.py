@@ -10,18 +10,16 @@ FAILED_CHATS = []
 FAILED_CHATS_COUNT = 0
 MIGRATED_CHATS_COUNT = 0
 
-MIGRATE_HELP = """
-    **Migrate all your chats to a second account**
-        __Args:__
-            `<username` - __The username of your second account__
-"""
-
 
 @client.CommandHandler(
     outgoing=True,
     command="migrate")
-@client.log_exception
 async def account_migrate(event):
+    """
+    **Migrate all your chats to a second account**
+        __Args:__
+            `<username` - __The username of your second account__
+    """
     global CHAT_IDS
     global FAILED_CHATS
     global FAILED_CHATS_COUNT
@@ -33,7 +31,7 @@ async def account_migrate(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 0:
-        await client.update_message(event, MIGRATE_HELP)
+        await client.update_message(event, account_migrate.__doc__)
         return
 
     username = split_text[1]

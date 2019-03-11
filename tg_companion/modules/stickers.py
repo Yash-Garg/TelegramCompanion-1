@@ -15,31 +15,18 @@ from telethon.tl.types import (DocumentAttributeFilename,
 
 from tg_companion.tgclient import client
 
-KANG_HELP = """
+
+@client.CommandHandler(outgoing=True, command="kang")
+async def kang_sticker(event):
+    """
     **Save any image/sticker to a sticker pack**
         __Usage:__
             __Reply to any image or photo document/sticker.__
         __Args:__
             `<emoji>` (**optional**) __The emoji you want to attach to your sticker__
-"""
-
-PACKINFO_HELP = """
-    **Get sticker pack info**
-        __Usage:__
-            __Reply to any sticker to get his pack info.__
-"""
-
-GET_HELP = """
-    **Send a sticker as a PMG document**
-        __Usage:__
-            __Reply to any sticker to get it as a PMG document.__
-"""
-
-
-@client.CommandHandler(outgoing=True, command="kang", help=KANG_HELP)
-async def kang_sticker(event):
+    """
     if not event.is_reply:
-        await client.update_message(event, KANG_HELP)
+        await client.update_message(event, kang_sticker.__doc__)
         return
     rep_msg = await event.get_reply_message()
     sticker_emoji = "🤔"
@@ -99,10 +86,15 @@ async def kang_sticker(event):
     await client.update_message(event, f"sticker added! Your pack can be found [here](https://t.me/addstickers/{packshortname})")
 
 
-@client.CommandHandler(outgoing=True, command="packinfo", help=PACKINFO_HELP)
+@client.CommandHandler(outgoing=True, command="packinfo")
 async def get_pack_info(event):
+    """
+    **Get sticker pack info**
+        __Usage:__
+            __Reply to any sticker to get his pack info.__
+    """
     if not event.is_reply:
-        await client.update_message(event, PACKINFO_HELP)
+        await client.update_message(event, get_pack_info.__doc__)
         return
     rep_msg = await event.get_reply_message()
     if not rep_msg.document:
@@ -126,10 +118,15 @@ async def get_pack_info(event):
     await client.update_message(event, OUTPUT)
 
 
-@client.CommandHandler(outgoing=True, command="stickerget", help=GET_HELP)
+@client.CommandHandler(outgoing=True, command="stickerget")
 async def sticker_to_png(event):
+    """
+    **Send a sticker as a PMG document**
+        __Usage:__
+            __Reply to any sticker to get it as a PMG document.__
+    """
     if not event.is_reply:
-        await client.update_message(event, GET_HELP)
+        await client.update_message(event, sticker_to_png.__doc__)
         return
     rep_msg = await event.get_reply_message()
     if not rep_msg.document:

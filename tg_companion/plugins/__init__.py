@@ -2,6 +2,7 @@ from tg_companion import LOGGER
 import os
 import configparser
 
+
 def load_plugins():
     config = configparser.ConfigParser()
     plugins = []
@@ -11,7 +12,13 @@ def load_plugins():
                 for file in os.listdir(root + dir):
                     if file.endswith(".plugin"):
                         config.read(root + dir + "/" + file)
-                        plugins.append(root + dir + "/" + config.get("CORE", "main"))
+                        plugins.append(
+                            root +
+                            dir +
+                            "/" +
+                            config.get(
+                                "CORE",
+                                "main"))
     return plugins
 
 

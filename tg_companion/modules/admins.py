@@ -4,33 +4,14 @@ from telethon.tl.types import (ChannelParticipantsBanned,
 
 from tg_companion.tgclient import client
 
-BAN_HELP = """
+
+@client.CommandHandler(outgoing=True, command="ban")
+async def ban_user(event):
+    """
     **Ban a user from your chat.**
         __Usage:__
             Reply to or mention a user to ban him.
-"""
-UNBAN_HELP = """
-    **Unban a user from your chat.**
-        __Usage:__
-            Reply to or mention a banned user to unban him.
-"""
-
-MUTE_HELP = """
-    **Mute a user from your chat.**
-        __Usage:__
-            Reply to or mention a user to mute him.
-"""
-
-UNMUTE_HELP = """
-    **Unmute a user from your chat.**
-        __Usage:__
-            Reply to or mention a mutes user to unmute him.
-"""
-
-
-@client.CommandHandler(outgoing=True, command="ban", help=BAN_HELP)
-@client.log_exception
-async def ban_user(event):
+    """
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
@@ -50,7 +31,7 @@ async def ban_user(event):
                 await client.update_message(event, f"`I don't seem to find this user by {split_text[1]}`.")
                 return
         else:
-            await client.update_message(event, BAN_HELP)
+            await client.update_message(event, ban_user.__doc__)
             return
 
         if user.id == me.id:
@@ -83,9 +64,13 @@ async def ban_user(event):
         await client.update_message(event, "I need admin permissions to ban users here!")
 
 
-@client.CommandHandler(outgoing=True, command="unban", help=UNBAN_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="unban")
 async def unban_user(event):
+    """
+    **Unban a user from your chat.**
+        __Usage:__
+            Reply to or mention a banned user to unban him.
+    """
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
@@ -107,7 +92,7 @@ async def unban_user(event):
                 await client.update_message(event, f"`I don't seem to find this user by {split_text[1]}`.")
                 return
         else:
-            await client.update_message(event, UNBAN_HELP)
+            await client.update_message(event, unban_user.__doc__)
             return
 
         if user.id == me.id:
@@ -142,9 +127,13 @@ async def unban_user(event):
         await client.update_message(event, "I need admin permissions to ban users here!")
 
 
-@client.CommandHandler(outgoing=True, command="mute", help=MUTE_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="mute")
 async def mute_user(event):
+    """
+    **Mute a user from your chat.**
+        __Usage:__
+            Reply to or mention a user to mute him.
+    """
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
@@ -164,7 +153,7 @@ async def mute_user(event):
                 await client.update_message(event, f"`I don't seem to find this user by {split_text[1]}`.")
                 return
         else:
-            await client.update_message(event, MUTE_HELP)
+            await client.update_message(event, mute_user.__doc__)
             return
 
         if user.id == me.id:
@@ -198,9 +187,13 @@ async def mute_user(event):
         await client.update_message(event, "I need admin permissions to mute users here!")
 
 
-@client.CommandHandler(outgoing=True, command="unmute", help=UNMUTE_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="unmute")
 async def unmute_user(event):
+    """
+    **Unmute a user from your chat.**
+        __Usage:__
+            Reply to or mention a mutes user to unmute him.
+    """
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
@@ -220,7 +213,7 @@ async def unmute_user(event):
                 await client.update_message(event, f"`I don't seem to find this user by {split_text[1]}`.")
                 return
         else:
-            await client.update_message(event, UNMUTE_HELP)
+            await client.update_message(event, unmute_user.__doc__)
             return
 
         if user.id == me.id:

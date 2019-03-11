@@ -41,7 +41,6 @@ connection.close()
 @client.CommandHandler(
     outgoing=True,
     command="profanity",
-    help=PROFANITY_HELP,
     func=lambda e: not e.is_private)
 async def profanity_switch(event):
     global PROFANITY_CHECK_CHATS
@@ -137,7 +136,6 @@ async def check_profanity_filter(event):
     incoming=True,
     outgoing=True,
     command="profanity",
-    help=PROFANITY_HELP,
     func=lambda e: not e.is_private and not any(
         x in e.text for x in [
             "on",

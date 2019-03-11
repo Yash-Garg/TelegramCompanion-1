@@ -45,13 +45,8 @@ GroupsInfo_tbl = db.Table("groups_info", metadata,
 
 FirstRun = None
 
-STATS_HELP = """
-    **Counts all the messages in joined chats and all the chats/groups/PMs you have a conversations with.**
-"""
-
 
 @client.on_timer(STATS_TIMER)
-@client.log_exception
 async def GetStats():
     global FirstRun
 
@@ -300,9 +295,11 @@ async def GetStats():
     LOGGER.info("DONE!! You can see your stats by sending .stats in any chat")
 
 
-@client.CommandHandler(outgoing=True, command="stats", help=STATS_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="stats")
 async def show_stats(event):
+    """
+    **Counts all the messages in joined chats and all the chats/groups/PMs you have a conversations with.**
+    """
     stats = None
 
     connection = engine.connect()

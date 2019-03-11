@@ -13,34 +13,14 @@ from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto, InputChan
 
 from tg_companion.tgclient import client
 
-CPIC_HELP = """
+
+@client.CommandHandler(outgoing=True, command="cpic")
+async def update_profile_pic(event):
+    """
     **Change your channel/group profile picture.**
         __Usage:__
             __Reply to any image or photo document.__
-"""
-
-CABOUT_HELP = """
-    **Change your channel/group bio.**
-        __Args:__
-            `<bio>`
-"""
-
-CUNAME_HELP = """
-    **Change your channel/group username.**
-        __Args:__
-            `<username>`
-"""
-
-CNAME_HELP = """
-    **Change your channel/group name.**
-        __Args:__
-            `<name>` - __Use \\n to separate first name from second name__
-"""
-
-
-@client.CommandHandler(outgoing=True, command="cpic", help=CPIC_HELP)
-@client.log_exception
-async def update_profile_pic(event):
+    """
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
         return
@@ -90,8 +70,13 @@ async def update_profile_pic(event):
                 os.remove(photo)
 
 
-@client.CommandHandler(outgoing=True, command="cabout", help=CABOUT_HELP)
+@client.CommandHandler(outgoing=True, command="cabout")
 async def update_profile_bio(event):
+    """
+    **Change your channel/group bio.**
+        __Args:__
+            `<bio>`
+    """
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
         return
@@ -100,7 +85,7 @@ async def update_profile_bio(event):
     print(split_text)
     return
     if len(split_text) == 1:
-        await client.update_message(event, CABOUT_HELP)
+        await client.update_message(event, update_profile_bio.__doc__)
         return
 
     about = split_text[1]
@@ -126,8 +111,7 @@ async def update_profile_bio(event):
                 await client.update_message(event, "`The chat wasn't modified`")
 
 
-@client.CommandHandler(outgoing=True, command="cuname (.+)", help=CUNAME_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="cuname (.+)")
 async def change_profile_username(event):
     if event.is_private:
         await client.update_message(event, "Invalid chat type")
@@ -171,16 +155,20 @@ async def change_profile_username(event):
                 await client.update_message(event, "`The chat wasn't modified`")
 
 
-@client.CommandHandler(outgoing=True, command="cname (.+)", help=CNAME_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="cname (.+)")
 async def change_profile_name(event):
+    """
+    **Change your channel/group username.**
+        __Args:__
+            `<username>`
+    """
     if event.is_private:
         await client.update_message(event, "Invalid chat type.")
         return
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 0:
-        await client.update_message(event, CNAME_HELP)
+        await client.update_message(event, change_profile_name.__doc__)
         return
 
     title = split_text[1]

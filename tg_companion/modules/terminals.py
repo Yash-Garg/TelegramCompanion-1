@@ -10,39 +10,19 @@ from tg_companion import (ENABLE_SSH, SSH_HOSTNAME, SSH_KEY, SSH_PASSPHRASE,
                           SUBPROCESS_ANIM)
 from tg_companion.tgclient import client
 
-TERM_HELP = """
+
+@client.CommandHandler(outgoing=True, command="term")
+async def terminal(event):
+    """
     **Execute a bash command on your pc/server**
         __Args:__
             `<command>` - Your bash command that will be executed.
-"""
-
-
-SSH_TERM_HELP = """
-    **Execute a bash command on your ssh connection**
-        __Args:__
-            `<command>` - Your bash command that will be executed.
-"""
-UPLOAD_HELP = """
-    **Upload a file or folder from your pc/server**
-        __Args:__
-            `<path>` - The path to the file or folder you want to upload
-"""
-
-SSH_UPLOAD_HELP = """
-    **Upload a file or folder from your ssh connection**
-        __Args:__
-            `<path>` - The path to the file or folder you want to upload
-"""
-
-
-@client.CommandHandler(outgoing=True, command="term", help=TERM_HELP)
-@client.log_exception
-async def terminal(event):
+    """
 
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await client.update_message(event, TERM_HELP)
+        await client.update_message(event, terminal.__doc__)
         return
 
     cmd = split_text[1]
@@ -112,14 +92,17 @@ async def terminal(event):
     outgoing=True,
     func=lambda x: ENABLE_SSH,
     command="rterm",
-    help=SSH_TERM_HELP)
-@client.log_exception
+)
 async def ssh_terminal(event):
-
+    """
+    **Execute a bash command on your ssh connection**
+        __Args:__
+            `<command>` - Your bash command that will be executed.
+    """
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await client.update_message(event, SSH_TERM_HELP)
+        await client.update_message(event, ssh_terminal.__doc__)
         return
 
     cmd = split_text[1]
@@ -187,13 +170,17 @@ async def ssh_terminal(event):
                     break
 
 
-@client.CommandHandler(outgoing=True, command="upload", help=UPLOAD_HELP)
-@client.log_exception
+@client.CommandHandler(outgoing=True, command="upload")
 async def upload_file(event):
+    """
+    **Upload a file or folder from your pc/server**
+        __Args:__
+            `<path>` - The path to the file or folder you want to upload
+    """
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await client.update_message(event, UPLOAD_HELP)
+        await client.update_message(event, upload_file.__doc__)
         return
 
     to_upload = split_text[1]
@@ -204,13 +191,17 @@ async def upload_file(event):
 @client.CommandHandler(
     outgoing=True,
     command="rupload (.+)",
-    help=SSH_UPLOAD_HELP)
-@client.log_exception
+)
 async def ssh_upload_file(event):
+    """
+    **Upload a file or folder from your ssh connection**
+        __Args:__
+            `<path>` - The path to the file or folder you want to upload
+    """
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await client.update_message(event, SSH_UPLOAD_HELP)
+        await client.update_message(event, ssh_upload_file.__doc__)
         return
 
     to_upload = split_text[1]
