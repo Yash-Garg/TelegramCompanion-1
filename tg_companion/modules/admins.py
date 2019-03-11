@@ -15,6 +15,9 @@ async def ban_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
+    if event.is_private:
+        await client.update_message(event, "This command was made to be used in groups")
+        return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
@@ -74,6 +77,9 @@ async def unban_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
+    if event.is_private:
+        await client.update_message(event, "This command was made to be used in groups")
+        return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
@@ -138,6 +144,10 @@ async def mute_user(event):
     me = await client.get_me()
     split_text = event.text.split(None, 1)
 
+    if event.is_private:
+        await client.update_message(event, "This command was made to be used in groups")
+        return
+
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
@@ -197,6 +207,10 @@ async def unmute_user(event):
     chat = await event.get_chat()
     me = await client.get_me()
     split_text = event.text.split(None, 1)
+
+    if event.is_private:
+        await client.update_message(event, "This command was made to be used in groups")
+        return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
