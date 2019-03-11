@@ -87,7 +87,7 @@ class CustomClient(TelegramClient):
                 except Exception as exc:
                     if isinstance(exc, PhoneCodeInvalidError):
                         code = input(
-                            "The phone code entered was invalid. Try again: ")
+                            "The phone code entered was invalid. Press enter to try again")
                     elif isinstance(exc, SessionPasswordNeededError):
                         password = getpass(
                             "Two step verification is enabled. Please enter your password: ")
