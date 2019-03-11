@@ -25,7 +25,7 @@ async def save_note(event):
     """
     **Globally save a note.**
         __Args:__
-            `<notename>` `<notecontent>` **The notecontent argument is required only if you don't reply to a message**
+            `<notename>` `<notecontent>` __The notecontent argument is required only if you don't reply to a message__
     """
     message = event.message
     split_text = event.text.split(None, 2)
@@ -33,13 +33,13 @@ async def save_note(event):
     if event.reply_to_msg_id:
         message = await event.get_reply_message()
         if len(split_text) == 1:
-            await client.update_message(event, SAVE_HELP)
+            await client.update_message(event, save_note.__doc__)
             return
         note_name = split_text[1]
         note_text = message.text
     else:
         if len(split_text) <= 2:
-            await client.update_message(event, SAVE_HELP)
+            await client.update_message(event, event, save_note.__doc__)
             return
         note_text = split_text[2]
 
@@ -107,7 +107,7 @@ async def get_note(event):
     chat = await event.get_chat()
 
     if len(split_text) == 1:
-        await client.update_message(event, GET_HELP)
+        await client.update_message(event, get_note.__doc__)
         return
 
     note_name = split_text[1]
@@ -151,7 +151,7 @@ async def remove_note(event):
     split_text = event.text.split(None, 1)
 
     if len(split_text) == 1:
-        await client.update_message(event, REMOVE_HELP)
+        await client.update_message(event, remove_note.__doc__)
         return
     note_name = split_text[1]
 
