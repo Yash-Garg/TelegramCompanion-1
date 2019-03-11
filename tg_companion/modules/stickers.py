@@ -73,7 +73,7 @@ async def kang_sticker(event):
                 await silently_send_message(bot_conv, "/publish")
                 response = await silently_send_message(bot_conv, packshortname)
                 if response.text == "Sorry, this short name is already taken.":
-                    await client.update_message(event, "There has been an error processing your sticker!")
+                    await client.update_message(event, "`There has been an error processing your sticker!`")
                     return
             else:
                 await silently_send_message(bot_conv, "/cancel")
@@ -83,7 +83,7 @@ async def kang_sticker(event):
                 await bot_conv.mark_read(message=await bot_conv.get_response())
                 await silently_send_message(bot_conv, sticker_emoji)
                 await silently_send_message(bot_conv, "/done")
-    await client.update_message(event, f"sticker added! Your pack can be found [here](https://t.me/addstickers/{packshortname})")
+    await client.update_message(event, f"`Sticker added! Your pack can be found` [here](https://t.me/addstickers/{packshortname})")
 
 
 @client.CommandHandler(outgoing=True, command="packinfo")

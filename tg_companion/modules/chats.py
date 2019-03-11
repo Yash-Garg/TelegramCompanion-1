@@ -28,7 +28,7 @@ async def update_profile_pic(event):
         message = await event.get_reply_message()
         chat = await event.get_chat()
         if not await client.is_user_admin(chat):
-            await client.update_message(event, "`Chat admin privileges are required change chat photo`")
+            await client.update_message(event, "`Chat admin privileges are required to change chat photo`")
             return
         photo = None
         if message.media:
@@ -48,7 +48,7 @@ async def update_profile_pic(event):
                     photo.name = "image." + media_ext
 
             else:
-                await client.update_message(event, "`The type of this media entity is invalid.`")
+                await client.update_message(event, "`This type of this media entity is invalid.`")
 
         if photo:
             await client.update_message(event, "`UPLOADING`")

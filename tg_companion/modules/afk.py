@@ -55,7 +55,7 @@ async def afk(event):
 async def no_afk(event):
     chat = await event.get_chat()
     if "yes" in USER_AFK:
-        await client.send_message(chat.id, "`I'm no longer afk`")
+        await client.send_message(chat.id, "**I'm no longer afk**")
         del USER_AFK["yes"]
 
 

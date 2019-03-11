@@ -25,7 +25,7 @@ async def account_migrate(event):
     global FAILED_CHATS_COUNT
 
     await client.update_message(event,
-                                "`Migrating Chats. This might take a while so relax. and check this message later`"
+                                "`Migrating Chats. This might take a while so relax and check this message later`"
                                 )
 
     split_text = event.text.split(None, 1)
@@ -75,7 +75,7 @@ async def account_migrate(event):
                                 FAILED_CHATS.append(chat.id)
                                 FAILED_CHATS_COUNT = FAILED_CHATS_COUNT + 1
 
-                REPLY = f"Failed to migrate `{FAILED_CHATS_COUNT}` chat because a problem has occurred or you are already in those groups/channels\n"
+                REPLY = f"Failed to migrate `{FAILED_CHATS_COUNT}` chats because a problem has occurred or you are already in those groups/channels\n"
 
                 await event.reply(REPLY)
         else:

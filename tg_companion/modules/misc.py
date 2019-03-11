@@ -31,7 +31,7 @@ async def ping(event):
         async with session.get("https://www.google.com"):
             end_time = time.time()
             ping_time = float(end_time - start_time) * 1000
-            await client.update_message(event, f"Ping time was: {ping_time}ms.")
+            await client.update_message(event, f"Ping time was: `{ping_time}ms`.")
 
 
 @client.CommandHandler(outgoing=True, command="version")
@@ -77,7 +77,7 @@ async def user_info(event):
             await event.reply(f"`@{user.username}` is not a User")
             return
         if user.deleted:
-            await event.edit("This user has deleted his account. I can't get his info.")
+            await event.edit("`This user has deleted his account. I can't get his info.`")
             return
 
     full_user = await client(GetFullUserRequest(user.id))

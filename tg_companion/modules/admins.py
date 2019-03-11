@@ -16,13 +16,13 @@ async def ban_user(event):
     me = await client.get_me()
     split_text = event.text.split(None, 1)
     if event.is_private:
-        await client.update_message(event, "This command was made to be used in groups")
+        await client.update_message(event, "`This command was made to be used in groups!`")
         return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
-                await client.update_message(event, "I don't have permission to ban users here.")
+                await client.update_message(event, "`I don't have permission to ban users here.`")
         if event.reply_to_msg_id:
             rep_msg = await event.get_reply_message()
             user = await rep_msg.get_sender()
@@ -49,7 +49,7 @@ async def ban_user(event):
                     user_banned = True
 
         if user_banned is True:
-            await client.update_message(event, "This user is already banned!")
+            await client.update_message(event, "`This user is already banned!`")
             return
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
             until_date=None,
@@ -64,7 +64,7 @@ async def ban_user(event):
         )))
         await client.update_message(event, f"`I succesfully banned {user.first_name}`!")
     else:
-        await client.update_message(event, "I need admin permissions to ban users here!")
+        await client.update_message(event, "`I need admin permissions to ban users here!`")
 
 
 @client.CommandHandler(outgoing=True, command="unban")
@@ -78,13 +78,13 @@ async def unban_user(event):
     me = await client.get_me()
     split_text = event.text.split(None, 1)
     if event.is_private:
-        await client.update_message(event, "This command was made to be used in groups")
+        await client.update_message(event, "`This command was made to be used in groups!`")
         return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
-                await client.update_message(event, "I don't have permission to ban users here!")
+                await client.update_message(event, "`I don't have permission to ban users here!`")
                 return
 
         if event.reply_to_msg_id:
@@ -114,7 +114,7 @@ async def unban_user(event):
                     user_banned = True
 
         if user_banned is False:
-            await client.update_message(event, "This user is not banned yet.")
+            await client.update_message(event, "`This user is not banned yet.`")
             return
 
         await client(EditBannedRequest(chat, user, ChatBannedRights(
@@ -130,7 +130,7 @@ async def unban_user(event):
         )))
         await client.update_message(event, f"`Succesfully unbanned {user.first_name}`!")
     else:
-        await client.update_message(event, "I need admin permissions to ban users here!")
+        await client.update_message(event, "`I need admin permissions to ban users here!`")
 
 
 @client.CommandHandler(outgoing=True, command="mute")
@@ -145,13 +145,13 @@ async def mute_user(event):
     split_text = event.text.split(None, 1)
 
     if event.is_private:
-        await client.update_message(event, "This command was made to be used in groups")
+        await client.update_message(event, "`This command was made to be used in groups!`")
         return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
-                await client.update_message(event, "I don't have permission to mute users here!")
+                await client.update_message(event, "`I don't have permission to mute users here!`")
         if event.reply_to_msg_id:
             rep_msg = await event.get_reply_message()
             user = await rep_msg.get_sender()
@@ -167,7 +167,7 @@ async def mute_user(event):
             return
 
         if user.id == me.id:
-            await client.update_message(event, "`I can't mute myself`")
+            await client.update_message(event, "`I can't mute myself`!")
             return
         user_muted = False
         query = user.username if user.username else user.first_name
@@ -178,7 +178,7 @@ async def mute_user(event):
                     user_muted = True
 
         if user_muted is True:
-            await client.update_message(event, "This user is already muted!")
+            await client.update_message(event, "`This user is already muted!`")
             return
 
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
@@ -194,7 +194,7 @@ async def mute_user(event):
         )))
         await client.update_message(event, f"`Succesfully muted {user.first_name}`!")
     else:
-        await client.update_message(event, "I need admin permissions to mute users here!")
+        await client.update_message(event, "`I need admin permissions to mute users here!`")
 
 
 @client.CommandHandler(outgoing=True, command="unmute")
@@ -209,13 +209,13 @@ async def unmute_user(event):
     split_text = event.text.split(None, 1)
 
     if event.is_private:
-        await client.update_message(event, "This command was made to be used in groups")
+        await client.update_message(event, "`This command was made to be used in groups!`")
         return
 
     if chat.creator or chat.admin_rights:
         if chat.admin_rights:
             if not chat.admin_rights.ban_users:
-                await client.update_message(event, "I don't have permission to unmute users here!")
+                await client.update_message(event, "`I don't have permission to unmute users here!`")
         if event.reply_to_msg_id:
             rep_msg = await event.get_reply_message()
             user = await rep_msg.get_sender()
@@ -242,7 +242,7 @@ async def unmute_user(event):
                     user_muted = True
 
         if user_muted is True:
-            await client.update_message(event, "This user is not muted!")
+            await client.update_message(event, "`This user is not muted!`")
             return
 
         await client(EditBannedRequest(chat.id, user, ChatBannedRights(
@@ -258,4 +258,4 @@ async def unmute_user(event):
         )))
         await client.update_message(event, f"`Succesfully unmuted {user.first_name}`!")
     else:
-        await client.update_message(event, "I need admin permissions to unmute users here!")
+        await client.update_message(event, "`I need admin permissions to unmute users here!`")

@@ -41,7 +41,7 @@ async def update_profile_pic(event):
                 photo.name = "image." + media_ext
 
         else:
-            await client.update_message(event, "`The type of this media entity is invalid.`")
+            await client.update_message(event, "`This type of this media entity is invalid.`")
 
     if photo:
         await client.update_message(event, "`UPLOADING`")

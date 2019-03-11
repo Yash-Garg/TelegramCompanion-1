@@ -58,7 +58,7 @@ async def await_permission(event):
             if PM_WARNS[chat.id] == 3:
                 await client.send_message(
                     chat.id,
-                    message="You are spamming this user. I will ban you until he decides to unban you. Thanks "
+                    message="`You are spamming this user. I will ban you until he decides to unban you. Thanks`"
                 )
                 await client(BlockRequest(chat.id))
                 return
@@ -90,4 +90,4 @@ async def accept_permission(event):
                 ACCEPTED_USERS.append(chat.id)
                 connection.execute(query)
                 connection.close()
-                await client.update_message(event, "Private Message Accepted")
+                await client.update_message(event, "`Private Message Accepted`")
