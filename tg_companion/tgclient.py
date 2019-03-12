@@ -71,7 +71,9 @@ class CustomClient(TelegramClient):
 
                 code = input(
                     "Please enter the code you just recieved.. Press enter to send the code via SMS: ")
-
+                loop.run_until_complete(
+                    self.send_code_request(
+                        phone, force_sms=False))
                 if not code:
                     loop.run_until_complete(
                         self.send_code_request(
