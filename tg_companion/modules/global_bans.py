@@ -276,11 +276,13 @@ async def disable_gbans(event):
                                               "**Because of the API limitations you'll need to manually unban gbanned users from this group**.")
                             connection.execute(query)
                             connection.close()
+                            _load_gban_enabled_chats()
+                            return
                     else:
                         await event.reply("This chat doesn't have the companion's global bans enabled.")
-            else:
-                await client.event.reply("`Only chat owners can disable global bans from this companion`!")
-            _load_gban_enabled_chats()
+            
+            await client.event.reply("`Only chat owners can disable global bans from this companion`!")
+            
 
 
 @client.on(
@@ -317,9 +319,10 @@ async def enable_gbans(event):
                             chat_id=chat.id, is_enabled=True)
                     connection.execute(query)
                     connection.close()
-            else:
-                await event.reply("`Only chat owners can enable global bans from this companion`!")
-            _load_gban_enabled_chats
+                    _load_gban_enabled_chats()
+                    return
+            await event.reply("`Only chat owners can enable global bans from this companion`!")
+
 
 
 @client.CommandHandler(incoming=True, outgoing=True, command="enablegbans")
