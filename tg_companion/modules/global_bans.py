@@ -253,7 +253,7 @@ async def ban_on_join(event):
         incoming=True,
         pattern=r"\.disablegbans"))
 async def disable_gbans(event):
-    if not await event.get_reply_message() or (await event.get_reply_message()).id == (await client.get_me()).id:
+    if not await event.get_reply_message() or (await event.get_reply_message()).id != (await client.get_me()).id:
         return
 
     chat = await event.get_chat()
@@ -289,7 +289,7 @@ async def disable_gbans(event):
         incoming=True,
         pattern=r"\.enablegbans"))
 async def enable_gbans(event):
-    if not await event.get_reply_message() or (await event.get_reply_message()).id == (await client.get_me()).id:
+    if not await event.get_reply_message() or (await event.get_reply_message()).id != (await client.get_me()).id:
         return
 
     chat = await event.get_chat()
