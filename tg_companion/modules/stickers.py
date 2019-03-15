@@ -154,7 +154,7 @@ def is_message_image(message):
             return False
         if isinstance(message.media, MessageMediaPhoto):
             return True
-    elif message.document:
+    if message.document:
         if message.media.document.mime_type.split("/")[0] == "image":
             return True
         return False
