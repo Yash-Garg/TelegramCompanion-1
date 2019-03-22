@@ -71,6 +71,7 @@ async def kang_sticker(event):
                 await bot_conv.get_response()
                 await silently_send_message(bot_conv, sticker_emoji)
                 await silently_send_message(bot_conv, "/publish")
+                await silently_send_message(bot_conv, "/skip")
                 response = await silently_send_message(bot_conv, packshortname)
                 if response.text == "Sorry, this short name is already taken.":
                     await client.update_message(event, "`There has been an error processing your sticker!`")
