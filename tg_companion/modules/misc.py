@@ -314,3 +314,18 @@ async def mute(event):
         await client.update_message(event, f"`Chat muted until: {dt.strftime('%d/%m/%Y %I:%M:%S%p')}`")
     else:
         await client.update_message(event, "`Failed to mute this chat`!")
+
+
+@client.CommandHandler(outgoing=True, allow_edited=True, func=lambda e: e.text)
+async def text_strikedown(event):
+    """
+    Strikethrough markdown support for any telegram clients.
+    Strikethrough uses two tildes: ~~Scratch this.~~.
+    """
+
+    text = event.text
+    match = re.findall(r"(?<!\w)(~{2})(?!~~)(.+?)(?<!~)\1(?!\w)", text)
+    if match:
+        for _, m in match:
+            text = re.sub(f"~~{re.escape(m)}~~", "\u0336".join(m) + "\u0336", text)
+        await event.edit(text)
